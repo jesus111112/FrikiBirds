@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edad Media & Edad Moderna — Análisis Histórico</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  /* ─── RESET & BASE ───────────────────────────────────────── */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --medieval-dark:   #1a0f00;
+    --medieval-bg:     #2c1810;
+    --medieval-mid:    #4a2c1a;
+    --medieval-gold:   #c9a84c;
+    --medieval-amber:  #e8c56a;
+    --medieval-text:   #f0e0c0;
+    --medieval-muted:  #a08060;
+
+    --modern-dark:     #0a1628;
+    --modern-bg:       #0d2040;
+    --modern-mid:      #1a3a6a;
+    --modern-blue:     #4a90d9;
+    --modern-light:    #8ec8f5;
+    --modern-text:     #e8f4ff;
+    --modern-muted:    #7090b0;
+    --modern-accent:   #00d4aa;
+
+    --neutral-bg:      #0c0c0c;
+    --white:           #ffffff;
+    --transition:      all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  html { scroll-behavior: smooth; font-size: 16px; }
+
+  body {
+    font-family: 'EB Garamond', serif;
+    background: var(--neutral-bg);
+    color: #ddd;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ─── STUDENT INFO CARD ──────────────────────────────────── */
+  .student-info-wrapper {
+    position: relative;
+  }
+  .student-trigger {
+    cursor: default;
+    display: flex; align-items: center;
+    transition: var(--transition);
+  }
+  .student-trigger:hover {
+    color: var(--medieval-amber);
+  }
+  .student-card {
+    position: absolute; top: calc(100% + 14px); left: 0;
+    width: 280px;
+    background: rgba(10, 8, 4, 0.97);
+    border: 1px solid rgba(201,168,76,0.35);
+    padding: 1.2rem 1.4rem;
+    opacity: 0; pointer-events: none;
+    transform: translateY(-6px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    z-index: 9999;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,168,76,0.08);
+  }
+  .student-card::before {
+    content: '';
+    position: absolute; top: -6px; left: 18px;
+    width: 10px; height: 10px;
+    background: rgba(10,8,4,0.97);
+    border-left: 1px solid rgba(201,168,76,0.35);
+    border-top: 1px solid rgba(201,168,76,0.35);
+    transform: rotate(45deg);
+  }
+  .student-info-wrapper:hover .student-card {
+    opacity: 1; pointer-events: auto;
+    transform: translateY(0);
+  }
+  .student-card-title {
+    font-family: 'Cinzel', serif; font-size: 0.65rem;
+    letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--medieval-gold); margin-bottom: 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+  }
+  .student-field {
+    display: flex; flex-direction: column;
+    margin-bottom: 0.75rem;
+  }
+  .student-field:last-child { margin-bottom: 0; }
+  .field-label {
+    font-family: 'Cinzel', serif; font-size: 0.6rem;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: rgba(201,168,76,0.5); margin-bottom: 0.15rem;
+  }
+  .field-value {
+    font-family: 'EB Garamond', serif; font-size: 0.95rem;
+    color: rgba(255,255,255,0.75); line-height: 1.3;
+  }
+
+  /* ─── SCROLLBAR ──────────────────────────────────────────── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #111; }
+  ::-webkit-scrollbar-thumb { background: var(--medieval-gold); border-radius: 3px; }
+
+  /* ─── NAV ────────────────────────────────────────────────── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+    background: rgba(10, 8, 4, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201,168,76,0.3);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px;
+  }
+  .nav-brand {
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem; letter-spacing: 0.15em;
+    color: var(--medieval-gold);
+    text-transform: uppercase;
+  }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    font-family: 'Cinzel', serif; font-size: 0.72rem;
+    letter-spacing: 0.1em; text-decoration: none;
+    color: rgba(255,255,255,0.6); text-transform: uppercase;
+    transition: var(--transition);
+  }
+  .nav-links a:hover { color: var(--medieval-gold); }
+
+  /* ─── HERO ───────────────────────────────────────────────── */
+  #hero {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+    background: linear-gradient(160deg, #0d0600 0%, #1a0e02 40%, #0a1020 100%);
+  }
+
+  .hero-bg-art {
+    position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+  }
+
+  /* Stained glass circles - medieval side */
+  .sg-circle {
+    position: absolute; border-radius: 50%;
+    border: 1px solid;
+    animation: pulse-glow 4s ease-in-out infinite;
+  }
+  .sg-1 { width: 500px; height: 500px; left: -100px; top: -100px; border-color: rgba(201,168,76,0.15); background: radial-gradient(circle, rgba(201,168,76,0.05) 0%, transparent 70%); animation-delay: 0s; }
+  .sg-2 { width: 350px; height: 350px; left: 50px; top: 50px; border-color: rgba(201,168,76,0.1); animation-delay: 0.5s; }
+  .sg-3 { width: 200px; height: 200px; left: 150px; top: 150px; border-color: rgba(232,197,106,0.2); background: radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 60%); animation-delay: 1s; }
+
+  /* Modern geometry - right side */
+  .mod-line {
+    position: absolute; background: linear-gradient(90deg, transparent, rgba(74,144,217,0.3), transparent);
+    height: 1px;
+    animation: scan-line 6s ease-in-out infinite;
+  }
+  .mod-1 { width: 400px; right: 100px; top: 30%; animation-delay: 0s; }
+  .mod-2 { width: 280px; right: 150px; top: 45%; animation-delay: 1.5s; }
+  .mod-3 { width: 200px; right: 200px; top: 60%; animation-delay: 3s; }
+
+  .mod-circle {
+    position: absolute; border-radius: 50%;
+    border: 1px solid rgba(74,144,217,0.15);
+  }
+  .mc-1 { width: 600px; height: 600px; right: -150px; bottom: -100px; background: radial-gradient(circle, rgba(74,144,217,0.04) 0%, transparent 70%); }
+  .mc-2 { width: 380px; height: 380px; right: 30px; bottom: 30px; border-color: rgba(0,212,170,0.12); }
+
+  /* Dividing light column */
+  .hero-divide {
+    position: absolute; left: 50%; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(180deg, transparent 0%, rgba(201,168,76,0.4) 30%, rgba(255,255,255,0.6) 50%, rgba(74,144,217,0.4) 70%, transparent 100%);
+    transform: translateX(-50%);
+  }
+  .hero-divide::after {
+    content: ''; position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%,-50%);
+    width: 12px; height: 12px; border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 20px 6px rgba(255,255,255,0.5);
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.02); }
+  }
+  @keyframes scan-line {
+    0%, 100% { opacity: 0.2; transform: translateX(0); }
+    50% { opacity: 0.7; transform: translateX(-20px); }
+  }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    text-align: center; padding: 6rem 2rem 3rem;
+    max-width: 900px;
+  }
+  .hero-eyebrow {
+    font-family: 'Cinzel', serif; font-size: 0.75rem;
+    letter-spacing: 0.4em; color: var(--medieval-gold);
+    text-transform: uppercase; margin-bottom: 1.5rem;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.3s;
+  }
+  .hero-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(2.2rem, 5vw, 4.5rem);
+    line-height: 1.1; font-weight: 700;
+    background: linear-gradient(135deg, var(--medieval-amber) 0%, #fff 45%, var(--modern-light) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1.5rem;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.6s;
+  }
+  .hero-subtitle {
+    font-family: 'EB Garamond', serif; font-size: 1.25rem;
+    font-style: italic; color: rgba(255,255,255,0.55);
+    max-width: 600px; margin: 0 auto 2.5rem; line-height: 1.7;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.9s;
+  }
+
+  .hero-dates {
+    display: flex; gap: 3rem; justify-content: center; align-items: center;
+    margin-bottom: 3rem;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 1.2s;
+  }
+  .date-chip {
+    text-align: center;
+  }
+  .date-chip .year {
+    font-family: 'Cinzel', serif; font-size: 1.4rem; font-weight: 700;
+    display: block; margin-bottom: 0.2rem;
+  }
+  .date-chip.medieval .year { color: var(--medieval-gold); }
+  .date-chip.modern .year { color: var(--modern-light); }
+  .date-chip .label {
+    font-size: 0.72rem; letter-spacing: 0.15em;
+    text-transform: uppercase; color: rgba(255,255,255,0.4);
+    font-family: 'Cinzel', serif;
+  }
+  .date-sep {
+    font-size: 2rem; color: rgba(255,255,255,0.2);
+    font-family: 'Cinzel', serif;
+  }
+
+  .hero-scroll {
+    opacity: 0; animation: fadeUp 0.8s ease forwards 1.5s;
+  }
+  .scroll-btn {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    font-family: 'Cinzel', serif; font-size: 0.72rem;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(255,255,255,0.4); text-decoration: none;
+    transition: var(--transition);
+  }
+  .scroll-btn:hover { color: var(--medieval-gold); }
+  .scroll-btn::after {
+    content: '↓';
+    animation: bounce 2s ease-in-out infinite;
+    display: inline-block;
+  }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(5px)} }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── SECTION BASE ───────────────────────────────────────── */
+  section { padding: 6rem 2rem; position: relative; }
+
+  .section-label {
+    font-family: 'Cinzel', serif; font-size: 0.72rem;
+    letter-spacing: 0.35em; text-transform: uppercase;
+    margin-bottom: 0.75rem; display: block;
+  }
+  .section-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    line-height: 1.2; margin-bottom: 1rem;
+  }
+  .section-intro {
+    font-family: 'EB Garamond', serif; font-size: 1.15rem;
+    font-style: italic; line-height: 1.8;
+    max-width: 650px;
+  }
+
+  .container { max-width: 1200px; margin: 0 auto; }
+
+  /* ─── REVEAL ANIMATION ───────────────────────────────────── */
+  .reveal {
+    opacity: 0; transform: translateY(40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+  .reveal-delay-5 { transition-delay: 0.5s; }
+
+  /* ─── EDAD MEDIA SECTION ─────────────────────────────────── */
+  #edad-media {
+    background: linear-gradient(180deg, #0d0500 0%, var(--medieval-bg) 30%, #1e0e06 70%, #0d0500 100%);
+  }
+  #edad-media .section-label { color: var(--medieval-gold); }
+  #edad-media .section-title { color: var(--medieval-amber); }
+  #edad-media .section-intro { color: var(--medieval-muted); }
+
+  .medieval-header-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 4rem; align-items: start; margin-bottom: 4rem;
+  }
+
+  /* Ornamental divider */
+  .ornament {
+    display: flex; align-items: center; gap: 1rem;
+    margin: 2.5rem 0;
+  }
+  .ornament::before, .ornament::after {
+    content: ''; flex: 1; height: 1px;
+  }
+  .ornament.gold::before, .ornament.gold::after { background: linear-gradient(90deg, transparent, var(--medieval-gold), transparent); }
+  .ornament.blue::before, .ornament.blue::after { background: linear-gradient(90deg, transparent, var(--modern-blue), transparent); }
+  .ornament span {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1rem; padding: 0 0.5rem;
+  }
+  .ornament.gold span { color: var(--medieval-gold); }
+  .ornament.blue span { color: var(--modern-blue); }
+
+  /* Feature cards */
+  .feature-cards {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem; margin: 2rem 0;
+  }
+
+  .fcard {
+    border: 1px solid;
+    padding: 1.8rem;
+    position: relative; overflow: hidden;
+    transition: var(--transition);
+  }
+  .fcard::before {
+    content: ''; position: absolute; inset: 0;
+    opacity: 0; transition: var(--transition);
+  }
+  .fcard:hover { transform: translateY(-4px); }
+  .fcard:hover::before { opacity: 1; }
+
+  .fcard.medieval-card {
+    background: rgba(44, 24, 16, 0.6);
+    border-color: rgba(201,168,76,0.25);
+  }
+  .fcard.medieval-card::before {
+    background: radial-gradient(circle at 20% 20%, rgba(201,168,76,0.08) 0%, transparent 60%);
+  }
+  .fcard.medieval-card:hover { border-color: rgba(201,168,76,0.6); box-shadow: 0 8px 30px rgba(201,168,76,0.12); }
+
+  .fcard.modern-card {
+    background: rgba(13, 32, 64, 0.6);
+    border-color: rgba(74,144,217,0.25);
+  }
+  .fcard.modern-card::before {
+    background: radial-gradient(circle at 20% 20%, rgba(74,144,217,0.08) 0%, transparent 60%);
+  }
+  .fcard.modern-card:hover { border-color: rgba(74,144,217,0.6); box-shadow: 0 8px 30px rgba(74,144,217,0.12); }
+
+  .fcard-icon {
+    font-size: 2rem; margin-bottom: 1rem; display: block;
+  }
+  .fcard-title {
+    font-family: 'Cinzel', serif; font-size: 0.9rem;
+    font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; margin-bottom: 0.8rem;
+  }
+  .fcard.medieval-card .fcard-title { color: var(--medieval-gold); }
+  .fcard.modern-card .fcard-title { color: var(--modern-blue); }
+  .fcard-desc {
+    font-family: 'EB Garamond', serif; font-size: 1rem;
+    line-height: 1.75; color: rgba(255,255,255,0.65);
+  }
+
+  /* ─── EDAD MODERNA SECTION ───────────────────────────────── */
+  #edad-moderna {
+    background: linear-gradient(180deg, #050d18 0%, var(--modern-bg) 30%, #071525 70%, #050d18 100%);
+  }
+  #edad-moderna .section-label { color: var(--modern-accent); }
+  #edad-moderna .section-title { color: var(--modern-light); }
+  #edad-moderna .section-intro { color: var(--modern-muted); }
+
+  /* ─── COMPARISON SECTION ─────────────────────────────────── */
+  #comparacion {
+    background: #080808;
+    border-top: 1px solid #1a1a1a;
+    border-bottom: 1px solid #1a1a1a;
+  }
+
+  .comp-header {
+    text-align: center; margin-bottom: 4rem;
+  }
+  .comp-header .section-label { color: #888; }
+  .comp-header .section-title {
+    background: linear-gradient(135deg, var(--medieval-gold), #fff, var(--modern-blue));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Tab system */
+  .tab-nav {
+    display: flex; justify-content: center; gap: 0;
+    margin-bottom: 3rem; border: 1px solid #222;
+    border-radius: 4px; overflow: hidden;
+    max-width: 600px; margin-left: auto; margin-right: auto;
+  }
+  .tab-btn {
+    flex: 1; padding: 0.85rem 1.5rem;
+    font-family: 'Cinzel', serif; font-size: 0.75rem;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    background: transparent; border: none; cursor: pointer;
+    color: rgba(255,255,255,0.4); transition: var(--transition);
+    border-right: 1px solid #222;
+  }
+  .tab-btn:last-child { border-right: none; }
+  .tab-btn:hover { color: rgba(255,255,255,0.7); background: #111; }
+  .tab-btn.active { color: #fff; background: #1a1a1a; }
+  .tab-btn[data-tab="paradigma"].active { color: var(--medieval-gold); border-bottom: 2px solid var(--medieval-gold); }
+  .tab-btn[data-tab="sociedad"].active { color: var(--modern-blue); border-bottom: 2px solid var(--modern-blue); }
+  .tab-btn[data-tab="tecnologia"].active { color: var(--modern-accent); border-bottom: 2px solid var(--modern-accent); }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; animation: fadeIn 0.4s ease; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+  /* Comparison table */
+  .comp-table {
+    width: 100%; border-collapse: collapse;
+    font-family: 'EB Garamond', serif; font-size: 1rem;
+  }
+  .comp-table th {
+    font-family: 'Cinzel', serif; font-size: 0.78rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 1.2rem 1.5rem; font-weight: 600;
+    border-bottom: 1px solid #333;
+  }
+  .comp-table th:nth-child(1) { color: #888; text-align: left; }
+  .comp-table th:nth-child(2) { color: var(--medieval-gold); text-align: left; background: rgba(201,168,76,0.04); }
+  .comp-table th:nth-child(3) { color: var(--modern-blue); text-align: left; background: rgba(74,144,217,0.04); }
+
+  .comp-table td {
+    padding: 1.1rem 1.5rem; border-bottom: 1px solid #1a1a1a;
+    vertical-align: top; line-height: 1.7; color: rgba(255,255,255,0.7);
+  }
+  .comp-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .comp-table td:nth-child(1) { font-family: 'Cinzel', serif; font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; color: #666; }
+  .comp-table td:nth-child(2) { background: rgba(201,168,76,0.03); }
+  .comp-table td:nth-child(3) { background: rgba(74,144,217,0.03); }
+
+  /* ─── VENTAJAS SECTION ───────────────────────────────────── */
+  #ventajas { background: #050505; }
+  .va-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 3rem; margin-top: 3rem;
+  }
+
+  .va-card {
+    border: 1px solid #1a1a1a; border-radius: 2px;
+    overflow: hidden;
+  }
+  .va-card-header {
+    padding: 1.2rem 1.8rem;
+    font-family: 'Cinzel', serif; font-size: 0.85rem;
+    letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .va-card.medieval-va .va-card-header { background: rgba(44,24,16,0.9); color: var(--medieval-gold); border-bottom: 1px solid rgba(201,168,76,0.2); }
+  .va-card.modern-va .va-card-header { background: rgba(13,32,64,0.9); color: var(--modern-blue); border-bottom: 1px solid rgba(74,144,217,0.2); }
+
+  .va-row {
+    display: grid; grid-template-columns: 1fr 1fr;
+  }
+  .va-cell {
+    padding: 1.2rem 1.5rem;
+    font-family: 'EB Garamond', serif; font-size: 0.95rem;
+    line-height: 1.7; vertical-align: top;
+  }
+  .va-cell.plus { background: rgba(0, 200, 100, 0.04); border-right: 1px solid #1a1a1a; }
+  .va-cell.minus { background: rgba(200, 50, 50, 0.04); }
+  .va-cell-head {
+    font-family: 'Cinzel', serif; font-size: 0.65rem;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    margin-bottom: 1rem; display: block;
+  }
+  .va-cell.plus .va-cell-head { color: #2ecc71; }
+  .va-cell.minus .va-cell-head { color: #e74c3c; }
+
+  .va-item {
+    display: flex; gap: 0.6rem; margin-bottom: 0.75rem;
+    color: rgba(255,255,255,0.65); font-size: 0.95rem;
+  }
+  .va-item::before { flex-shrink: 0; margin-top: 0.1rem; }
+  .va-cell.plus .va-item::before { content: '+'; color: #2ecc71; font-weight: 700; }
+  .va-cell.minus .va-item::before { content: '−'; color: #e74c3c; font-weight: 700; }
+
+  /* ─── TIMELINE ────────────────────────────────────────────── */
+  #avances { background: linear-gradient(180deg, #050505 0%, #070a10 100%); }
+
+  .avances-header { text-align: center; margin-bottom: 4rem; }
+  .avances-header .section-label { color: var(--modern-accent); }
+  .avances-header .section-title {
+    background: linear-gradient(135deg, var(--medieval-gold), var(--modern-accent));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .timeline {
+    position: relative; max-width: 900px; margin: 0 auto;
+  }
+  .timeline::before {
+    content: ''; position: absolute; left: 50%; top: 0; bottom: 0;
+    width: 1px; background: linear-gradient(180deg, var(--medieval-gold), var(--modern-blue));
+    transform: translateX(-50%);
+  }
+  .tl-item {
+    display: grid; grid-template-columns: 1fr 60px 1fr;
+    gap: 0; margin-bottom: 3rem; align-items: center;
+  }
+  .tl-content {
+    padding: 1.5rem; border: 1px solid;
+    position: relative;
+  }
+  .tl-item:nth-child(odd) .tl-left { grid-column: 1; }
+  .tl-item:nth-child(odd) .tl-right { grid-column: 3; visibility: hidden; }
+  .tl-item:nth-child(even) .tl-left { grid-column: 1; visibility: hidden; }
+  .tl-item:nth-child(even) .tl-right { grid-column: 3; }
+
+  .tl-content.medieval-tl { background: rgba(44,24,16,0.5); border-color: rgba(201,168,76,0.2); }
+  .tl-content.modern-tl { background: rgba(13,32,64,0.5); border-color: rgba(74,144,217,0.2); }
+  .tl-content:hover { transform: scale(1.02); transition: var(--transition); }
+
+  /* ── Hover image reveal ── */
+  .tl-img-reveal {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
+    transition: max-height 0.55s cubic-bezier(0.25,0.46,0.45,0.94),
+                opacity 0.45s ease,
+                margin-top 0.4s ease;
+    border-radius: 1px;
+  }
+  .tl-content:hover .tl-img-reveal {
+    max-height: 220px;
+    opacity: 1;
+    margin-top: 1rem;
+  }
+  .tl-img-reveal img {
+    width: 100%; height: 180px;
+    object-fit: cover; display: block;
+    filter: brightness(0.9) contrast(1.05) saturate(0.85);
+    transition: filter 0.4s ease;
+  }
+  .tl-content:hover .tl-img-reveal img {
+    filter: brightness(1) contrast(1.05) saturate(1);
+  }
+  .tl-img-caption {
+    font-family: 'Cinzel', serif; font-size: 0.6rem;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 0.4rem 0.5rem;
+    text-align: center;
+  }
+  .medieval-tl .tl-img-caption { color: rgba(201,168,76,0.6); background: rgba(201,168,76,0.06); border-top: 1px solid rgba(201,168,76,0.15); }
+  .modern-tl .tl-img-caption   { color: rgba(74,144,217,0.7); background: rgba(74,144,217,0.06); border-top: 1px solid rgba(74,144,217,0.15); }
+
+  .tl-year {
+    font-family: 'Cinzel', serif; font-size: 0.7rem;
+    letter-spacing: 0.15em; margin-bottom: 0.4rem;
+  }
+  .medieval-tl .tl-year { color: var(--medieval-gold); }
+  .modern-tl .tl-year { color: var(--modern-accent); }
+  .tl-title {
+    font-family: 'Cinzel', serif; font-size: 0.95rem;
+    font-weight: 700; margin-bottom: 0.6rem; color: #fff;
+  }
+  .tl-desc {
+    font-family: 'EB Garamond', serif; font-size: 0.95rem;
+    line-height: 1.65; color: rgba(255,255,255,0.6);
+  }
+
+  .tl-dot {
+    grid-column: 2; justify-self: center;
+    width: 14px; height: 14px; border-radius: 50%;
+    border: 2px solid;
+    position: relative; z-index: 1;
+  }
+  .tl-dot.medieval-dot { background: var(--medieval-dark); border-color: var(--medieval-gold); box-shadow: 0 0 10px rgba(201,168,76,0.5); }
+  .tl-dot.modern-dot { background: var(--modern-dark); border-color: var(--modern-blue); box-shadow: 0 0 10px rgba(74,144,217,0.5); }
+
+  /* ─── REFERENCES SECTION ─────────────────────────────────── */
+  #referencias {
+    background: #030303;
+    border-top: 1px solid #111;
+  }
+  .ref-header { text-align: center; margin-bottom: 3rem; }
+  .ref-header .section-label { color: #555; }
+  .ref-header .section-title { color: #aaa; font-size: 1.8rem; }
+
+  .ref-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; }
+
+  .ref-card {
+    background: #0a0a0a; border: 1px solid #1a1a1a;
+    padding: 1.5rem; transition: var(--transition);
+  }
+  .ref-card:hover { border-color: #333; background: #0d0d0d; }
+  .ref-type {
+    font-family: 'Cinzel', serif; font-size: 0.65rem;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    margin-bottom: 0.75rem; display: block; color: #555;
+  }
+  .ref-entry {
+    font-family: 'EB Garamond', serif; font-size: 0.95rem;
+    line-height: 1.75; color: rgba(255,255,255,0.55);
+  }
+  .ref-entry em { font-style: italic; color: rgba(255,255,255,0.75); }
+  .ref-entry a { color: var(--modern-blue); text-decoration: none; }
+  .ref-entry a:hover { text-decoration: underline; }
+
+  /* VIDEO BOX */
+  .video-ref {
+    margin-top: 3rem; padding: 2rem;
+    border: 1px solid rgba(201,168,76,0.25);
+    background: rgba(201,168,76,0.03);
+    text-align: center;
+  }
+  .video-ref-label {
+    font-family: 'Cinzel', serif; font-size: 0.75rem;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--medieval-gold); margin-bottom: 1rem; display: block;
+  }
+  .video-ref p {
+    font-family: 'EB Garamond', serif; font-size: 1rem;
+    line-height: 1.75; color: rgba(255,255,255,0.6);
+    max-width: 700px; margin: 0 auto 1.2rem;
+  }
+  .video-ref em { font-style: italic; color: rgba(255,255,255,0.8); }
+  .video-ref a {
+    display: inline-block; padding: 0.6rem 1.4rem;
+    border: 1px solid rgba(201,168,76,0.5);
+    color: var(--medieval-gold); text-decoration: none;
+    font-family: 'Cinzel', serif; font-size: 0.75rem;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    transition: var(--transition);
+  }
+  .video-ref a:hover { background: rgba(201,168,76,0.1); }
+
+  /* ─── FOOTER ─────────────────────────────────────────────── */
+  footer {
+    background: #000; padding: 2.5rem;
+    text-align: center; border-top: 1px solid #111;
+  }
+  footer p {
+    font-family: 'Cinzel', serif; font-size: 0.7rem;
+    letter-spacing: 0.15em; color: #333; text-transform: uppercase;
+  }
+
+  /* ─── PROGRESS BAR ───────────────────────────────────────── */
+  .progress-bar {
+    position: fixed; top: 60px; left: 0; right: 0;
+    height: 2px; z-index: 998;
+    background: linear-gradient(90deg, var(--medieval-gold), var(--modern-blue));
+    transform-origin: left; transform: scaleX(0);
+    transition: transform 0.1s linear;
+  }
+
+  /* ─── RESPONSIVE ─────────────────────────────────────────── */
+  @media (max-width: 768px) {
+    .medieval-header-grid, .va-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .timeline::before { left: 20px; }
+    .tl-item { grid-template-columns: 1fr; }
+    .tl-item .tl-right, .tl-item .tl-left { grid-column: 1; visibility: visible !important; }
+    .tl-dot { display: none; }
+    .nav-links { display: none; }
+    .hero-dates { gap: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- ─── NAV ────────────────────────────────────────────────── -->
+<nav>
+  <div class="student-info-wrapper">
+    <span class="nav-brand student-trigger">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle; margin-right:6px; opacity:0.7"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Información del Estudiante
+    </span>
+    <div class="student-card">
+      <div class="student-card-title">Datos del Estudiante</div>
+      <div class="student-field">
+        <span class="field-label">Nombre</span>
+        <span class="field-value">Valenzuela Ayala Jesus イエス</span>
+      </div>
+      <div class="student-field">
+        <span class="field-label">Grado y Grupo</span>
+        <span class="field-value">6CPGM</span>
+      </div>
+      <div class="student-field">
+        <span class="field-label">Materia</span>
+        <span class="field-value">Conciencia histórica 3</span>
+      </div>
+      <div class="student-field">
+        <span class="field-label">Profesor</span>
+        <span class="field-value">carlos urbina hernandez</span>
+      </div>
+      <div class="student-field">
+        <span class="field-label">Actividad</span>
+        <span class="field-value">Edad Media a diferencia de la edad Moderna.</span>
+      </div>
+    </div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#edad-media">Edad Media</a></li>
+    <li><a href="#edad-moderna">Edad Moderna</a></li>
+    <li><a href="#comparacion">Comparación</a></li>
+    <li><a href="#avances">Avances</a></li>
+    <li><a href="#ventajas">Análisis</a></li>
+    <li><a href="#referencias">Referencias</a></li>
+  </ul>
+</nav>
+
+<!-- ─── HERO ────────────────────────────────────────────────── -->
+<section id="hero">
+  <div class="hero-bg-art">
+    <div class="sg-circle sg-1"></div>
+    <div class="sg-circle sg-2"></div>
+    <div class="sg-circle sg-3"></div>
+    <div class="hero-divide"></div>
+    <div class="mod-circle mc-1"></div>
+    <div class="mod-circle mc-2"></div>
+    <div class="mod-line mod-1"></div>
+    <div class="mod-line mod-2"></div>
+    <div class="mod-line mod-3"></div>
+  </div>
+
+  <div class="hero-content">
+    <span class="hero-eyebrow">Investigación Histórica · Era Digital</span>
+    <h1 class="hero-title">Edad Media<br>&amp; Edad Moderna</h1>
+    <p class="hero-subtitle">De la fe al razonamiento, del feudo a la nación, del pergamino a la imprenta: la gran transformación de Europa</p>
+
+    <div class="hero-dates">
+      <div class="date-chip medieval">
+        <span class="year">476 – 1453</span>
+        <span class="label">Edad Media</span>
+      </div>
+      <span class="date-sep">·</span>
+      <div class="date-chip">
+        <span class="year" style="color:#fff; font-size:1rem;">1492</span>
+        <span class="label">El Puente</span>
+      </div>
+      <span class="date-sep">·</span>
+      <div class="date-chip modern">
+        <span class="year">1453 – 1789</span>
+        <span class="label">Edad Moderna</span>
+      </div>
+    </div>
+
+    <div class="hero-scroll">
+      <a href="#edad-media" class="scroll-btn">Comenzar exploración</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── EDAD MEDIA ───────────────────────────────────────────── -->
+<section id="edad-media">
+  <div class="container">
+
+    <div class="medieval-header-grid reveal">
+      <div>
+        <span class="section-label">Siglos V — XV</span>
+        <h2 class="section-title">La Edad Media</h2>
+        <div class="ornament gold"><span>✦</span></div>
+        <p class="section-intro">"El Orden de la Fe" — Un mundo donde la Iglesia validaba a los reyes y la vida terrenal se concebía como un tránsito hacia la eternidad.</p>
+      </div>
+      <div style="padding-top:1rem;">
+        <p style="font-family:'EB Garamond',serif; font-size:1.05rem; line-height:1.85; color:rgba(240,224,192,0.55);">
+          La Edad Media abarca desde la caída del Imperio Romano de Occidente (476 d.C.) hasta la Caída de Constantinopla (1453) o el Descubrimiento de América (1492). Se divide en <em style="color:var(--medieval-amber)">Alta Edad Media</em> (formación) y <em style="color:var(--medieval-amber)">Baja Edad Media</em> (transformación y crisis). Durante este período, la Iglesia Católica no solo dictaba la moral sino que otorgaba legitimidad a los gobernantes, creando un sistema de poder teocrático y feudal sin precedentes.
+        </p>
+      </div>
+    </div>
+
+    <!-- Características Generales -->
+    <h3 class="reveal" style="font-family:'Cinzel',serif; font-size:0.8rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--medieval-gold); margin-bottom:1.5rem;">Características Generales</h3>
+    <div class="feature-cards">
+      <div class="fcard medieval-card reveal reveal-delay-1">
+        <span class="fcard-icon">✝</span>
+        <div class="fcard-title">Teocentrismo Absoluto</div>
+        <p class="fcard-desc">Dios es el centro de toda explicación del universo. La Iglesia Católica no solo dictaba la moral, sino que validaba a los reyes. La vida terrenal se veía como un "trámite" para llegar al cielo.</p>
+      </div>
+      <div class="fcard medieval-card reveal reveal-delay-2">
+        <span class="fcard-icon">🏰</span>
+        <div class="fcard-title">Sistema Feudal</div>
+        <p class="fcard-desc">Pirámide social donde el Rey repartía tierras a nobles a cambio de lealtad militar, y estos usaban a los siervos para trabajar la tierra. Economía basada en la agricultura de subsistencia.</p>
+      </div>
+      <div class="fcard medieval-card reveal reveal-delay-3">
+        <span class="fcard-icon">⚜</span>
+        <div class="fcard-title">Sociedad Estamental</div>
+        <p class="fcard-desc">Grupos sociales cerrados y hereditarios: nobleza, clero y campesinado. La inmovilidad social era absoluta; si nacías campesino, morías campesino. No existía el ascenso social.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── EDAD MODERNA ─────────────────────────────────────────── -->
+<section id="edad-moderna">
+  <div class="container">
+
+    <div class="medieval-header-grid reveal">
+      <div>
+        <span class="section-label">Siglos XV — XVIII</span>
+        <h2 class="section-title">La Edad Moderna</h2>
+        <div class="ornament blue"><span>◈</span></div>
+        <p class="section-intro">"El Amanecer de la Razón" — El ser humano se convierte en el centro del pensamiento; nace el Renacimiento, la Ilustración y la ciencia experimental.</p>
+      </div>
+      <div style="padding-top:1rem;">
+        <p style="font-family:'EB Garamond',serif; font-size:1.05rem; line-height:1.85; color:rgba(142,200,245,0.55);">
+          La Edad Moderna se inicia con el Renacimiento y termina con la Revolución Francesa (1789). Es la era de los grandes viajes, el nacimiento de la ciencia experimental y la Ilustración. El <em style="color:var(--modern-light)">Humanismo y el Antropocentrismo</em> reemplazaron el teocentrismo medieval, revalorizando los saberes clásicos de Grecia y Roma. La burguesía emergió como clase influyente y el dinero comenzó a valer más que el linaje o la sangre noble.
+        </p>
+      </div>
+    </div>
+
+    <h3 class="reveal" style="font-family:'Cinzel',serif; font-size:0.8rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--modern-accent); margin-bottom:1.5rem;">Características Generales</h3>
+    <div class="feature-cards">
+      <div class="fcard modern-card reveal reveal-delay-1">
+        <span class="fcard-icon">🤔</span>
+        <div class="fcard-title">Humanismo y Antropocentrismo</div>
+        <p class="fcard-desc">El ser humano se vuelve el centro del estudio filosófico y artístico. Se rescatan los valores de la antigua Grecia y Roma. El Renacimiento revolucionó el arte, la arquitectura y la ciencia.</p>
+      </div>
+      <div class="fcard modern-card reveal reveal-delay-2">
+        <span class="fcard-icon">👑</span>
+        <div class="fcard-title">Estados Nación</div>
+        <p class="fcard-desc">Los reyes centralizan el poder, creando ejércitos propios y burocracia estatal. Aparece el Absolutismo. El poder político pasa de los señores feudales al monarca nacional.</p>
+      </div>
+      <div class="fcard modern-card reveal reveal-delay-3">
+        <span class="fcard-icon">🌍</span>
+        <div class="fcard-title">Expansión Global</div>
+        <p class="fcard-desc">Descubrimiento de América (1492) y nuevas rutas comerciales hacia Asia. Nace el Capitalismo Mercantil y la burguesía. La riqueza comienza a medirse en dinero y comercio, no solo en tierra.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── COMPARACIÓN ─────────────────────────────────────────── -->
+<section id="comparacion">
+  <div class="container">
+    <div class="comp-header reveal">
+      <span class="section-label">Análisis Comparativo</span>
+      <h2 class="section-title">El Gran Cambio de Paradigma</h2>
+      <p style="font-family:'EB Garamond',serif; font-style:italic; font-size:1.1rem; color:#666; margin-top:1rem; max-width:600px; margin-left:auto; margin-right:auto;">La transición más importante es el paso de un mundo cerrado y espiritual a uno abierto y racional.</p>
+    </div>
+
+    <div class="reveal">
+      <div class="tab-nav">
+        <button class="tab-btn active" data-tab="paradigma">Paradigma</button>
+        <button class="tab-btn" data-tab="sociedad">Sociedad</button>
+        <button class="tab-btn" data-tab="tecnologia">Tecnología</button>
+      </div>
+
+      <!-- TAB: Paradigma -->
+      <div class="tab-panel active" id="tab-paradigma">
+        <table class="comp-table">
+          <thead>
+            <tr>
+              <th>Categoría</th>
+              <th>⚜ Edad Media</th>
+              <th>◈ Edad Moderna</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Centro del universo</td>
+              <td>Dios. Todo se explica por la voluntad divina y las Escrituras.</td>
+              <td>El Ser Humano. La razón y la observación explican el mundo.</td>
+            </tr>
+            <tr>
+              <td>El saber</td>
+              <td>Monopolio de la Iglesia. Libros escritos a mano en latín.</td>
+              <td>Democratización gracias a la Imprenta de Gutenberg.</td>
+            </tr>
+            <tr>
+              <td>Visión del mundo</td>
+              <td>Plana o limitada a Europa y el Mediterráneo.</td>
+              <td>Global. Se confirma la esfericidad de la Tierra.</td>
+            </tr>
+            <tr>
+              <td>Astronomía</td>
+              <td>Geocentrismo: La Tierra es el centro fijo del universo.</td>
+              <td>Heliocentrismo: La Tierra gira alrededor del Sol (Copérnico).</td>
+            </tr>
+            <tr>
+              <td>Fuente de verdad</td>
+              <td>La Biblia y los textos de Aristóteles y los Padres de la Iglesia.</td>
+              <td>La observación, la experimentación y el razonamiento matemático.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- TAB: Sociedad -->
+      <div class="tab-panel" id="tab-sociedad">
+        <table class="comp-table">
+          <thead>
+            <tr>
+              <th>Categoría</th>
+              <th>⚜ Edad Media</th>
+              <th>◈ Edad Moderna</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Poder político</td>
+              <td>Fragmentado. El rey era uno más entre los nobles. El poder real lo tenían los Señores Feudales.</td>
+              <td>Centralizado. El Absolutismo otorga control total al monarca, con ejército y burocracia propios.</td>
+            </tr>
+            <tr>
+              <td>Clases sociales</td>
+              <td>Estáticas. Se nace y muere en el mismo estamento: Noble, Clero o Campesino.</td>
+              <td>Ascendentes. Aparece la Burguesía (comerciantes y banqueros) con dinero y poder real.</td>
+            </tr>
+            <tr>
+              <td>Economía</td>
+              <td>Rural y de subsistencia. La riqueza = posesión de tierras. Comercio limitado.</td>
+              <td>Capitalismo mercantil. Rutas comerciales globales. El dinero supera al linaje.</td>
+            </tr>
+            <tr>
+              <td>Papel de la Iglesia</td>
+              <td>Máxima autoridad política, moral e intelectual. Controla universidades y producción de libros.</td>
+              <td>Su poder se fragmenta. La Reforma Protestante (Lutero, 1517) rompe la unidad cristiana.</td>
+            </tr>
+            <tr>
+              <td>El saber / poder</td>
+              <td>Monasterio aislado: el monje copista como guardián del conocimiento.</td>
+              <td>Academia y Café público: el debate intelectual abierto y la opinión pública naciente.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- TAB: Tecnología -->
+      <div class="tab-panel" id="tab-tecnologia">
+        <table class="comp-table">
+          <thead>
+            <tr>
+              <th>Invención</th>
+              <th>⚜ Era Medieval</th>
+              <th>◈ Era Moderna</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Comunicación</td>
+              <td>Manuscritos en pergamino. Un libro tardaba meses en producirse. Solo accesible al clero.</td>
+              <td>Imprenta de tipos móviles (Gutenberg, ~1450). Miles de copias. El "Internet" de la época.</td>
+            </tr>
+            <tr>
+              <td>Guerra</td>
+              <td>Caballeros en armadura, espadas, castillos de piedra y catapultas medievales.</td>
+              <td>Pólvora y artillería. Los castillos se vuelven obsoletos. Guerras con barcos artillados.</td>
+            </tr>
+            <tr>
+              <td>Navegación</td>
+              <td>Brújula y astrolabio (finales del período). Navegación costera, sin cruzar océanos.</td>
+              <td>Carabelas, galeones y sextante. Cruce del Atlántico. Circunnavegación del globo.</td>
+            </tr>
+            <tr>
+              <td>Ciencia</td>
+              <td>Lentes ópticas (s. XIII) y reloj mecánico. Organización del tiempo en monasterios.</td>
+              <td>Telescopio (Galileo) y microscopio. Lo infinitamente grande y lo infinitamente pequeño.</td>
+            </tr>
+            <tr>
+              <td>Agricultura</td>
+              <td>Arado de vertedera, herradura y molinos de agua/viento. Revolución agrícola local.</td>
+              <td>Técnicas agrícolas mejoradas, pero el foco se mueve al comercio y la manufactura.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── AVANCES TECNOLÓGICOS ─────────────────────────────────── -->
+<section id="avances">
+  <div class="container">
+    <div class="avances-header reveal">
+      <span class="section-label">Motor del Cambio</span>
+      <h2 class="section-title">Avances Tecnológicos</h2>
+      <p style="font-family:'EB Garamond',serif; font-style:italic; font-size:1.1rem; color:#555; margin-top:1rem; max-width:620px; margin-left:auto; margin-right:auto;">
+        La tecnología no solo cambió las máquinas, cambió la forma de pensar de la humanidad.
+      </p>
+    </div>
+
+    <div class="timeline">
+
+      <div class="tl-item reveal">
+        <div class="tl-content medieval-tl tl-left">
+          <div class="tl-year">Siglo IX — Edad Media</div>
+          <div class="tl-title">⚙ Molino de Agua y Viento</div>
+          <p class="tl-desc">Revolución en la molienda de grano. Liberó horas de trabajo manual, permitiendo que las comunidades medievales aumentaran su producción de alimentos y desarrollaran pequeñas industrias locales.</p>
+          <div class="tl-img-reveal">
+            <img src="https://i.pinimg.com/originals/ed/21/97/ed21973c3a71216fdb802c976652b19b.jpg" alt="Molinos medievales de viento" loading="lazy">
+            <div class="tl-img-caption">Molinos medievales — Kinderdijk, c. s. IX</div>
+          </div>
+        </div>
+        <div class="tl-dot medieval-dot"></div>
+        <div class="tl-content tl-right" style="visibility:hidden"></div>
+      </div>
+
+      <div class="tl-item reveal">
+        <div class="tl-content tl-left" style="visibility:hidden"></div>
+        <div class="tl-dot medieval-dot"></div>
+        <div class="tl-content medieval-tl tl-right">
+          <div class="tl-year">Siglo XIII — Edad Media</div>
+          <div class="tl-title">👓 Lentes Ópticas</div>
+          <p class="tl-desc">Permitieron extender la vida útil de los monjes copistas y estudiosos. Sin este invento, muchos textos clásicos habrían sido imposibles de transcribir. El primer paso hacia el telescopio.</p>
+          <div class="tl-img-reveal">
+            <img src="https://i.pinimg.com/originals/76/6f/76/766f76098e01780c92a2e506829a5856.jpg" alt="Lentes ópticas medievales" loading="lazy">
+            <div class="tl-img-caption">Monje con lentes — Conrad von Soest, 1403</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item reveal">
+        <div class="tl-content medieval-tl tl-left">
+          <div class="tl-year">Siglo XIV — Edad Media</div>
+          <div class="tl-title">⌚ Reloj Mecánico</div>
+          <p class="tl-desc">Sustituyó a los relojes de sol y agua. Permitió una organización más precisa del tiempo en monasterios y ciudades, transformando la cultura del trabajo y la vida comunitaria medieval.</p>
+          <div class="tl-img-reveal">
+            <img src="https://apuntesfilosoficos.cl/wp-content/uploads/2022/09/reloj-mecanico-edad-media-768x499.jpg" alt="Reloj astronómico de Praga" loading="lazy">
+            <div class="tl-img-caption">Reloj astronómico de Praga — c. 1410</div>
+          </div>
+        </div>
+        <div class="tl-dot medieval-dot"></div>
+        <div class="tl-content tl-right" style="visibility:hidden"></div>
+      </div>
+
+      <div class="tl-item reveal">
+        <div class="tl-content tl-left" style="visibility:hidden"></div>
+        <div class="tl-dot modern-dot"></div>
+        <div class="tl-content modern-tl tl-right">
+          <div class="tl-year">~1450 — Edad Moderna</div>
+          <div class="tl-title">📰 Imprenta de Gutenberg</div>
+          <p class="tl-desc">El "Internet" del Siglo XV. Permitió producir miles de copias de un texto. Las ideas científicas de Galileo y Copérnico, y la Biblia traducida, llegaron a todos, rompiendo el control de la Iglesia.</p>
+          <div class="tl-img-reveal">
+            <img src="https://educahistoria.com/wp-content/uploads/2024/05/Imprenta-y-Guttenberg.jpg" alt="Imprenta de Gutenberg siglo XV" loading="lazy">
+            <div class="tl-img-caption">Imprenta de tipos móviles — Johannes Gutenberg, ~1450</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item reveal">
+        <div class="tl-content modern-tl tl-left">
+          <div class="tl-year">1492 — Edad Moderna</div>
+          <div class="tl-title">⛵ Carabelas y Navegación Oceánica</div>
+          <p class="tl-desc">Carabelas y galeones, junto con el sextante y la brújula mejorada, permitieron cruzar el Atlántico. Abrieron Europa a un mundo global que transformó para siempre la economía y la cultura.</p>
+          <div class="tl-img-reveal">
+            <img src="https://muchahistoria.com/wp-content/uploads/2021/06/carabelas-origen.jpg" alt="Carabela Nao Victoria" loading="lazy">
+            <div class="tl-img-caption">Nao Victoria — primera vuelta al mundo, 1522</div>
+          </div>
+        </div>
+        <div class="tl-dot modern-dot"></div>
+        <div class="tl-content tl-right" style="visibility:hidden"></div>
+      </div>
+
+      <div class="tl-item reveal">
+        <div class="tl-content tl-left" style="visibility:hidden"></div>
+        <div class="tl-dot modern-dot"></div>
+        <div class="tl-content modern-tl tl-right">
+          <div class="tl-year">1609 — Edad Moderna</div>
+          <div class="tl-title">🔭 Telescopio y Microscopio</div>
+          <p class="tl-desc">Galileo perfeccionó el telescopio y confirmó el heliocentrismo. El microscopio abrió el mundo de lo invisible (bacterias, células). Ambos cambiaron para siempre la relación del ser humano con la naturaleza.</p>
+          <div class="tl-img-reveal">
+            <img src="https://vecinovirtual.com/wp-content/uploads/2017/08/galileo-galilei-telescopio.jpg" alt="Telescopio de Galileo Galilei" loading="lazy">
+            <div class="tl-img-caption">Telescopio original de Galileo Galilei — 1609</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── VENTAJAS Y DESVENTAJAS ──────────────────────────────── -->
+<section id="ventajas">
+  <div class="container">
+    <div class="reveal" style="text-align:center; margin-bottom:4rem;">
+      <span class="section-label" style="color:#888; display:block; font-family:'Cinzel',serif; font-size:0.72rem; letter-spacing:0.35em; text-transform:uppercase; margin-bottom:0.75rem;">Cuadro Analítico</span>
+      <h2 class="section-title" style="font-family:'Cinzel Decorative',serif; font-size:clamp(1.8rem,3.5vw,2.8rem); background:linear-gradient(135deg,var(--medieval-gold),#fff,var(--modern-accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Ventajas y Desventajas</h2>
+    </div>
+
+    <div class="va-grid">
+
+      <!-- EDAD MEDIA -->
+      <div class="va-card medieval-va reveal reveal-delay-1">
+        <div class="va-card-header">⚜ Edad Media</div>
+        <div class="va-row">
+          <div class="va-cell plus">
+            <span class="va-cell-head">✚ Ventajas</span>
+            <div class="va-item">Identidad Cultural: creación de lenguas romances y las primeras universidades (Oxford, Bolonia).</div>
+            <div class="va-item">Arquitectura Gótica: técnicas para construir catedrales inmensas que perduran hasta hoy.</div>
+            <div class="va-item">Preservación de textos clásicos griegos y romanos en monasterios.</div>
+            <div class="va-item">Seguridad Feudal: el castillo ofrecía protección física ante invasiones.</div>
+          </div>
+          <div class="va-cell minus">
+            <span class="va-cell-head">✖ Desventajas</span>
+            <div class="va-item">Estancamiento científico por dogmas religiosos. La experimentación era sospechosa de herejía.</div>
+            <div class="va-item">Gran desigualdad y falta de movilidad social. El estamento era hereditario e inmutable.</div>
+            <div class="va-item">Salud precaria: la Peste Negra (1347) mató al 30-50% de Europa por falta de higiene.</div>
+            <div class="va-item">Inmovilidad del saber: si nacías sin acceso a un monasterio, no accedías al conocimiento.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EDAD MODERNA -->
+      <div class="va-card modern-va reveal reveal-delay-2">
+        <div class="va-card-header">◈ Edad Moderna</div>
+        <div class="va-row">
+          <div class="va-cell plus">
+            <span class="va-cell-head">✚ Ventajas</span>
+            <div class="va-item">Revolución Científica: se pasa de la fe a la observación (Galileo, Newton, Copérnico).</div>
+            <div class="va-item">Libertad de Pensamiento: la Ilustración trajo derechos individuales y el debate democrático.</div>
+            <div class="va-item">Economía Global: primeras rutas de comercio que conectaron todos los continentes.</div>
+            <div class="va-item">Mayor acceso a la educación y la alfabetización gracias a la imprenta.</div>
+          </div>
+          <div class="va-cell minus">
+            <span class="va-cell-head">✖ Desventajas</span>
+            <div class="va-item">Colonialismo: el auge de Europa se basó en la explotación de América y África.</div>
+            <div class="va-item">Esclavismo Masivo: el comercio transatlántico de personas se convirtió en industria.</div>
+            <div class="va-item">Guerras de Religión: conflictos sangrientos entre católicos y protestantes (s. XVI-XVII).</div>
+            <div class="va-item">Destrucción de culturas indígenas y saberes ancestrales durante la conquista.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Comparativa Principal -->
+    <div class="reveal" style="margin-top:3rem; padding:2rem; border:1px solid #1a1a1a; background:#080808;">
+      <h3 style="font-family:'Cinzel',serif; font-size:0.8rem; letter-spacing:0.2em; text-transform:uppercase; color:#666; margin-bottom:1.5rem; text-align:center;">Ventaja y Desventaja Principal por Era</h3>
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>Era</th>
+            <th>Ventaja Principal</th>
+            <th>Desventaja Principal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="color:var(--medieval-gold)">⚜ Edad Media</td>
+            <td>Creación de una identidad europea común y las primeras universidades del mundo occidental.</td>
+            <td>Estancamiento científico y alta mortalidad por dogmatismo religioso y falta de higiene.</td>
+          </tr>
+          <tr>
+            <td style="color:var(--modern-accent)">◈ Edad Moderna</td>
+            <td>El nacimiento del método científico y el inicio de los Derechos Humanos (Ilustración).</td>
+            <td>El inicio del colonialismo agresivo y el tráfico masivo de esclavos a escala industrial.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ─── REFERENCIAS ─────────────────────────────────────────── -->
+<section id="referencias">
+  <div class="container">
+    <div class="ref-header reveal">
+      <span class="section-label">Bibliografía Académica</span>
+      <h2 class="section-title">Referencias — Formato APA</h2>
+    </div>
+
+    <div class="ref-grid">
+
+      <div class="ref-card reveal reveal-delay-1">
+        <span class="ref-type">Libro</span>
+        <p class="ref-entry">Anderson, P. (2016). <em>Transiciones de la Antigüedad al Feudalismo.</em> Siglo XXI Editores.</p>
+      </div>
+
+      <div class="ref-card reveal reveal-delay-2">
+        <span class="ref-type">Libro</span>
+        <p class="ref-entry">Braudel, F. (1984). <em>Civilización material, economía y capitalismo, siglos XV-XVIII.</em> Alianza Editorial.</p>
+      </div>
+
+      <div class="ref-card reveal reveal-delay-3">
+        <span class="ref-type">Libro</span>
+        <p class="ref-entry">Duby, G. (1992). <em>Guerreros y campesinos: Desarrollo inicial de la economía europea (500-1200).</em> Siglo XXI Editores.</p>
+      </div>
+
+      <div class="ref-card reveal reveal-delay-4">
+        <span class="ref-type">Libro</span>
+        <p class="ref-entry">Eco, U. (2012). <em>La Edad Media: Bárbaros, cristianos y musulmanes.</em> Fondo de Cultura Económica.</p>
+      </div>
+
+      <div class="ref-card reveal reveal-delay-1">
+        <span class="ref-type">Libro</span>
+        <p class="ref-entry">Tenenti, A. (1989). <em>La formación del mundo moderno.</em> Crítica.</p>
+      </div>
+
+      <div class="ref-card reveal reveal-delay-2">
+        <span class="ref-type">Libro — Tecnología</span>
+        <p class="ref-entry">Pacey, A. (1990). <em>La tecnología en la civilización mundial.</em> Ediciones Istmo.</p>
+      </div>
+
+      <div class="ref-card reveal reveal-delay-3">
+        <span class="ref-type">Libro — Tecnología</span>
+        <p class="ref-entry">Rossi, P. (1970). <em>Los filósofos y las máquinas (1400-1700).</em> Editorial Labor.</p>
+      </div>
+
+      <div class="ref-card reveal reveal-delay-4">
+        <span class="ref-type">Fuente Digital</span>
+        <p class="ref-entry">National Geographic Historia. (s.f.). <em>La vida en la Edad Media y El Renacimiento.</em> Recuperado de <a href="https://historia.nationalgeographic.com.es/" target="_blank">https://historia.nationalgeographic.com.es/</a></p>
+      </div>
+
+      <div class="ref-card reveal reveal-delay-1">
+        <span class="ref-type">Fuente Digital</span>
+        <p class="ref-entry">Enciclopedia Humanidades. (2024). <em>Edad Media y Edad Moderna: Características y resumen.</em> Recuperado de <a href="https://humanidades.com/" target="_blank">https://humanidades.com/</a></p>
+      </div>
+
+      <div class="ref-card reveal reveal-delay-2">
+        <span class="ref-type">Fuente Digital</span>
+        <p class="ref-entry">UNESCO. (s.f.). <em>Patrimonio de la Humanidad: De las catedrales góticas a las ciudades del Renacimiento.</em> Recuperado de <a href="https://unesco.org" target="_blank">https://unesco.org</a></p>
+      </div>
+
+    </div>
+
+    <!-- VIDEO REFERENCE BOX -->
+    <div class="video-ref reveal">
+      <span class="video-ref-label">📹 Fuente de Video — Referencia de Investigación</span>
+      <p>
+        Canal de YouTube. (s.f.). <em>La Edad Media y la Edad Moderna: Transición y cambios históricos.</em> [Video]. YouTube.
+      </p>
+      <p style="font-size:0.85rem; color:rgba(255,255,255,0.35); margin-bottom:1.2rem;">
+        Nota: Verifica el nombre exacto del canal y el año en el video para completar esta referencia según APA 7.ª ed.
+      </p>
+      <a href="https://www.youtube.com/watch?v=r6zmd1hH6xk" target="_blank">
+        Ver video de referencia →
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── FOOTER ─────────────────────────────────────────────── -->
+<footer>
+  <p>Historia Universal · Edad Media &amp; Edad Moderna · Investigación Académica · Formato APA 7.ª Edición</p>
+</footer>
+
+<!-- ─── JS ─────────────────────────────────────────────────── -->
+<script>
+  // ── Scroll progress bar ────────────────────────────────
+  const bar = document.getElementById('progressBar');
+  window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY;
+    const total = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.transform = `scaleX(${scrolled / total})`;
+  });
+
+  // ── Reveal on scroll ───────────────────────────────────
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+  // ── Tab system ─────────────────────────────────────────
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabBtns.forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // ── Active nav link ────────────────────────────────────
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 120) current = s.id;
+    });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === '#' + current
+        ? 'var(--medieval-gold)' : '';
+    });
+  });
+</script>
+</body>
+</html>
