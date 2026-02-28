@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Era Digital en la Educación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════ */
+:root {
+  --bg:       #111110;
+  --bg2:      #191917;
+  --bg3:      #1f1f1d;
+  --surface:  #242422;
+  --border:   rgba(255,255,255,0.07);
+  --border2:  rgba(255,255,255,0.13);
+
+  --amber:    #F59E0B;
+  --amber-l:  #FCD34D;
+  --cyan:     #22D3EE;
+  --cyan-d:   #0891B2;
+  --rose:     #FB7185;
+  --lime:     #84CC16;
+
+  --text:     #F0EDE6;
+  --text2:    #A8A49C;
+  --text3:    #6B6760;
+
+  --ff-display: 'Bebas Neue', sans-serif;
+  --ff-body:    'Source Serif 4', Georgia, serif;
+  --ff-mono:    'JetBrains Mono', monospace;
+
+  --ease: cubic-bezier(.16,1,.3,1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--ff-body);
+  font-size: 17px;
+  line-height: 1.75;
+  overflow-x: hidden;
+}
+
+/* ═══════════════════════════════════════
+   SCROLLBAR
+═══════════════════════════════════════ */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--amber); }
+
+/* ═══════════════════════════════════════
+   CURSOR
+═══════════════════════════════════════ */
+.cursor {
+  width: 8px; height: 8px;
+  background: var(--amber);
+  position: fixed; top: 0; left: 0;
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: width .2s, height .2s, background .2s;
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+.cursor-ring {
+  width: 32px; height: 32px;
+  border: 1px solid rgba(245,158,11,.5);
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  position: fixed; top: 0; left: 0;
+  pointer-events: none; z-index: 9998;
+  transform: translate(-50%,-50%);
+  transition: transform .3s var(--ease);
+}
+
+/* ═══════════════════════════════════════
+   NAV
+═══════════════════════════════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  height: 52px;
+  background: rgba(17,17,16,.95);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 2rem;
+  gap: 2rem;
+  transform: translateY(-100%);
+  transition: transform .5s var(--ease);
+}
+nav.show { transform: translateY(0); }
+.nav-logo {
+  font-family: var(--ff-display);
+  font-size: 1.05rem;
+  letter-spacing: .06em;
+  color: var(--amber);
+  flex-shrink: 0;
+}
+.nav-links {
+  display: flex; gap: 1.4rem; list-style: none;
+  font-family: var(--ff-mono);
+  font-size: .6rem; letter-spacing: .1em; text-transform: uppercase;
+  overflow-x: auto; scrollbar-width: none;
+}
+.nav-links a { color: var(--text3); text-decoration: none; transition: color .2s; white-space: nowrap; }
+.nav-links a:hover, .nav-links a.active { color: var(--amber); }
+.nav-bar {
+  position: absolute; bottom: 0; left: 0;
+  height: 2px; background: var(--amber); width: 0;
+  transition: width .1s linear;
+}
+  /* ─── STUDENT INFO CARD ──────────────────────────────────── */
+  .student-info-wrapper {
+    position: relative;
+  }
+  .student-trigger {
+    cursor: default;
+    display: flex; align-items: center;
+    transition: var(--transition);
+  }
+  .student-trigger:hover {
+    color: var(--medieval-amber);
+  }
+  .student-card {
+    position: absolute; top: calc(100% + 14px); left: 0;
+    width: 280px;
+    background: rgba(10, 8, 4, 0.97);
+    border: 1px solid rgba(201,168,76,0.35);
+    padding: 1.2rem 1.4rem;
+    opacity: 0; pointer-events: none;
+    transform: translateY(-6px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    z-index: 9999;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,168,76,0.08);
+  }
+  .student-card::before {
+    content: '';
+    position: absolute; top: -6px; left: 18px;
+    width: 10px; height: 10px;
+    background: rgba(10,8,4,0.97);
+    border-left: 1px solid rgba(201,168,76,0.35);
+    border-top: 1px solid rgba(201,168,76,0.35);
+    transform: rotate(45deg);
+  }
+  .student-info-wrapper:hover .student-card {
+    opacity: 1; pointer-events: auto;
+    transform: translateY(0);
+  }
+  .student-card-title {
+    font-family: 'Cinzel', serif; font-size: 0.65rem;
+    letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--medieval-gold); margin-bottom: 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+  }
+  .student-field {
+    display: flex; flex-direction: column;
+    margin-bottom: 0.75rem;
+  }
+  .student-field:last-child { margin-bottom: 0; }
+  .field-label {
+    font-family: 'Cinzel', serif; font-size: 0.6rem;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: rgba(201,168,76,0.5); margin-bottom: 0.15rem;
+  }
+  .field-value {
+    font-family: 'EB Garamond', serif; font-size: 0.95rem;
+    color: rgba(255,255,255,0.75); line-height: 1.3;
+  }
+/* ═══════════════════════════════════════
+   UTILITY
+═══════════════════════════════════════ */
+.u-mono {
+  font-family: var(--ff-mono);
+  font-size: .65rem; letter-spacing: .12em; text-transform: uppercase;
+}
+.u-tag {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-family: var(--ff-mono); font-size: .58rem;
+  letter-spacing: .1em; text-transform: uppercase;
+  border: 1px solid; padding: .25rem .7rem;
+  line-height: 1;
+}
+.u-tag.amber { color: var(--amber); border-color: rgba(245,158,11,.35); background: rgba(245,158,11,.06); }
+.u-tag.cyan  { color: var(--cyan);  border-color: rgba(34,211,238,.3);  background: rgba(34,211,238,.05); }
+.u-tag.rose  { color: var(--rose);  border-color: rgba(251,113,133,.3);  background: rgba(251,113,133,.05); }
+
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+.reveal.in { opacity: 1; transform: none; }
+.reveal-l { opacity: 0; transform: translateX(-24px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+.reveal-l.in { opacity: 1; transform: none; }
+
+/* ═══════════════════════════════════════
+   HERO
+═══════════════════════════════════════ */
+.hero {
+  min-height: 100vh;
+  display: grid; grid-template-rows: 1fr auto;
+  position: relative; overflow: hidden;
+  background: var(--bg);
+}
+
+/* Mesh gradient */
+.hero-mesh {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 55% 55% at 80% 20%, rgba(34,211,238,.09) 0%, transparent 60%),
+    radial-gradient(ellipse 45% 60% at 10% 80%, rgba(245,158,11,.08) 0%, transparent 55%),
+    radial-gradient(ellipse 30% 30% at 55% 55%, rgba(251,113,133,.04) 0%, transparent 50%);
+}
+
+/* Grid lines */
+.hero-grid {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 79px, rgba(255,255,255,.025) 79px, rgba(255,255,255,.025) 80px),
+    repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(255,255,255,.018) 79px, rgba(255,255,255,.018) 80px);
+}
+
+/* Thick amber vertical bar — left edge */
+.hero-bar {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 5px;
+  background: linear-gradient(180deg, var(--amber) 0%, var(--cyan) 100%);
+}
+
+.hero-inner {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 130px 3.5rem 60px 4rem;
+  position: relative; z-index: 2;
+  max-width: 1180px;
+}
+
+/* Chapter tag */
+.hero-pretag {
+  display: flex; align-items: center; gap: 1rem;
+  margin-bottom: 2rem;
+  opacity: 0; animation: fadeUp .7s .2s var(--ease) forwards;
+}
+.hero-pretag-line { width: 36px; height: 1px; background: var(--amber); }
+.hero-pretag-text { font-family: var(--ff-mono); font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; color: var(--amber); }
+
+/* BIG TITLE */
+.hero-title {
+  font-family: var(--ff-display);
+  font-size: clamp(5rem, 14vw, 13rem);
+  line-height: .88;
+  letter-spacing: -.01em;
+  margin-bottom: 2.5rem;
+}
+.hero-title .line {
+  display: block;
+  opacity: 0; animation: fadeUp .9s var(--ease) forwards;
+}
+.hero-title .line:nth-child(1) { animation-delay: .35s; color: var(--text); }
+.hero-title .line:nth-child(2) { animation-delay: .5s;  color: var(--amber); position: relative; }
+.hero-title .line:nth-child(3) { animation-delay: .65s; color: var(--text3); }
+
+/* Glitch on the amber line */
+.hero-title .line:nth-child(2)::before,
+.hero-title .line:nth-child(2)::after {
+  content: attr(data-text);
+  position: absolute; left: 0; top: 0;
+  font-family: var(--ff-display);
+  font-size: inherit; line-height: inherit;
+}
+.hero-title .line:nth-child(2)::before {
+  color: var(--cyan); clip-path: polygon(0 0, 100% 0, 100% 40%, 0 40%);
+  transform: translateX(-3px);
+  animation: glitch1 4s infinite;
+}
+.hero-title .line:nth-child(2)::after {
+  color: var(--rose); clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);
+  transform: translateX(3px);
+  animation: glitch2 4s infinite;
+}
+@keyframes glitch1 {
+  0%,90%,100% { transform: translateX(0); opacity: 0; }
+  92% { transform: translateX(-4px); opacity: .8; }
+  94% { transform: translateX(2px); opacity: 0; }
+  96% { transform: translateX(-2px); opacity: .6; }
+}
+@keyframes glitch2 {
+  0%,90%,100% { transform: translateX(0); opacity: 0; }
+  93% { transform: translateX(4px); opacity: .6; }
+  95% { transform: translateX(-2px); opacity: 0; }
+  97% { transform: translateX(2px); opacity: .4; }
+}
+
+/* Subtitle */
+.hero-sub {
+  max-width: 560px;
+  font-size: 1.05rem; font-weight: 300; font-style: italic;
+  color: var(--text2); line-height: 1.8;
+  border-left: 3px solid var(--amber);
+  padding-left: 1.5rem;
+  opacity: 0; animation: fadeUp .8s .85s var(--ease) forwards;
+}
+
+/* Meta row */
+.hero-meta {
+  display: flex; gap: 2rem; flex-wrap: wrap;
+  margin-top: 2.5rem;
+  opacity: 0; animation: fadeUp .7s 1.05s var(--ease) forwards;
+}
+.hero-meta-item { display: flex; flex-direction: column; gap: .2rem; }
+.hero-meta-item strong { font-family: var(--ff-mono); font-size: .72rem; letter-spacing: .06em; color: var(--text); }
+.hero-meta-item span  { font-family: var(--ff-mono); font-size: .58rem; letter-spacing: .08em; text-transform: uppercase; color: var(--text3); }
+
+/* Scroll strip */
+.hero-foot {
+  padding: 1.5rem 4rem;
+  position: relative; z-index: 2;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; gap: 1.2rem;
+  opacity: 0; animation: fadeIn .8s 1.5s forwards;
+}
+.hero-foot-run {
+  width: 44px; height: 1px; background: var(--border2);
+  position: relative; overflow: hidden;
+}
+.hero-foot-run::after {
+  content: ''; position: absolute; left: -100%; top: 0;
+  width: 100%; height: 1px; background: var(--amber);
+  animation: run 1.4s 1.8s infinite;
+}
+.hero-foot-txt { font-family: var(--ff-mono); font-size: .56rem; letter-spacing: .18em; text-transform: uppercase; color: var(--text3); }
+
+/* ═══════════════════════════════════════
+   SECTION SHELL
+═══════════════════════════════════════ */
+.sec { padding: 96px 4rem; max-width: 1180px; margin: 0 auto; }
+.sec-full { padding: 96px 0; }
+.sec-full .sec { padding-top: 0; padding-bottom: 0; }
+
+/* ─── Chapter marker ─── */
+.ch-mark {
+  display: flex; align-items: center; gap: 1rem;
+  margin-bottom: 3rem;
+}
+.ch-num {
+  font-family: var(--ff-mono); font-size: .6rem;
+  letter-spacing: .18em; text-transform: uppercase;
+  color: var(--amber); border: 1px solid rgba(245,158,11,.3);
+  background: rgba(245,158,11,.06);
+  padding: .35rem .9rem; flex-shrink: 0;
+}
+.ch-line { flex: 1; height: 1px; background: var(--border); }
+
+/* ─── Section title ─── */
+h2.stitle {
+  font-family: var(--ff-display);
+  font-size: clamp(2.8rem, 5.5vw, 5rem);
+  line-height: .92; letter-spacing: .01em;
+  color: var(--text); margin-bottom: 1.2rem;
+}
+h2.stitle em { color: var(--amber); font-style: normal; }
+h2.stitle .cyan-txt { color: var(--cyan); }
+
+h3.sh { font-family: var(--ff-display); font-size: 1.6rem; letter-spacing: .03em; color: var(--cyan); margin: 2.8rem 0 .6rem; }
+h4.ssh {
+  font-family: var(--ff-mono); font-size: .68rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--amber); margin: 2rem 0 .6rem;
+  padding-left: 1rem; border-left: 3px solid var(--amber);
+}
+
+p { font-size: .97rem; color: var(--text2); line-height: 1.82; margin-bottom: 1.1rem; max-width: 72ch; }
+p strong { color: var(--text); font-weight: 600; }
+p em { color: var(--cyan); font-style: italic; }
+
+/* ═══════════════════════════════════════
+   VIDEO REFERENCE
+═══════════════════════════════════════ */
+.video-sec { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 64px 4rem; }
+.video-inner { max-width: 860px; margin: 0 auto; }
+.video-embed {
+  position: relative; padding-bottom: 56.25%;
+  border: 1px solid rgba(34,211,238,.2);
+  box-shadow: 0 0 60px rgba(34,211,238,.07), 0 0 0 1px rgba(34,211,238,.06);
+  overflow: hidden;
+  margin-top: 2rem;
+}
+.video-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+.video-cap { font-family: var(--ff-mono); font-size: .55rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text3); margin-top: .7rem; text-align: right; }
+
+/* ═══════════════════════════════════════
+   TESIS BOX
+═══════════════════════════════════════ */
+.tesis {
+  margin: 4rem 0;
+  padding: 3rem 3rem 3rem 3.5rem;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--amber);
+  position: relative; overflow: hidden;
+}
+.tesis::before {
+  content: '"';
+  font-family: var(--ff-display);
+  font-size: 22rem; line-height: .7;
+  color: rgba(245,158,11,.04);
+  position: absolute; top: -2rem; left: -.5rem;
+  pointer-events: none; user-select: none;
+}
+.tesis-lbl { font-family: var(--ff-mono); font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; color: var(--amber); margin-bottom: 1.4rem; }
+.tesis-q {
+  font-family: var(--ff-body);
+  font-size: 1.2rem; font-style: italic; font-weight: 400;
+  line-height: 1.72; color: var(--text);
+  max-width: 80ch; border: none;
+}
+.tesis-note {
+  margin-top: 1.6rem; padding-top: 1.4rem;
+  border-top: 1px solid var(--border);
+  font-size: .88rem; color: var(--text2);
+  max-width: 72ch; font-style: normal;
+}
+
+/* ═══════════════════════════════════════
+   INTRO GRID
+═══════════════════════════════════════ */
+.intro-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-top: 3rem; }
+@media(max-width:768px){ .intro-cols { grid-template-columns: 1fr; gap: 2rem; } }
+
+/* ═══════════════════════════════════════
+   AVANCES — TABS
+═══════════════════════════════════════ */
+.sec-avances { background: var(--bg2); }
+
+.tabs-shell {
+  margin-top: 3rem;
+  border: 1px solid var(--border2);
+}
+.tab-nav {
+  display: flex; overflow-x: auto; scrollbar-width: none;
+  border-bottom: 1px solid var(--border2);
+  background: var(--bg3);
+}
+.tab-btn {
+  display: flex; flex-direction: column; align-items: center; gap: .3rem;
+  flex: 1; min-width: 120px;
+  padding: 1.2rem 1rem;
+  background: none; border: none; border-right: 1px solid var(--border);
+  cursor: pointer; transition: background .2s;
+  position: relative;
+}
+.tab-btn:last-child { border-right: none; }
+.tab-btn::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+  height: 2px; background: var(--amber);
+  transform: scaleX(0); transition: transform .3s var(--ease);
+}
+.tab-btn:hover, .tab-btn.on { background: rgba(245,158,11,.05); }
+.tab-btn.on::after { transform: scaleX(1); }
+.tab-btn .ti { font-size: 1.3rem; line-height: 1; }
+.tab-btn .tl { font-family: var(--ff-mono); font-size: .52rem; letter-spacing: .08em; text-transform: uppercase; color: var(--text3); transition: color .2s; text-align: center; }
+.tab-btn .tn { font-family: var(--ff-mono); font-size: .6rem; color: var(--amber); opacity: .5; transition: opacity .2s; }
+.tab-btn.on .tl { color: var(--text); }
+.tab-btn.on .tn { opacity: 1; }
+
+.tab-panels { min-height: 320px; }
+.tab-panel { display: none; grid-template-columns: 1.5fr 1fr; animation: pIn .3s var(--ease); }
+.tab-panel.on { display: grid; }
+@media(max-width:700px){ .tab-panel { grid-template-columns: 1fr; } }
+
+.tp-left { padding: 2.5rem; border-right: 1px solid var(--border); }
+.tp-right { padding: 2rem 2rem 2rem; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,.01); }
+
+.tp-icon { font-size: 5.5rem; line-height: 1; display: block; text-align: center; margin-bottom: 1.5rem; filter: drop-shadow(0 0 28px rgba(34,211,238,.25)); }
+.tp-title { font-family: var(--ff-display); font-size: 2rem; letter-spacing: .03em; color: var(--text); margin-bottom: 1rem; line-height: 1; }
+
+.tp-stats { display: flex; gap: 1.5rem; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+.stat-n { font-family: var(--ff-mono); font-size: .85rem; font-weight: 700; color: var(--cyan); }
+.stat-l { font-family: var(--ff-mono); font-size: .58rem; letter-spacing: .06em; color: var(--text3); line-height: 1.3; margin-top: .2rem; }
+
+.tp-tags { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; }
+
+/* ═══════════════════════════════════════
+   PARADIGM SHIFTS
+═══════════════════════════════════════ */
+.shifts { display: flex; flex-direction: column; gap: 0; margin-top: 3rem; }
+.shift {
+  display: grid; grid-template-columns: 1fr 48px 1fr;
+  align-items: center; gap: 0;
+  padding: 2.2rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.shift:last-child { border-bottom: none; }
+@media(max-width:640px){ .shift { grid-template-columns: 1fr; } .shift-mid { display: none; } .shift-a { padding-left: 0; } }
+
+.shift-b { text-align: right; padding-right: 2rem; }
+.shift-a { padding-left: 2rem; }
+.sh-lbl { font-family: var(--ff-mono); font-size: .56rem; letter-spacing: .14em; text-transform: uppercase; color: var(--text3); margin-bottom: .35rem; }
+.shift-b .sh-lbl { text-align: right; }
+.sh-title { font-family: var(--ff-display); font-size: 1.4rem; letter-spacing: .03em; margin-bottom: .4rem; }
+.shift-b .sh-title { color: var(--text2); }
+.shift-a .sh-title { color: var(--cyan); }
+.sh-desc { font-size: .88rem; color: var(--text3); line-height: 1.65; }
+.shift-b .sh-desc { text-align: right; }
+
+.shift-mid {
+  display: flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; margin: 0 auto;
+  background: var(--amber); color: var(--bg); font-size: .85rem;
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+
+/* ═══════════════════════════════════════
+   COGNITIVE SECTION
+═══════════════════════════════════════ */
+.sec-cogn { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+.brain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; margin-top: 3rem; background: var(--border); border: 1px solid var(--border); }
+@media(max-width:700px){ .brain-grid { grid-template-columns: 1fr; } }
+.brain-card {
+  background: var(--bg2); padding: 2.2rem;
+  position: relative; overflow: hidden;
+  transition: background .25s;
+}
+.brain-card:hover { background: var(--bg3); }
+.brain-card::before {
+  content: attr(data-n);
+  font-family: var(--ff-display); font-size: 8rem; line-height: .9;
+  color: rgba(245,158,11,.06);
+  position: absolute; top: -.5rem; right: .5rem;
+  pointer-events: none; user-select: none;
+}
+.brain-card-title { font-family: var(--ff-display); font-size: 1.5rem; letter-spacing: .03em; color: var(--amber-l); margin-bottom: .8rem; line-height: 1; }
+.warn { display: inline-block; font-family: var(--ff-mono); font-size: .55rem; letter-spacing: .1em; text-transform: uppercase; background: rgba(251,113,133,.12); color: var(--rose); border: 1px solid rgba(251,113,133,.3); padding: .2rem .6rem; margin-bottom: .8rem; }
+
+/* ═══════════════════════════════════════
+   PROS/CONS
+═══════════════════════════════════════ */
+.pc-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-top: 3rem; background: var(--border); border: 1px solid var(--border); }
+@media(max-width:640px){ .pc-wrap { grid-template-columns: 1fr; } }
+.pc-pros { background: var(--bg); }
+.pc-cons { background: var(--bg); }
+
+.pc-head {
+  display: flex; align-items: center; gap: .8rem;
+  padding: 1.4rem 2rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg3);
+}
+.pc-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.pc-pros .pc-dot { background: var(--cyan); }
+.pc-cons .pc-dot { background: var(--rose); }
+.pc-head-title { font-family: var(--ff-display); font-size: 1.5rem; letter-spacing: .04em; color: var(--text); }
+
+.pc-list { padding: 1rem 2rem 2rem; }
+.pc-item {
+  display: flex; gap: .9rem;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.pc-item:last-child { border-bottom: none; }
+.pc-item-icon { font-size: 1rem; flex-shrink: 0; margin-top: .1rem; }
+.pc-item strong { display: block; font-size: .92rem; color: var(--text); margin-bottom: .25rem; }
+.pc-item-body { font-size: .88rem; color: var(--text3); line-height: 1.6; }
+
+/* ═══════════════════════════════════════
+   TABLES
+═══════════════════════════════════════ */
+.sec-tables { background: var(--bg2); border-top: 1px solid var(--border); }
+
+.tbl-wrap {
+  margin: 3rem 0;
+  border: 1px solid var(--border2);
+  overflow: hidden;
+}
+.tbl-label {
+  padding: .9rem 1.6rem;
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border2);
+  font-family: var(--ff-mono); font-size: .6rem; letter-spacing: .15em; text-transform: uppercase; color: var(--amber);
+  display: flex; align-items: center; gap: .8rem;
+}
+.tbl-badges { display: flex; gap: .6rem; margin-left: auto; }
+
+table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+thead tr { background: rgba(34,211,238,.05); }
+thead th {
+  padding: .9rem 1.4rem;
+  font-family: var(--ff-mono); font-size: .6rem; letter-spacing: .1em; text-transform: uppercase; font-weight: 400;
+  text-align: left; border-bottom: 1px solid var(--border2); white-space: nowrap;
+}
+thead th:first-child { color: var(--amber); width: 18%; }
+thead th:nth-child(2) { color: var(--text3); }
+thead th:nth-child(3) { color: var(--cyan); }
+tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
+tbody tr:hover { background: rgba(255,255,255,.02); }
+td { padding: .9rem 1.4rem; vertical-align: top; line-height: 1.65; color: var(--text2); }
+td:first-child { font-family: var(--ff-mono); font-size: .65rem; letter-spacing: .06em; color: var(--amber-l); font-weight: 700; }
+td:nth-child(2) { color: var(--text3); border-right: 1px solid var(--border); }
+td:nth-child(3) { color: rgba(125,223,247,.8); }
+
+/* ═══════════════════════════════════════
+   CRITICAL ANALYSIS
+═══════════════════════════════════════ */
+.crit-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; margin-top: 3rem; background: var(--border); border: 1px solid var(--border); }
+@media(max-width:700px){ .crit-grid { grid-template-columns: 1fr; } }
+.crit-card {
+  background: var(--bg); padding: 2.5rem 2rem;
+  position: relative; overflow: hidden;
+  transition: background .25s;
+}
+.crit-card:hover { background: var(--bg3); }
+.crit-big {
+  font-family: var(--ff-display); font-size: 7rem; line-height: .85;
+  color: rgba(245,158,11,.07); position: absolute; top: -.3rem; right: .4rem;
+  pointer-events: none; user-select: none;
+}
+.crit-tag { font-family: var(--ff-mono); font-size: .55rem; letter-spacing: .14em; text-transform: uppercase; color: var(--amber); margin-bottom: .9rem; }
+.crit-title { font-family: var(--ff-display); font-size: 1.45rem; letter-spacing: .03em; color: var(--text); margin-bottom: .9rem; line-height: 1.05; }
+.crit-body { font-size: .88rem; color: var(--text3); line-height: 1.7; }
+
+/* ═══════════════════════════════════════
+   CONCLUSION
+═══════════════════════════════════════ */
+.sec-concl { background: var(--bg2); border-top: 1px solid var(--border); }
+.concl-q-list { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 3rem; }
+.concl-q {
+  display: flex; gap: 2rem;
+  padding: 2rem;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--amber);
+  background: var(--bg);
+  transition: background .25s;
+}
+.concl-q:hover { background: var(--bg3); }
+.concl-q-n {
+  font-family: var(--ff-display); font-size: 3.5rem; color: var(--amber);
+  line-height: .9; flex-shrink: 0; width: 44px;
+}
+.concl-q-title { font-family: var(--ff-display); font-size: 1.35rem; letter-spacing: .03em; color: var(--cyan); margin-bottom: .5rem; line-height: 1; }
+
+.final-box {
+  margin-top: 4rem; padding: 3.5rem;
+  border: 1px solid var(--border2);
+  background: linear-gradient(135deg, rgba(245,158,11,.06), rgba(34,211,238,.04));
+  text-align: center;
+}
+.final-box p {
+  font-family: var(--ff-display); font-size: clamp(1.4rem,3vw,2.2rem);
+  letter-spacing: .02em; line-height: 1.3;
+  color: var(--text); max-width: 70ch; margin: 0 auto;
+}
+.final-box p em { color: var(--amber); font-style: normal; }
+
+/* ═══════════════════════════════════════
+   REFERENCES
+═══════════════════════════════════════ */
+.ref-item {
+  display: flex; gap: 1.2rem;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: .87rem; line-height: 1.7; color: var(--text3);
+}
+.ref-n { font-family: var(--ff-mono); font-size: .58rem; color: var(--amber); flex-shrink: 0; padding-top: .25rem; width: 28px; }
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+footer {
+  background: var(--bg); border-top: 1px solid var(--border);
+  padding: 2rem 4rem;
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+  font-family: var(--ff-mono); font-size: .56rem; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--text3);
+}
+footer span { color: var(--amber); }
+
+/* ═══════════════════════════════════════
+   KEYFRAMES
+═══════════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; } to { opacity: 1; }
+}
+@keyframes run {
+  0%   { left: -100%; }
+  100% { left:  100%; }
+}
+@keyframes pIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Stagger delays */
+.reveal:nth-child(1) { transition-delay: .05s; }
+.reveal:nth-child(2) { transition-delay: .12s; }
+.reveal:nth-child(3) { transition-delay: .19s; }
+.reveal:nth-child(4) { transition-delay: .26s; }
+.reveal:nth-child(5) { transition-delay: .33s; }
+.reveal-l:nth-child(1) { transition-delay: .05s; }
+.reveal-l:nth-child(2) { transition-delay: .12s; }
+.reveal-l:nth-child(3) { transition-delay: .19s; }
+.reveal-l:nth-child(4) { transition-delay: .26s; }
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- ── NAV ─────────────────────────────── -->
+<nav id="nav">
+    <div class="student-info-wrapper">
+    <span class="nav-brand student-trigger">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle; margin-right:6px; opacity:0.7"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Información del Estudiante
+    </span>
+    <div class="student-card">
+      <div class="student-card-title">Datos del Estudiante</div>
+      <div class="student-field">
+        <span class="field-label">Nombre</span>
+        <span class="field-value">Valenzuela Ayala Jesus イエス</span>
+      </div>
+      <div class="student-field">
+        <span class="field-label">Grado y Grupo</span>
+        <span class="field-value">6CPGM</span>
+      </div>
+      <div class="student-field">
+        <span class="field-label">Materia</span>
+        <span class="field-value">Conciencia histórica 3</span>
+      </div>
+      <div class="student-field">
+        <span class="field-label">Profesor</span>
+        <span class="field-value">carlos urbina hernandez</span>
+      </div>
+      <div class="student-field">
+        <span class="field-label">Actividad</span>
+        <span class="field-value">Edad Media a diferencia de la edad Moderna.</span>
+      </div>
+    </div>
+  </div>
+  <div class="nav-logo">ERA DIGITAL</div>
+  <ul class="nav-links">
+    <li><a href="#video-ref">Video</a></li>
+    <li><a href="#intro">Intro</a></li>
+    <li><a href="#avances">Avances</a></li>
+    <li><a href="#paradigma">Paradigma</a></li>
+    <li><a href="#cognitivo">Cognitivo</a></li>
+    <li><a href="#ventajas">Ventajas</a></li>
+    <li><a href="#tablas">Tablas</a></li>
+    <li><a href="#critico">Crítico</a></li>
+    <li><a href="#conclusion">Conclusión</a></li>
+    <li><a href="#refs">Referencias</a></li>
+  </ul>
+  <div class="nav-bar" id="navBar"></div>
+</nav>
+
+<!-- ══════════════════════════════════════
+     HERO
+══════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-mesh"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-bar"></div>
+
+  <div class="hero-inner">
+    <div class="hero-pretag">
+      <div class="hero-pretag-line"></div>
+      <div class="hero-pretag-text">Investigación Académica · Educación &amp; Tecnología</div>
+    </div>
+
+    <h1 class="hero-title">
+      <span class="line" data-text="ERA">ERA</span>
+      <span class="line" data-text="DIGITAL">DIGITAL</span>
+      <span class="line" data-text="EDUCACIÓN">EDUCACIÓN</span>
+    </h1>
+
+    <p class="hero-sub">
+      La integración de tecnologías digitales e inteligencia artificial no solo optimiza el aprendizaje, sino que modifica los procesos cognitivos de las nuevas generaciones, generando una transformación estructural del paradigma educativo tradicional.
+    </p>
+
+    <div class="hero-meta">
+      <div class="hero-meta-item"><strong>8 Capítulos</strong><span>Estructura completa</span></div>
+      <div class="hero-meta-item"><strong>3 Tablas</strong><span>Análisis comparativo</span></div>
+      <div class="hero-meta-item"><strong>Enfoque Crítico</strong><span>Pedagógico y cognitivo</span></div>
+    </div>
+  </div>
+
+  <div class="hero-foot">
+    <div class="hero-foot-run"></div>
+    <span class="hero-foot-txt">Scroll para explorar</span>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     VIDEO REFERENCIA
+══════════════════════════════════════ -->
+<section id="video-ref" class="video-sec">
+  <div class="video-inner">
+    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;">
+      <span class="u-tag amber">📎 Material de referencia</span>
+      <div style="flex:1;height:1px;background:var(--border);"></div>
+    </div>
+    <p style="max-width:55ch;">El siguiente video se anexa como referencia para el análisis y posible aplicación en el contexto de la era digital en la educación.</p>
+    <div class="video-embed">
+      <iframe src="https://www.youtube.com/embed/xgUSSygbrbo" title="Video de referencia – Era Digital en la Educación" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <p class="video-cap">Fuente externa · Solo referencia analítica · youtu.be/xgUSSygbrbo</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     INTRODUCCIÓN
+══════════════════════════════════════ -->
+<section id="intro">
+<div class="sec">
+  <div class="ch-mark reveal">
+    <div class="ch-num">Capítulo 01</div>
+    <div class="ch-line"></div>
+  </div>
+  <h2 class="stitle reveal">Introducción: <em>El punto de inflexión</em></h2>
+
+  <div class="intro-cols">
+    <div>
+      <h4 class="ssh">1.1 La era digital en la educación</h4>
+      <p>La denominada "Cuarta Revolución Industrial" no ha traído únicamente máquinas más veloces; ha reconfigurado la estructura de la realidad educativa. La digitalización convierte el aprendizaje en un proceso no lineal, multimodal y permanente —lo que Burbules (2014) denomina <em>lifelong learning</em>—, donde la información habita en la nube y la escuela ya no es el único espacio de acceso al conocimiento.</p>
+      <p>Este fenómeno implica una ruptura con la concepción clásica del aula como espacio cerrado y del maestro como custodio del saber. Hoy el conocimiento es ubicuo, instantáneo y fragmentado.</p>
+
+      <h4 class="ssh">1.2 El paradigma educativo tradicional</h4>
+      <p>El modelo prusiano —heredado del siglo XIX— se cimentaba en la estandarización, la disciplina y la jerarquía. Su objetivo era claro: producir ciudadanos aptos para la industria. El éxito se medía por la capacidad de replicar datos exactos y obedecer rutinas fijas. El tiempo se fragmentaba en bloques rígidos, el currículo era homogéneo y la evaluación, sumativa.</p>
+    </div>
+    <div>
+      <h4 class="ssh">1.3 Planteamiento del problema</h4>
+      <p>La transición hacia lo digital ha sido más <strong>reactiva que planificada</strong>. Al introducir inteligencia artificial y dispositivos móviles en el aula, surge una tensión fundamental: mientras las herramientas prometen potenciar la mente, las evidencias neuroeducativas sugieren una fragmentación de la atención y una posible pérdida de la capacidad de lectura profunda (Carr, 2010).</p>
+      <p>La pregunta central no es si la tecnología mejora la educación, sino <em>bajo qué condiciones</em> lo hace, y cuál es el costo cognitivo de su uso sin mediación pedagógica crítica.</p>
+
+      <h4 class="ssh">1.4 Objetivo de la investigación</h4>
+      <p>Explorar la transformación estructural del modelo educativo, analizando cómo las herramientas de IA y Big Data modifican no solo el <em>qué</em> se enseña, sino el <em>cómo</em> el cerebro procesa la realidad, identificando los riesgos de la externalización cognitiva para las nuevas generaciones.</p>
+    </div>
+  </div>
+
+  <div class="tesis reveal">
+    <div class="tesis-lbl">Tesis Principal</div>
+    <p class="tesis-q">Si bien la tecnología digital rompe las barreras de acceso y permite una personalización sin precedentes del aprendizaje, su implementación sin un marco crítico amenaza con convertir la educación en un proceso de consumo pasivo, donde la productividad algorítmica sustituye al esfuerzo intelectual profundo, alterando la estructura misma del pensamiento humano.</p>
+    <p class="tesis-note"><strong style="color:var(--text)">Enfoque crítico:</strong> Aunque la tecnología digital optimiza el acceso y la productividad educativa, su uso excesivo podría reducir el esfuerzo cognitivo profundo, evidenciando que el cambio de paradigma implica tanto una evolución pedagógica como un reto para el desarrollo intelectual humano.</p>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════════════════════════════
+     AVANCES TECNOLÓGICOS
+══════════════════════════════════════ -->
+<section id="avances" class="sec-full sec-avances">
+<div class="sec">
+  <div class="ch-mark reveal">
+    <div class="ch-num">Capítulo 02</div>
+    <div class="ch-line"></div>
+  </div>
+  <h2 class="stitle reveal">Avances tecnológicos <em>en la educación digital</em></h2>
+  <p style="max-width:62ch;margin-bottom:0;">Las tecnologías que están redefiniendo el ecosistema educativo no son meras herramientas; representan una nueva infraestructura del conocimiento que altera relaciones, roles y procesos a nivel global.</p>
+
+  <div class="tabs-shell reveal">
+    <div class="tab-nav">
+      <button class="tab-btn on" data-tab="0"><span class="ti">🖥</span><span class="tl">Plataformas LMS</span><span class="tn">2.1</span></button>
+      <button class="tab-btn" data-tab="1"><span class="ti">🤖</span><span class="tl">IA Generativa</span><span class="tn">2.2</span></button>
+      <button class="tab-btn" data-tab="2"><span class="ti">📊</span><span class="tl">Aprendizaje Adaptativo</span><span class="tn">2.3</span></button>
+      <button class="tab-btn" data-tab="3"><span class="ti">🥽</span><span class="tl">Realidad Virtual</span><span class="tn">2.4</span></button>
+      <button class="tab-btn" data-tab="4"><span class="ti">⚡</span><span class="tl">Analítica Educativa</span><span class="tn">2.5</span></button>
+    </div>
+    <div class="tab-panels">
+
+      <div class="tab-panel on" data-p="0">
+        <div class="tp-left">
+          <span class="u-tag amber" style="margin-bottom:1rem;display:inline-flex;">2.1 · LMS</span>
+          <div class="tp-title">Plataformas Virtuales de Aprendizaje</div>
+          <p>Sistemas como Moodle, Canvas o Blackboard integran <strong>analítica de aprendizaje</strong> para detectar patrones de estudio y predecir el rendimiento académico mediante modelos estadísticos. Ya no son repositorios de PDF: son ecosistemas vivos.</p>
+          <p>Permiten educación asíncrona, evaluación automatizada, comunicación docente-alumno sin restricciones geográficas y seguimiento granular del progreso individual de cada estudiante (Area-Moreira, 2021).</p>
+          <div class="tp-stats">
+            <div><div class="stat-n">+900M</div><div class="stat-l">usuarios globales</div></div>
+            <div><div class="stat-n">24/7</div><div class="stat-l">acceso continuo</div></div>
+            <div><div class="stat-n">85%</div><div class="stat-l">universidades top</div></div>
+          </div>
+        </div>
+        <div class="tp-right">
+          <div>
+            <span class="tp-icon">🖥</span>
+            <div class="tp-tags"><span class="u-tag cyan">Moodle</span><span class="u-tag cyan">Canvas</span><span class="u-tag cyan">Blackboard</span><span class="u-tag cyan">Analytics</span><span class="u-tag amber">Asíncrono</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" data-p="1">
+        <div class="tp-left">
+          <span class="u-tag amber" style="margin-bottom:1rem;display:inline-flex;">2.2 · GenIA</span>
+          <div class="tp-title">Inteligencia Artificial Generativa</div>
+          <p>Los modelos de lenguaje de gran escala (LLM) han pasado de ser buscadores a ser <strong>co-creadores del conocimiento</strong>. Actúan como tutores socráticos capaces de debatir, corregir código en tiempo real y resumir literatura científica.</p>
+          <p>Sin embargo, su capacidad de generar respuestas plausibles sin que el estudiante realice el razonamiento propio constituye el mayor reto pedagógico actual (García-Peñalvo &amp; Moreno-Ger, 2023).</p>
+          <div class="tp-stats">
+            <div><div class="stat-n">GPT-4</div><div class="stat-l">tutor interactivo</div></div>
+            <div><div class="stat-n">100M+</div><div class="stat-l">estudiantes asistidos</div></div>
+            <div><div class="stat-n" style="color:var(--rose)">⚠</div><div class="stat-l">riesgo cognitivo</div></div>
+          </div>
+        </div>
+        <div class="tp-right">
+          <div>
+            <span class="tp-icon">🤖</span>
+            <div class="tp-tags"><span class="u-tag cyan">ChatGPT</span><span class="u-tag cyan">Claude</span><span class="u-tag cyan">LLMs</span><span class="u-tag amber">Tutor socrático</span><span class="u-tag rose">Riesgo crítico</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" data-p="2">
+        <div class="tp-left">
+          <span class="u-tag amber" style="margin-bottom:1rem;display:inline-flex;">2.3 · Big Data</span>
+          <div class="tp-title">Aprendizaje Adaptativo Basado en Datos</div>
+          <p>Mediante <strong>Machine Learning</strong>, las plataformas detectan si un estudiante flaquea en un concepto y reconfiguran automáticamente la ruta de aprendizaje. Es la industrialización de la tutoría privada. Plataformas como Khan Academy o Duolingo usan estos algoritmos para personalizar la experiencia de millones de usuarios de forma simultánea (Siemens, 2004).</p>
+          <div class="tp-stats">
+            <div><div class="stat-n">150M</div><div class="stat-l">Khan Academy users</div></div>
+            <div><div class="stat-n">ML</div><div class="stat-l">rutas personalizadas</div></div>
+            <div><div class="stat-n">∞</div><div class="stat-l">escalabilidad</div></div>
+          </div>
+        </div>
+        <div class="tp-right">
+          <div>
+            <span class="tp-icon">📊</span>
+            <div class="tp-tags"><span class="u-tag cyan">Machine Learning</span><span class="u-tag cyan">Big Data</span><span class="u-tag amber">Khan Academy</span><span class="u-tag amber">Duolingo</span><span class="u-tag cyan">Predictivo</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" data-p="3">
+        <div class="tp-left">
+          <span class="u-tag amber" style="margin-bottom:1rem;display:inline-flex;">2.4 · RV/RA</span>
+          <div class="tp-title">Realidad Virtual y Aumentada</div>
+          <p>La RV/RA permite simular <strong>entornos inmersivos</strong> de aprendizaje: desde disecciones virtuales en biología hasta reconstrucciones históricas tridimensionales. Estudios del MIT Media Lab reportan retención del 75% frente al 5% de clases magistrales.</p>
+          <div class="tp-stats">
+            <div><div class="stat-n">75%</div><div class="stat-l">retención con RV (MIT)</div></div>
+            <div><div class="stat-n">3D</div><div class="stat-l">entornos inmersivos</div></div>
+            <div><div class="stat-n">↑</div><div class="stat-l">crecimiento acelerado</div></div>
+          </div>
+        </div>
+        <div class="tp-right">
+          <div>
+            <span class="tp-icon">🥽</span>
+            <div class="tp-tags"><span class="u-tag cyan">Meta Quest</span><span class="u-tag cyan">HoloLens</span><span class="u-tag amber">Simulaciones</span><span class="u-tag amber">Inmersión</span><span class="u-tag cyan">Labs virtuales</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" data-p="4">
+        <div class="tp-left">
+          <span class="u-tag amber" style="margin-bottom:1rem;display:inline-flex;">2.5 · Analytics</span>
+          <div class="tp-title">Automatización y Analítica Educativa</div>
+          <p>Los sistemas de <em>Learning Analytics</em> recopilan datos de comportamiento, tiempos de respuesta y patrones de error para generar <strong>perfiles de aprendizaje</strong> detallados, permitiendo intervenciones tempranas en estudiantes en riesgo de abandono. Sin embargo, plantea interrogantes éticas sobre privacidad (Selwyn, 2020).</p>
+          <div class="tp-stats">
+            <div><div class="stat-n">Early</div><div class="stat-l">detección abandono</div></div>
+            <div><div class="stat-n">Data</div><div class="stat-l">perfiles detallados</div></div>
+            <div><div class="stat-n" style="color:var(--rose)">⚠</div><div class="stat-l">ética &amp; privacidad</div></div>
+          </div>
+        </div>
+        <div class="tp-right">
+          <div>
+            <span class="tp-icon">⚡</span>
+            <div class="tp-tags"><span class="u-tag cyan">Learning Analytics</span><span class="u-tag amber">Dashboards</span><span class="u-tag amber">Predicción</span><span class="u-tag rose">Privacidad</span><span class="u-tag cyan">Intervención</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════════════════════════════
+     PARADIGMA
+══════════════════════════════════════ -->
+<section id="paradigma">
+<div class="sec">
+  <div class="ch-mark reveal">
+    <div class="ch-num">Capítulo 03</div>
+    <div class="ch-line"></div>
+  </div>
+  <h2 class="stitle reveal">Transformación del <em>paradigma tradicional</em></h2>
+  <p style="max-width:62ch;">El núcleo de este cambio reside en la reconfiguración de los roles, espacios y objetivos del acto educativo. No se trata solo de usar nuevas herramientas: es un cambio profundo en la epistemología del aprendizaje.</p>
+
+  <div class="shifts">
+    <div class="shift reveal-l">
+      <div class="shift-b"><div class="sh-lbl">Antes</div><div class="sh-title">El sabio en el estrado</div><p class="sh-desc">Poseedor y transmisor del conocimiento. Su autoridad era incuestionable y el currículo, inmutable.</p></div>
+      <div class="shift-mid">→</div>
+      <div class="shift-a"><div class="sh-lbl">Ahora</div><div class="sh-title">Arquitecto de experiencias</div><p class="sh-desc">Facilita, orienta y contextualiza. Enseña a filtrar la desinformación y conectar conceptos interdisciplinarios.</p></div>
+    </div>
+    <div class="shift reveal-l">
+      <div class="shift-b"><div class="sh-lbl">Antes</div><div class="sh-title">Receptor pasivo</div><p class="sh-desc">Consumidor de información. La obediencia intelectual y la repetición exacta eran las virtudes más valoradas.</p></div>
+      <div class="shift-mid">→</div>
+      <div class="shift-a"><div class="sh-lbl">Ahora</div><div class="sh-title">Prosumidor activo</div><p class="sh-desc">Produce y crea: videos, software, blogs y proyectos colaborativos globales. Asume la responsabilidad de su propio ritmo.</p></div>
+    </div>
+    <div class="shift reveal-l">
+      <div class="shift-b"><div class="sh-lbl">Antes</div><div class="sh-title">Educación local y cerrada</div><p class="sh-desc">El aula física era la única posibilidad. Un estudiante rural tenía acceso radicalmente desigual.</p></div>
+      <div class="shift-mid">→</div>
+      <div class="shift-a"><div class="sh-lbl">Ahora</div><div class="sh-title">Educación global y distribuida</div><p class="sh-desc">Deslocalización radical. Un alumno en zona rural puede acceder a clases de MIT, Harvard o Coursera.</p></div>
+    </div>
+    <div class="shift reveal-l">
+      <div class="shift-b"><div class="sh-lbl">Antes</div><div class="sh-title">Memorización y reproducción</div><p class="sh-desc">El éxito académico se definía por la fidelidad al texto y la capacidad de recuperar información exacta.</p></div>
+      <div class="shift-mid">→</div>
+      <div class="shift-a"><div class="sh-lbl">Ahora</div><div class="sh-title">Pensamiento crítico y gestión</div><p class="sh-desc">Importa más saber dónde y cómo encontrar, evaluar y sintetizar información que memorizarla.</p></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════════════════════════════
+     COGNITIVO
+══════════════════════════════════════ -->
+<section id="cognitivo" class="sec-full sec-cogn">
+<div class="sec">
+  <div class="ch-mark reveal">
+    <div class="ch-num" style="color:var(--amber-l);border-color:rgba(252,211,77,.3);background:rgba(252,211,77,.06);">Capítulo 04</div>
+    <div class="ch-line"></div>
+  </div>
+  <h2 class="stitle reveal">Impacto cognitivo <em>en las nuevas generaciones</em></h2>
+  <p>El cambio digital no opera solo sobre los métodos de enseñanza: opera directamente sobre la arquitectura funcional del cerebro en desarrollo. Este es, quizás, el ámbito de mayor controversia e implicación ética.</p>
+
+  <div class="brain-grid">
+    <div class="brain-card reveal" data-n="4.1">
+      <div class="brain-card-title">Cambios en la atención y procesamiento</div>
+      <p>El cerebro humano está adaptando su sistema visual para el <strong>escaneo rápido</strong>. Los estudios de seguimiento ocular muestran que los nativos digitales leen siguiendo un patrón en "F". Esto optimiza la búsqueda de datos pero penaliza la comprensión de textos complejos y la empatía literaria (Carr, 2010). El <em>multitasking</em> digital no mejora la productividad; la fragmenta.</p>
+    </div>
+    <div class="brain-card reveal" data-n="4.2">
+      <div class="warn">⚠ Punto crítico</div>
+      <div class="brain-card-title">Automatización del pensamiento</div>
+      <p>La teoría de la <strong>cognición extendida</strong> (Clark &amp; Chalmers, 1998) sugiere que los dispositivos son extensiones funcionales de la mente. Al automatizar procesos, el cerebro aplica economía energética y reduce la activación de los mecanismos de consolidación en memoria a largo plazo. La pregunta crítica no es si la IA piensa por nosotros, sino si ese proceso nos impide aprender a pensar.</p>
+    </div>
+    <div class="brain-card reveal" data-n="4.3">
+      <div class="brain-card-title">Neuroplasticidad y eficiencia cerebral</div>
+      <p>Es fundamental precisar: el cerebro no "se vuelve menos inteligente", se <strong>reorganiza</strong>. La neuroplasticidad implica que las áreas dedicadas a la integración visual y la toma rápida de decisiones se fortalecen. Sin embargo, áreas asociadas a la reflexión profunda y la atención sostenida pueden mostrar menor activación. El reto pedagógico es preservar la plasticidad para ambos tipos de pensamiento (Dehaene, 2015).</p>
+    </div>
+    <div class="brain-card reveal" data-n="4.4">
+      <div class="warn">⚠ Riesgo identificado</div>
+      <div class="brain-card-title">Riesgos de dependencia tecnológica</div>
+      <p>Cuando la tecnología pasa de herramienta a prótesis cognitiva, surgen vulnerabilidades reales: incapacidad de resolver problemas simples sin conexión, ansiedad ante la desconexión (<em>nomofobia</em>) y empobrecimiento de la memoria episódica. Investigaciones en adolescentes muestran correlación entre uso excesivo de pantallas y reducción de materia gris en regiones prefrontales (Twenge, 2018).</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════════════════════════════
+     VENTAJAS Y DESVENTAJAS
+══════════════════════════════════════ -->
+<section id="ventajas">
+<div class="sec">
+  <div class="ch-mark reveal">
+    <div class="ch-num">Capítulo 05</div>
+    <div class="ch-line"></div>
+  </div>
+  <h2 class="stitle reveal">Ventajas y desventajas <em>del nuevo modelo</em></h2>
+  <p style="max-width:62ch;">Todo cambio de paradigma conlleva ganancias y costos. El análisis honesto del modelo educativo digital requiere contemplar con igual rigor sus promesas y sus riesgos reales.</p>
+
+  <div class="pc-wrap">
+    <div class="pc-pros">
+      <div class="pc-head"><div class="pc-dot"></div><div class="pc-head-title">5.1 Ventajas</div></div>
+      <div class="pc-list">
+        <div class="pc-item reveal"><div class="pc-item-icon">🌐</div><div class="pc-item-body"><strong>Democratización del acceso</strong>Un estudiante en comunidades rurales puede acceder a contenido de universidades de élite. La educación deja de ser un privilegio geográfico.</div></div>
+        <div class="pc-item reveal"><div class="pc-item-icon">🎯</div><div class="pc-item-body"><strong>Personalización masiva</strong>Los sistemas adaptativos ajustan el ritmo, el nivel y el estilo pedagógico a cada estudiante individualmente.</div></div>
+        <div class="pc-item reveal"><div class="pc-item-icon">⚡</div><div class="pc-item-body"><strong>Productividad y eficiencia</strong>La automatización de tareas repetitivas libera tiempo docente para interacciones de alto valor pedagógico.</div></div>
+        <div class="pc-item reveal"><div class="pc-item-icon">🔄</div><div class="pc-item-body"><strong>Flexibilidad espacio-temporal</strong>El aprendizaje asíncrono permite conciliar formación con trabajo, familia u otras responsabilidades.</div></div>
+        <div class="pc-item reveal"><div class="pc-item-icon">🚀</div><div class="pc-item-body"><strong>Alineación con el mercado laboral</strong>Las competencias digitales y el pensamiento computacional son habilidades demandadas que la escuela digital desarrolla de forma natural.</div></div>
+      </div>
+    </div>
+    <div class="pc-cons">
+      <div class="pc-head"><div class="pc-dot"></div><div class="pc-head-title">5.2 Desafíos</div></div>
+      <div class="pc-list">
+        <div class="pc-item reveal"><div class="pc-item-icon">⚠️</div><div class="pc-item-body"><strong>Dependencia tecnológica</strong>Incapacidad progresiva de aprender o resolver problemas sin asistencia digital. La externalización cognitiva puede empobrecer habilidades metacognitivas fundamentales.</div></div>
+        <div class="pc-item reveal"><div class="pc-item-icon">🔓</div><div class="pc-item-body"><strong>Erosión de la privacidad</strong>Las plataformas educativas recopilan datos masivos de comportamiento estudiantil con implicaciones éticas profundas.</div></div>
+        <div class="pc-item reveal"><div class="pc-item-icon">📱</div><div class="pc-item-body"><strong>Brecha digital de segundo orden</strong>La desigualdad real está en la capacidad de usar esa tecnología de forma crítica y productiva.</div></div>
+        <div class="pc-item reveal"><div class="pc-item-icon">🧠</div><div class="pc-item-body"><strong>Reducción del esfuerzo cognitivo profundo</strong>La gratificación instantánea reduce la tolerancia a la frustración intelectual necesaria para el aprendizaje complejo.</div></div>
+        <div class="pc-item reveal"><div class="pc-item-icon">💔</div><div class="pc-item-body"><strong>Deshumanización del vínculo educativo</strong>La mediación tecnológica excesiva puede empobrecer la relación docente-alumno, especialmente en edades tempranas.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════════════════════════════
+     TABLAS
+══════════════════════════════════════ -->
+<section id="tablas" class="sec-full sec-tables">
+<div class="sec">
+  <div class="ch-mark reveal">
+    <div class="ch-num">Capítulo 06</div>
+    <div class="ch-line"></div>
+  </div>
+  <h2 class="stitle reveal">Análisis comparativo: <em>antes y después</em></h2>
+  <p style="max-width:62ch;">Tres tablas sintetizan las transformaciones fundamentales en el modelo pedagógico, el tejido social y los procesos cognitivos.</p>
+
+  <div class="tbl-wrap reveal">
+    <div class="tbl-label">📊 Tabla 1 — Paradigma Educativo: Tradicional vs. Digital
+      <div class="tbl-badges"><span class="u-tag amber">● Tradicional</span><span class="u-tag cyan">● Digital</span></div>
+    </div>
+    <table>
+      <thead><tr><th>Aspecto</th><th>⬡ Paradigma Tradicional</th><th>◈ Paradigma Digital</th></tr></thead>
+      <tbody>
+        <tr><td>Rol del docente</td><td>Transmisor y autoridad única del saber. "Sabio en el estrado."</td><td>Facilitador, mediador y diseñador de experiencias de aprendizaje.</td></tr>
+        <tr><td>Rol del estudiante</td><td>Receptor pasivo. Memoriza y reproduce fielmente el contenido.</td><td>Agente activo, prosumidor. Construye, crea y colabora globalmente.</td></tr>
+        <tr><td>Fuente del saber</td><td>El libro de texto y el maestro como autoridades inapelables.</td><td>Red distribuida: académicas, colaborativas, algorítmicas.</td></tr>
+        <tr><td>Evaluación</td><td>Sumativa, estandarizada, exámenes escritos periódicos.</td><td>Continua, formativa, adaptativa. Basada en proyectos y desempeño.</td></tr>
+        <tr><td>Espacio</td><td>Aula física, cerrada, con horarios rígidos y grupos homogéneos.</td><td>Híbrido y ubicuo: escuela, hogar, dispositivo. Sin fronteras.</td></tr>
+        <tr><td>Habilidad central</td><td>Memorización precisa y obediencia a los procedimientos.</td><td>Pensamiento crítico, creatividad, colaboración y literacidad digital.</td></tr>
+        <tr><td>Ritmo</td><td>Único y uniforme para todo el grupo, definido por el currículo.</td><td>Personalizado, adaptativo, ajustado por algoritmos al perfil individual.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tbl-wrap reveal">
+    <div class="tbl-label">🌐 Tabla 2 — Evolución del Tejido Social y Tecnológico
+      <div class="tbl-badges"><span class="u-tag amber">● Industrial</span><span class="u-tag cyan">● Digital</span></div>
+    </div>
+    <table>
+      <thead><tr><th>Elemento</th><th>⬡ Sociedad Industrial (s. XIX–XX)</th><th>◈ Sociedad Digital (s. XXI)</th></tr></thead>
+      <tbody>
+        <tr><td>Recurso clave</td><td>Materia prima, energía y capital físico. La fábrica como metáfora.</td><td>Datos, información y atención humana. El algoritmo como motor.</td></tr>
+        <tr><td>Habilidad valorada</td><td>Obediencia, precisión manual y capacidad de repetición exacta.</td><td>Creatividad, adaptabilidad, resolución de problemas complejos.</td></tr>
+        <tr><td>Comunicación</td><td>Centralizada: radio, TV, libro de texto. Flujo unidireccional.</td><td>Descentralizada en red: redes sociales, nube, colaboración en tiempo real.</td></tr>
+        <tr><td>Producción de saber</td><td>Élites académicas y editoriales. Peer review cerrado y lento.</td><td>Colaborativa y abierta: wikis, preprints, open access, IA generativa.</td></tr>
+        <tr><td>Estructura del poder</td><td>Jerárquica, piramidal. La información como instrumento de poder.</td><td>Red horizontal. El acceso a datos como democratización (y vigilancia).</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tbl-wrap reveal">
+    <div class="tbl-label">🧠 Tabla 3 — Transformación Cognitiva: Antes y Ahora
+      <div class="tbl-badges"><span class="u-tag amber">● Analógico</span><span class="u-tag cyan">● Digital</span></div>
+    </div>
+    <table>
+      <thead><tr><th>Proceso mental</th><th>⬡ Antes (entorno analógico)</th><th>◈ Ahora (entorno digital)</th></tr></thead>
+      <tbody>
+        <tr><td>Adquisición</td><td>Memoria de repetición, lectura lineal profunda, construcción interna.</td><td>Curaduría de contenidos, lectura en escaneo, síntesis asistida por IA.</td></tr>
+        <tr><td>Atención</td><td>Sostenida, lineal y profunda. Alta tolerancia al aburrimiento cognitivo.</td><td>Dividida, asociativa y fragmentada. Baja tolerancia sin estímulo inmediato.</td></tr>
+        <tr><td>Validación</td><td>Autoridad del libro, el maestro y la institución académica.</td><td>Contraste entre múltiples fuentes, verificación de datos, pensamiento lateral.</td></tr>
+        <tr><td>Memoria</td><td>Central en el proceso. Almacenamiento interno y recuperación activa.</td><td>Externalizada en dispositivos. Se prioriza saber dónde buscar sobre retener.</td></tr>
+        <tr><td>Resolución de problemas</td><td>Individual, reflexiva, con períodos largos de incubación del pensamiento.</td><td>Colaborativa, rápida, apoyada en herramientas digitales. Riesgo de superficialidad.</td></tr>
+        <tr><td>Creatividad</td><td>Emergía del silencio, la contemplación y el trabajo sostenido.</td><td>Estimulada por conexión de ideas diversas, pero fragmentada por sobreestimulación.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════════════════════════════
+     ANÁLISIS CRÍTICO
+══════════════════════════════════════ -->
+<section id="critico">
+<div class="sec">
+  <div class="ch-mark reveal">
+    <div class="ch-num">Capítulo 07</div>
+    <div class="ch-line"></div>
+  </div>
+  <h2 class="stitle reveal">Análisis crítico: <em>herramienta, prótesis o sustituto</em></h2>
+  <p style="max-width:62ch;">El análisis crítico conecta todos los hilos anteriores para responder la pregunta de fondo: ¿hacia dónde nos conduce este cambio?</p>
+
+  <div class="crit-grid">
+    <div class="crit-card reveal">
+      <div class="crit-big">7.1</div>
+      <div class="crit-tag">Primer interrogante</div>
+      <div class="crit-title">¿Herramienta o sustituto cognitivo?</div>
+      <p class="crit-body">La línea entre amplificar y sustituir la inteligencia es delgada y contextual. Cuando un alumno usa la IA para generar un ensayo sin realizar el proceso de razonamiento, no hay aprendizaje, solo simulación de productividad. El problema no es la herramienta, sino la ausencia de un marco pedagógico que la convierta en andamiaje hacia la autonomía intelectual y no en atajo hacia la dependencia.</p>
+    </div>
+    <div class="crit-card reveal">
+      <div class="crit-big">7.2</div>
+      <div class="crit-tag">Segundo interrogante</div>
+      <div class="crit-title">Implicaciones éticas y sociales</div>
+      <p class="crit-body">Los algoritmos pueden heredar y amplificar sesgos raciales, de género o socioeconómicos codificados en los datos de entrenamiento, educando a nuevas generaciones bajo prejuicios invisibles. La concentración del poder en pocas plataformas tecnológicas globales plantea interrogantes sobre soberanía educativa y dependencia tecnológica de los estados.</p>
+    </div>
+    <div class="crit-card reveal">
+      <div class="crit-big">7.3</div>
+      <div class="crit-tag">Proyección futura</div>
+      <div class="crit-title">El modelo educativo del mañana</div>
+      <p class="crit-body">Caminamos hacia una educación simbiótica, donde el éxito no será saberlo todo ni delegarlo todo a la máquina, sino saber qué preguntar y cuándo el juicio humano es insustituible. El futuro exige una <strong>pedagogía de la resistencia crítica</strong>: usar la IA para llegar más lejos, pero sin perder el camino recorrido por la razón propia.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════════════════════════════
+     CONCLUSIÓN
+══════════════════════════════════════ -->
+<section id="conclusion" class="sec-full sec-concl">
+<div class="sec">
+  <div class="ch-mark reveal">
+    <div class="ch-num" style="color:var(--amber-l);border-color:rgba(252,211,77,.3);background:rgba(252,211,77,.06);">Capítulo 08</div>
+    <div class="ch-line"></div>
+  </div>
+  <h2 class="stitle reveal">Conclusión: <em>la responsabilidad del cambio</em></h2>
+  <p>Más que un cierre, esta sección es una apertura hacia la responsabilidad colectiva ante un cambio de era que ya no podemos detener, pero sí podemos orientar.</p>
+
+  <div class="concl-q-list">
+    <div class="concl-q reveal">
+      <div class="concl-q-n">1</div>
+      <div>
+        <div class="concl-q-title">¿Realmente cambió el paradigma educativo?</div>
+        <p>Sí, y de forma estructural. El paradigma educativo no ha cambiado simplemente de formato; ha cambiado de <em>naturaleza</em>. La fuente del saber, el rol de los actores y los objetivos cognitivos son radicalmente distintos. Este cambio no es reversible: la pregunta legítima no es si adoptamos lo digital, sino <em>cómo</em> lo adoptamos con responsabilidad pedagógica y ética.</p>
+      </div>
+    </div>
+    <div class="concl-q reveal">
+      <div class="concl-q-n">2</div>
+      <div>
+        <div class="concl-q-title">¿Qué implica para el futuro educativo?</div>
+        <p>Implica una bifurcación: si la tecnología se adopta sin marco crítico, aceleraremos la erosión cognitiva y la dependencia algorítmica. Si se adopta con intención pedagógica, podemos lograr la mayor democratización del conocimiento en la historia humana. Los sistemas educativos que prosperen serán aquellos que enseñen tanto a usar la IA como a prescindir de ella cuando el desarrollo humano lo requiera.</p>
+      </div>
+    </div>
+    <div class="concl-q reveal">
+      <div class="concl-q-n">3</div>
+      <div>
+        <div class="concl-q-title">¿Qué responsabilidad tiene el ser humano?</div>
+        <p>La responsabilidad es individual, institucional y política. Los docentes deben convertirse en arquitectos de esfuerzo cognitivo. Las instituciones deben regular el capitalismo de vigilancia en el aula. Y los estudiantes deben aprender que el malestar intelectual —el esfuerzo de entender algo difícil— es exactamente el territorio donde ocurre el aprendizaje real. Ningún algoritmo puede ni debe sustituirlo.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="final-box reveal">
+    <p>La verdadera innovación no consiste en llenar las aulas de pantallas, sino en preservar las capacidades humanas esenciales — la <em>curiosidad</em>, el <em>esfuerzo</em> y el <em>juicio crítico</em> — en un entorno que invita permanentemente a la ley del mínimo esfuerzo.</p>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════════════════════════════
+     REFERENCIAS
+══════════════════════════════════════ -->
+<section id="refs">
+<div class="sec">
+  <div class="ch-mark reveal">
+    <div class="ch-num">Referencias</div>
+    <div class="ch-line"></div>
+  </div>
+  <h2 class="stitle reveal" style="font-size:3rem;">Bibliografía <em>en formato APA</em></h2>
+  <p style="max-width:60ch;margin-bottom:2rem;">Fuentes primarias y secundarias consultadas en la elaboración de esta investigación.</p>
+
+  <div class="ref-item reveal"><div class="ref-n">[1]</div><div>Area-Moreira, M. (2021). <em>La educación en el mundo digital.</em> Editorial Morata.</div></div>
+  <div class="ref-item reveal"><div class="ref-n">[2]</div><div>Burbules, N. C. (2014). El aprendizaje ubicuo y el futuro de la enseñanza. <em>Encounters on Education, 13</em>, 3-14.</div></div>
+  <div class="ref-item reveal"><div class="ref-n">[3]</div><div>Carr, N. (2010). <em>¿Qué está haciendo Internet con nuestras mentes? Superficiales.</em> Taurus.</div></div>
+  <div class="ref-item reveal"><div class="ref-n">[4]</div><div>Clark, A., &amp; Chalmers, D. (1998). The extended mind. <em>Analysis, 58</em>(1), 7-19.</div></div>
+  <div class="ref-item reveal"><div class="ref-n">[5]</div><div>Dehaene, S. (2015). <em>¿Cómo aprendemos? Los cuatro pilares con los que la educación puede potenciar los talentos de nuestro cerebro.</em> Siglo XXI Editores.</div></div>
+  <div class="ref-item reveal"><div class="ref-n">[6]</div><div>García-Peñalvo, F. J., &amp; Moreno-Ger, P. (2023). Inteligencia artificial generativa en la educación. <em>Education in the Knowledge Society (EKS), 24</em>, e31241.</div></div>
+  <div class="ref-item reveal"><div class="ref-n">[7]</div><div>Huang, R., et al. (2020). <em>Handbook on facilitating flexible learning in educational emergencies.</em> Smart Learning Institute of Beijing Normal University.</div></div>
+  <div class="ref-item reveal"><div class="ref-n">[8]</div><div>Selwyn, N. (2020). <em>¿Debería la tecnología reemplazar a los maestros?</em> Editorial Octaedro.</div></div>
+  <div class="ref-item reveal"><div class="ref-n">[9]</div><div>Siemens, G. (2004). Connectivism: A learning theory for the digital age. <em>Elearnspace.</em></div></div>
+  <div class="ref-item reveal"><div class="ref-n">[10]</div><div>Twenge, J. M. (2018). <em>iGen: Why Today's Super-Connected Kids Are Growing Up Less Rebellious, More Tolerant, Less Happy.</em> Atria Books.</div></div>
+  <div class="ref-item reveal"><div class="ref-n">[11]</div><div>UNESCO. (2023). <em>Global education monitoring report 2023: Technology in education – A tool on whose terms?</em> UNESCO Publishing.</div></div>
+</div>
+</section>
+
+<footer>
+  <div>Era Digital en la Educación · Investigación Académica</div>
+  <div>Diseño rediseñado con <span>♥</span> · 2025</div>
+</footer>
+
+<!-- ═══════════════════════════════════════
+     JS
+═══════════════════════════════════════ -->
+<script>
+/* ── CURSOR ── */
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cur.style.transform = `translate(${mx}px,${my}px) translate(-50%,-50%)`;
+});
+(function loop(){
+  rx += (mx-rx)*.1; ry += (my-ry)*.1;
+  ring.style.transform = `translate(${rx}px,${ry}px) translate(-50%,-50%)`;
+  requestAnimationFrame(loop);
+})();
+document.querySelectorAll('a,button,.crit-card,.brain-card,.concl-q').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ cur.style.width='14px'; cur.style.height='14px'; });
+  el.addEventListener('mouseleave',()=>{ cur.style.width='8px'; cur.style.height='8px'; });
+});
+
+/* ── NAV & SCROLL PROGRESS ── */
+const nav = document.getElementById('nav');
+const bar = document.getElementById('navBar');
+const links = document.querySelectorAll('.nav-links a');
+const sections = document.querySelectorAll('section[id]');
+
+window.addEventListener('scroll', ()=>{
+  const sy = window.scrollY;
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  nav.classList.toggle('show', sy > 80);
+  bar.style.width = (sy/max*100) + '%';
+
+  let cur2 = '';
+  sections.forEach(s => { if(sy >= s.offsetTop - 120) cur2 = s.id; });
+  links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#'+cur2));
+}, { passive: true });
+
+/* ── REVEAL ── */
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); });
+}, { threshold: .1, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal,.reveal-l').forEach(el => io.observe(el));
+
+/* ── TABS ── */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', ()=>{
+    const i = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('on'));
+    btn.classList.add('on');
+    document.querySelector(`.tab-panel[data-p="${i}"]`).classList.add('on');
+  });
+});
+</script>
+</body>
+</html>
