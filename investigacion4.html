@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ciencia y Tecnología en México</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --azul-oscuro: #0b1f3a;
+    --azul-medio: #1a3a5c;
+    --dorado: #c9a84c;
+    --dorado-claro: #f0d080;
+    --verde-ciencia: #2ecc8a;
+    --blanco: #f5f2eb;
+    --gris-suave: #e8e4d9;
+    --texto: #1a1a2e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Source Sans 3', sans-serif; background: var(--blanco); color: var(--texto); line-height: 1.8; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    background: rgba(11,31,58,0.96);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 56px;
+    border-bottom: 2px solid var(--dorado);
+  }
+  nav .logo { color: var(--dorado); font-family: 'Playfair Display', serif; font-size: 1rem; letter-spacing: 1px; }
+  nav ul { list-style: none; display: flex; gap: 1.4rem; align-items: center; }
+  nav ul li a { color: rgba(245,242,235,0.8); text-decoration: none; font-size: 0.82rem; letter-spacing: 0.5px; text-transform: uppercase; transition: color .2s; }
+  nav ul li a:hover { color: var(--dorado-claro); }
+
+  /* STUDENT INFO WIDGET */
+  .student-info-wrapper { position: relative; }
+  .student-trigger {
+    color: var(--dorado-claro);
+    font-size: 0.82rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 4px;
+    padding: 6px 0;
+    user-select: none;
+    white-space: nowrap;
+  }
+  .student-trigger:hover { color: #fff; }
+  .student-card {
+    position: absolute; top: calc(100% + 14px); left: 0;
+    width: 260px;
+    background: rgba(10,8,4,0.97);
+    border: 1px solid rgba(201,168,76,0.4);
+    border-radius: 8px;
+    padding: 1.2rem 1.4rem;
+    opacity: 0; pointer-events: none;
+    transform: translateY(-8px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    z-index: 9999;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.7);
+  }
+  .student-card::before {
+    content: '';
+    position: absolute; top: -7px; left: 18px;
+    width: 12px; height: 12px;
+    background: rgba(10,8,4,0.97);
+    border-left: 1px solid rgba(201,168,76,0.4);
+    border-top: 1px solid rgba(201,168,76,0.4);
+    transform: rotate(45deg);
+  }
+  .student-info-wrapper:hover .student-card { opacity: 1; pointer-events: auto; transform: translateY(0); }
+  .student-card-title {
+    font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--dorado); margin-bottom: 1rem; padding-bottom: 0.6rem;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+    font-family: 'Playfair Display', serif;
+  }
+  .student-field { display: flex; flex-direction: column; margin-bottom: 0.7rem; }
+  .student-field:last-child { margin-bottom: 0; }
+  .field-label { font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(201,168,76,0.55); margin-bottom: 2px; }
+  .field-value { font-size: 0.92rem; color: rgba(255,255,255,0.8); line-height: 1.3; }
+
+  /* SECTIONS */
+  section { min-height: 100vh; scroll-margin-top: 56px; }
+
+  /* PORTADA */
+  #portada {
+    background: var(--azul-oscuro);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 80px 2rem 3rem; position: relative; overflow: hidden;
+  }
+  #portada::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 20% 30%, rgba(201,168,76,0.12) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 60% at 80% 70%, rgba(46,204,138,0.08) 0%, transparent 70%);
+  }
+  .portada-grid {
+    position: absolute; inset: 0; opacity: 0.05;
+    background-image: linear-gradient(rgba(201,168,76,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(201,168,76,0.6) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+  .portada-content { position: relative; z-index: 1; max-width: 760px; }
+  .portada-badge {
+    display: inline-block; border: 1px solid var(--dorado); color: var(--dorado);
+    font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase;
+    padding: 6px 20px; border-radius: 2px; margin-bottom: 2rem; animation: fadeUp .8s ease both;
+  }
+  #portada h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem,5vw,4rem); color: var(--blanco); line-height: 1.2; margin-bottom: 0.5rem; animation: fadeUp .8s .15s ease both; }
+  #portada h1 span { color: var(--dorado); }
+  #portada .subtitle { font-size: 1.2rem; color: rgba(245,242,235,0.65); margin-bottom: 2.5rem; animation: fadeUp .8s .25s ease both; }
+  .portada-meta { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; animation: fadeUp .8s .4s ease both; }
+  .meta-item { text-align: center; }
+  .meta-item .label { font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; color: var(--dorado); }
+  .meta-item .value { color: var(--blanco); font-size: 0.95rem; }
+  .scroll-hint { position: absolute; bottom: 2rem; color: rgba(245,242,235,0.35); font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; animation: bounce 2s infinite; }
+
+  /* ÍNDICE */
+  #indice { background: var(--gris-suave); display: flex; align-items: center; justify-content: center; padding: 100px 2rem; }
+  .indice-inner { max-width: 700px; width: 100%; }
+  .section-label { font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; color: var(--dorado); margin-bottom: 0.5rem; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem,3vw,2.8rem); color: var(--azul-oscuro); margin-bottom: 2.5rem; border-bottom: 3px solid var(--dorado); padding-bottom: 0.5rem; display: inline-block; }
+  .indice-list { list-style: none; }
+  .indice-list li { display: flex; align-items: baseline; gap: 1rem; padding: 0.9rem 0; border-bottom: 1px solid rgba(11,31,58,0.1); font-size: 1rem; transition: color .2s; }
+  .indice-list li:hover { color: var(--azul-medio); }
+  .indice-list li a { color: inherit; text-decoration: none; flex: 1; display: flex; justify-content: space-between; }
+  .indice-list li a:hover { color: var(--azul-medio); }
+  .num { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--dorado); min-width: 2rem; }
+  .dots { flex: 1; border-bottom: 1px dotted #aaa; margin: 0 0.5rem; height: 0.85em; }
+
+  /* CONTENT */
+  .content-section { padding: 100px 2rem; max-width: 900px; margin: 0 auto; }
+  .content-section p { font-size: 1.05rem; color: #333; margin-bottom: 1.2rem; }
+
+  /* DESARROLLO */
+  #desarrollo { background: #fff; padding-top: 80px; padding-bottom: 80px; }
+  #desarrollo .content-section { max-width: 1000px; }
+
+  /* MAPA */
+  .mapa-container { position: relative; margin: 3rem 0; overflow-x: auto; }
+  .mapa-svg { width: 100%; max-width: 900px; display: block; margin: 0 auto; }
+  .nodo-hover { cursor: pointer; }
+  .mapa-popup {
+    display: none; position: fixed; z-index: 9999; pointer-events: none;
+    transform: translate(-50%, -110%);
+    background: var(--azul-oscuro); border: 2px solid var(--dorado);
+    border-radius: 12px; overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5); width: 260px;
+    animation: popIn .2s ease;
+  }
+  .mapa-popup.visible { display: block; }
+  .mapa-popup img { width: 100%; height: 155px; object-fit: cover; display: block; }
+  .mapa-popup .pop-label { padding: 10px 14px; font-size: 0.82rem; font-weight: 600; color: var(--dorado-claro); font-family: 'Playfair Display', serif; border-top: 1px solid rgba(201,168,76,0.3); background: rgba(11,31,58,0.95); }
+  .mapa-popup .pop-sub { padding: 0 14px 10px; font-size: 0.75rem; color: rgba(245,242,235,0.6); line-height: 1.4; }
+  @keyframes popIn { from { opacity:0; transform:translate(-50%,-100%) scale(.92); } to { opacity:1; transform:translate(-50%,-110%) scale(1); } }
+
+  /* TARJETAS */
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap: 1.5rem; margin-top: 3rem; }
+  .card { background: var(--blanco); border: 1px solid var(--gris-suave); border-left: 4px solid var(--dorado); border-radius: 6px; padding: 1.5rem; transition: transform .25s, box-shadow .25s; }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(11,31,58,0.1); }
+  .card-icon { font-size: 2rem; margin-bottom: 0.7rem; }
+  .card h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--azul-oscuro); margin-bottom: 0.7rem; }
+  .card p { font-size: 0.92rem; color: #555; line-height: 1.7; }
+  .card-num { display: inline-block; background: var(--azul-oscuro); color: var(--dorado); font-family: 'Playfair Display', serif; font-size: 0.8rem; padding: 2px 8px; border-radius: 2px; margin-bottom: 0.6rem; }
+
+  /* VIDEO */
+  .video-wrapper { margin: 3rem auto; border-radius: 8px; overflow: hidden; box-shadow: 0 16px 50px rgba(11,31,58,0.2); aspect-ratio: 16/9; max-width: 800px; }
+  .video-wrapper iframe { width: 100%; height: 100%; border: none; display: block; }
+  .video-caption { text-align: center; font-size: 0.85rem; color: #888; margin-top: 0.8rem; font-style: italic; }
+
+  /* CONCLUSIÓN */
+  #conclusion { background: var(--gris-suave); }
+  #conclusion .content-section p { font-size: 1.05rem; }
+
+  /* REFERENCIAS */
+  #referencias { background: var(--azul-oscuro); }
+  #referencias .section-title { color: var(--blanco); }
+  #referencias .section-label { color: var(--dorado); }
+  .ref-list { list-style: none; }
+  .ref-list li { color: rgba(245,242,235,0.8); font-size: 0.9rem; padding: 0.8rem 0; border-bottom: 1px solid rgba(201,168,76,0.15); padding-left: 1.5rem; text-indent: -1.5rem; line-height: 1.7; }
+  .ref-list li a { color: var(--dorado-claro); }
+
+  footer { background: #060f1e; text-align: center; padding: 1.5rem; color: rgba(245,242,235,0.35); font-size: 0.8rem; letter-spacing: 1px; }
+
+  @keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes bounce { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-6px); } }
+  @media (max-width:600px) { nav ul { gap:.8rem; } nav ul li a { font-size:.72rem; } .portada-meta { gap:1.2rem; } .student-card { left: auto; right: 0; } }
+</style>
+</head>
+<body>
+
+<!-- NAVEGACIÓN -->
+<nav>
+  <div class="logo">🇲🇽 C&T México</div>
+  <ul>
+    <li>
+      <div class="student-info-wrapper">
+        <span class="student-trigger">👤 Estudiante ▾</span>
+        <div class="student-card">
+          <div class="student-card-title">Datos del Estudiante</div>
+          <div class="student-field">
+            <span class="field-label">Nombre</span>
+            <span class="field-value">Valenzuela Ayala Jesus</span>
+          </div>
+          <div class="student-field">
+            <span class="field-label">Grado y Grupo</span>
+            <span class="field-value">6CPGM</span>
+          </div>
+          <div class="student-field">
+            <span class="field-label">Materia</span>
+            <span class="field-value">Conciencia histórica 3</span>
+          </div>
+          <div class="student-field">
+            <span class="field-label">Profesor</span>
+            <span class="field-value">Carlos Urbina Hernández</span>
+          </div>
+          <div class="student-field">
+            <span class="field-label">Actividad</span>
+            <span class="field-value">Ciencia y Tecnología en México</span>
+          </div>
+        </div>
+      </div>
+    </li>
+    <li><a href="#portada">Portada</a></li>
+    <li><a href="#indice">Índice</a></li>
+    <li><a href="#introduccion">Intro</a></li>
+    <li><a href="#desarrollo">Desarrollo</a></li>
+    <li><a href="#conclusion">Conclusión</a></li>
+    <li><a href="#referencias">Referencias</a></li>
+  </ul>
+</nav>
+
+<!-- PORTADA -->
+<section id="portada">
+  <div class="portada-grid"></div>
+  <div class="portada-content">
+    <div class="portada-badge">Trabajo de Investigación</div>
+    <h1>Ciencia y <span>Tecnología</span><br>en México</h1>
+    <p class="subtitle">Condiciones, desafíos y perspectivas del desarrollo científico nacional</p>
+    <div class="portada-meta">
+      <div class="meta-item"><div class="label">Materia</div><div class="value">Ciencia, Tecnología y Sociedad</div></div>
+      <div class="meta-item"><div class="label">Ciclo Escolar</div><div class="value">2024 – 2025</div></div>
+      <div class="meta-item"><div class="label">País</div><div class="value">México</div></div>
+    </div>
+  </div>
+  <div class="scroll-hint">▼ Desplázate para continuar</div>
+</section>
+
+<!-- ÍNDICE -->
+<section id="indice">
+  <div class="indice-inner">
+    <div class="section-label">Contenido</div>
+    <h2 class="section-title">Índice</h2>
+    <ol class="indice-list">
+      <li><span class="num">I.</span><a href="#introduccion"><span>Introducción</span><span class="dots"></span><span>3</span></a></li>
+      <li><span class="num">II.</span><a href="#desarrollo"><span>Desarrollo — Mapa Conceptual</span><span class="dots"></span><span>4</span></a></li>
+      <li><span class="num">II.1</span><a href="#desarrollo"><span>Inversión en Ciencia y Tecnología</span><span class="dots"></span><span>5</span></a></li>
+      <li><span class="num">II.2</span><a href="#desarrollo"><span>Infraestructura Científica</span><span class="dots"></span><span>6</span></a></li>
+      <li><span class="num">II.3</span><a href="#desarrollo"><span>Educación y Formación de Científicos</span><span class="dots"></span><span>7</span></a></li>
+      <li><span class="num">II.4</span><a href="#desarrollo"><span>Fuga de Cerebros</span><span class="dots"></span><span>8</span></a></li>
+      <li><span class="num">II.5</span><a href="#desarrollo"><span>Innovación y Desarrollo Tecnológico</span><span class="dots"></span><span>9</span></a></li>
+      <li><span class="num">II.6</span><a href="#desarrollo"><span>Colaboración Internacional</span><span class="dots"></span><span>10</span></a></li>
+      <li><span class="num">III.</span><a href="#conclusion"><span>Conclusión</span><span class="dots"></span><span>11</span></a></li>
+      <li><span class="num">IV.</span><a href="#referencias"><span>Referencias</span><span class="dots"></span><span>12</span></a></li>
+    </ol>
+  </div>
+</section>
+
+<!-- INTRODUCCIÓN -->
+<section id="introduccion">
+  <div class="content-section">
+    <div class="section-label">Sección I</div>
+    <h2 class="section-title">Introducción</h2>
+    <p>La ciencia y la tecnología son pilares fundamentales del desarrollo humano y económico de cualquier nación. En el siglo XXI, los países que invierten en investigación científica, forman talento especializado y fomentan la innovación logran mayores niveles de bienestar, competitividad y soberanía tecnológica.</p>
+    <p>México es un país con una rica tradición intelectual y científica; sin embargo, enfrenta una serie de condiciones que limitan su pleno despegue en materia de ciencia y tecnología. Factores como la escasa inversión pública, la fuga de cerebros, la desigualdad en la infraestructura educativa y la débil vinculación entre industria y academia representan obstáculos que deben atenderse con urgencia.</p>
+    <p>El presente trabajo tiene como objetivo exponer y analizar las principales condiciones por las cuales atraviesa la ciencia y la tecnología en México, organizadas en un mapa conceptual que permite visualizar de manera clara sus interrelaciones. A través de seis ejes temáticos —inversión, infraestructura, educación, migración de talento, innovación y cooperación internacional— se busca construir una panorámica comprensiva del estado actual y los retos futuros del sistema científico-tecnológico mexicano.</p>
+    <p>Comprender estas condiciones es el primer paso para imaginar y proponer soluciones que permitan al país aprovechar todo su potencial científico en beneficio de su población.</p>
+  </div>
+</section>
+
+<!-- DESARROLLO -->
+<section id="desarrollo">
+  <div class="content-section">
+    <div class="section-label">Sección II</div>
+    <h2 class="section-title">Desarrollo</h2>
+
+    <h3 style="font-family:'Playfair Display',serif;color:var(--azul-oscuro);font-size:1.3rem;margin-bottom:0.5rem;">Mapa Conceptual</h3>
+    <p style="font-size:0.9rem;color:#777;margin-bottom:1rem;">Pasa el cursor sobre cada nodo para ver una imagen e información relacionada.</p>
+
+    <div class="mapa-popup" id="mapaPopup">
+      <img id="popupImg" src="" alt="">
+      <div class="pop-label" id="popupTitle"></div>
+      <div class="pop-sub" id="popupSub"></div>
+    </div>
+
+    <div class="mapa-container">
+      <svg class="mapa-svg" viewBox="0 0 860 520" xmlns="http://www.w3.org/2000/svg" font-family="'Source Sans 3',sans-serif">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#c9a84c"/></marker>
+          <filter id="sombra" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="rgba(0,0,0,0.2)"/></filter>
+          <filter id="sombraHover" x="-15%" y="-15%" width="130%" height="130%"><feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="rgba(201,168,76,0.5)"/></filter>
+        </defs>
+        <line x1="430" y1="220" x2="200" y2="95"  stroke="#c9a84c" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+        <line x1="430" y1="220" x2="660" y2="95"  stroke="#c9a84c" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+        <line x1="430" y1="220" x2="120" y2="310" stroke="#c9a84c" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+        <line x1="430" y1="220" x2="740" y2="310" stroke="#c9a84c" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+        <line x1="430" y1="220" x2="200" y2="430" stroke="#c9a84c" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+        <line x1="430" y1="220" x2="660" y2="430" stroke="#c9a84c" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+        <!-- Central -->
+        <rect x="295" y="165" width="270" height="110" rx="12" fill="#0b1f3a" filter="url(#sombra)"/>
+        <rect x="295" y="165" width="270" height="5" rx="3" fill="#c9a84c"/>
+        <text x="430" y="210" text-anchor="middle" font-size="15" font-weight="700" fill="#f0d080" font-family="'Playfair Display',serif">Ciencia y Tecnología</text>
+        <text x="430" y="230" text-anchor="middle" font-size="13" fill="rgba(245,242,235,0.75)">en México</text>
+        <text x="430" y="253" text-anchor="middle" font-size="10" fill="rgba(245,242,235,0.45)">Condiciones estructurales del sistema C+T</text>
+        <!-- Nodo 1 -->
+        <g class="nodo-hover" data-img="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=520&q=80" data-title="💰 Inversión en C+T" data-sub="México invierte ~0.3% del PIB en I+D, muy por debajo del promedio OCDE (2.7%).">
+          <rect x="100" y="38" width="200" height="72" rx="10" fill="#1a3a5c" filter="url(#sombra)"/>
+          <rect x="100" y="38" width="200" height="4" rx="2" fill="#2ecc8a"/>
+          <text x="200" y="68" text-anchor="middle" font-size="12" font-weight="700" fill="#f0d080">💰 Inversión en C+T</text>
+          <text x="200" y="86" text-anchor="middle" font-size="10" fill="rgba(245,242,235,0.7)">Baja inversión vs. países</text>
+          <text x="200" y="100" text-anchor="middle" font-size="10" fill="rgba(245,242,235,0.7)">de la OCDE (~0.3% del PIB)</text>
+        </g>
+        <!-- Nodo 2 -->
+        <g class="nodo-hover" data-img="data:image/jpeg;base64,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" data-title="🏛️ Infraestructura Científica" data-sub="Laboratorios con equipo limitado; instituciones como UNAM e IPN lideran el sector.">
+          <rect x="560" y="38" width="200" height="72" rx="10" fill="#1a3a5c" filter="url(#sombra)"/>
+          <rect x="560" y="38" width="200" height="4" rx="2" fill="#e74c7c"/>
+          <text x="660" y="68" text-anchor="middle" font-size="12" font-weight="700" fill="#f0d080">🏛 Infraestructura</text>
+          <text x="660" y="86" text-anchor="middle" font-size="10" fill="rgba(245,242,235,0.7)">Laboratorios limitados;</text>
+          <text x="660" y="100" text-anchor="middle" font-size="10" fill="rgba(245,242,235,0.7)">necesitan modernización</text>
+        </g>
+        <!-- Nodo 3 -->
+        <g class="nodo-hover" data-img="https://www.universidaddeleon.edu.mx/media/images/education/images/20240425-180847-urxudscjka.jpg" data-title="🎓 Educación y Formación" data-sub="Las universidades forman miles de investigadores, pero faltan becas y plazas de posgrado.">
+          <rect x="20" y="268" width="200" height="72" rx="10" fill="#1a3a5c" filter="url(#sombra)"/>
+          <rect x="20" y="268" width="200" height="4" rx="2" fill="#f39c12"/>
+          <text x="120" y="296" text-anchor="middle" font-size="12" font-weight="700" fill="#f0d080">🎓 Educación</text>
+          <text x="120" y="314" text-anchor="middle" font-size="10" fill="rgba(245,242,235,0.7)">Universidades forman</text>
+          <text x="120" y="328" text-anchor="middle" font-size="10" fill="rgba(245,242,235,0.7)">talento; faltan más becas</text>
+        </g>
+        <!-- Nodo 4 -->
+        <g class="nodo-hover" data-img="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=520&q=80" data-title="✈️ Fuga de Cerebros" data-sub="Científicos mexicanos emigran por mejores salarios y oportunidades en el extranjero.">
+          <rect x="640" y="268" width="200" height="72" rx="10" fill="#1a3a5c" filter="url(#sombra)"/>
+          <rect x="640" y="268" width="200" height="4" rx="2" fill="#e74c3c"/>
+          <text x="740" y="296" text-anchor="middle" font-size="12" font-weight="700" fill="#f0d080">✈️ Fuga de Cerebros</text>
+          <text x="740" y="314" text-anchor="middle" font-size="10" fill="rgba(245,242,235,0.7)">Migración de científicos</text>
+          <text x="740" y="328" text-anchor="middle" font-size="10" fill="rgba(245,242,235,0.7)">hacia el extranjero</text>
+        </g>
+        <!-- Nodo 5 -->
+        <g class="nodo-hover" data-img="https://images.unsplash.com/photo-1518770660439-4636190af475?w=520&q=80" data-title="⚙️ Innovación Tecnológica" data-sub="La vinculación empresa-academia-gobierno impulsa proyectos en biotecnología, aeronáutica y TI.">
+          <rect x="100" y="388" width="200" height="72" rx="10" fill="#1a3a5c" filter="url(#sombra)"/>
+          <rect x="100" y="388" width="200" height="4" rx="2" fill="#9b59b6"/>
+          <text x="200" y="416" text-anchor="middle" font-size="12" font-weight="700" fill="#f0d080">⚙️ Innovación</text>
+          <text x="200" y="434" text-anchor="middle" font-size="10" fill="rgba(245,242,235,0.7)">Vinculación empresa-</text>
+          <text x="200" y="448" text-anchor="middle" font-size="10" fill="rgba(245,242,235,0.7)">academia-gobierno</text>
+        </g>
+        <!-- Nodo 6 -->
+        <g class="nodo-hover" data-img="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=520&q=80" data-title="🌐 Colaboración Internacional" data-sub="México participa en el CERN, ESA e IANAS, compartiendo conocimiento y recursos a nivel global.">
+          <rect x="560" y="388" width="200" height="72" rx="10" fill="#1a3a5c" filter="url(#sombra)"/>
+          <rect x="560" y="388" width="200" height="4" rx="2" fill="#1abc9c"/>
+          <text x="660" y="416" text-anchor="middle" font-size="12" font-weight="700" fill="#f0d080">🌐 Colaboración Internacional</text>
+          <text x="660" y="434" text-anchor="middle" font-size="10" fill="rgba(245,242,235,0.7)">Redes globales de</text>
+          <text x="660" y="448" text-anchor="middle" font-size="10" fill="rgba(245,242,235,0.7)">investigación compartida</text>
+        </g>
+        <!-- Leyenda -->
+        <rect x="10" y="480" width="840" height="34" rx="6" fill="#f5f2eb" opacity="0.5"/>
+        <text x="430" y="502" text-anchor="middle" font-size="10" fill="#666">Pasa el cursor sobre cada nodo para ver más información · Elaboración propia</text>
+      </svg>
+    </div>
+
+    <script>
+    (function(){
+      const popup=document.getElementById('mapaPopup');
+      const pImg=document.getElementById('popupImg');
+      const pTitle=document.getElementById('popupTitle');
+      const pSub=document.getElementById('popupSub');
+      document.querySelectorAll('.nodo-hover').forEach(function(g){
+        g.addEventListener('mouseenter',function(e){
+          pImg.src=g.dataset.img; pTitle.textContent=g.dataset.title; pSub.textContent=g.dataset.sub;
+          popup.classList.add('visible'); movePopup(e);
+          const r=g.querySelectorAll('rect'); r[0].setAttribute('filter','url(#sombraHover)'); r[0].dataset.orig=r[0].getAttribute('fill'); r[0].setAttribute('fill','#243f60');
+        });
+        g.addEventListener('mousemove',movePopup);
+        g.addEventListener('mouseleave',function(){
+          popup.classList.remove('visible');
+          const r=g.querySelectorAll('rect'); r[0].setAttribute('filter','url(#sombra)'); r[0].setAttribute('fill',r[0].dataset.orig||'#1a3a5c');
+        });
+      });
+      function movePopup(e){ popup.style.left=e.clientX+'px'; popup.style.top=e.clientY+'px'; }
+    })();
+    </script>
+
+    <h3 style="font-family:'Playfair Display',serif;color:var(--azul-oscuro);font-size:1.3rem;margin:2.5rem 0 0.5rem;">Video de Referencia</h3>
+    <p style="font-size:0.9rem;color:#777;margin-bottom:1rem;">Recurso audiovisual complementario sobre la situación de la ciencia y tecnología en México.</p>
+    <div class="video-wrapper">
+      <iframe src="https://www.youtube.com/embed/HmZOdbIr6Uw" title="Ciencia y Tecnología en México" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <p class="video-caption">Fuente: YouTube — Video de referencia sobre la ciencia y tecnología en México.</p>
+
+    <h3 style="font-family:'Playfair Display',serif;color:var(--azul-oscuro);font-size:1.3rem;margin:3rem 0 0.5rem;">Condiciones Detalladas</h3>
+    <div class="cards-grid">
+      <div class="card"><div class="card-num">01</div><div class="card-icon">💰</div><h3>Inversión en Ciencia y Tecnología</h3><p>México invierte alrededor del 0.3% de su PIB en investigación y desarrollo, cifra muy inferior al promedio del 2.7% recomendado por la OCDE. Esta limitación financiera restringe la creación de nuevos proyectos, la adquisición de equipo de vanguardia y el otorgamiento de becas. Una mayor inversión permitiría mejorar laboratorios, ampliar programas de investigación y atraer financiamiento internacional.</p></div>
+      <div class="card"><div class="card-num">02</div><div class="card-icon">🏛️</div><h3>Infraestructura Científica</h3><p>El país cuenta con instituciones de referencia como la UNAM, el IPN y el CINVESTAV, reconocidas internacionalmente. Sin embargo, muchos centros de investigación fuera de la Ciudad de México presentan laboratorios con equipos limitados u obsoletos. La modernización de la infraestructura es indispensable para realizar experimentos de frontera y participar competitivamente en publicaciones científicas globales.</p></div>
+      <div class="card"><div class="card-num">03</div><div class="card-icon">🎓</div><h3>Educación y Formación de Científicos</h3><p>Las universidades públicas mexicanas gradúan anualmente a miles de ingenieros, científicos y especialistas. No obstante, la oferta de posgrados de calidad es desigual entre regiones, y el número de becas disponibles resulta insuficiente. Fortalecer los programas de maestría y doctorado, así como incrementar los apoyos económicos, es clave para consolidar la base científica del país.</p></div>
+      <div class="card"><div class="card-num">04</div><div class="card-icon">✈️</div><h3>Fuga de Cerebros</h3><p>La emigración de científicos y tecnólogos mexicanos hacia Estados Unidos, Canadá y Europa es un fenómeno persistente. Los principales factores son los bajos salarios en el sector académico, la insuficiencia de plazas y la burocracia institucional. Esta pérdida de talento representa un costo enorme para el país.</p></div>
+      <div class="card"><div class="card-num">05</div><div class="card-icon">⚙️</div><h3>Innovación y Desarrollo Tecnológico</h3><p>La innovación requiere articulación entre academia, gobierno e industria privada. Iniciativas como los CEMIE y los clústeres tecnológicos buscan crear ese puente. Algunos casos de éxito incluyen desarrollos en biotecnología, aeronáutica y TI; sin embargo, la vinculación sigue siendo débil comparada con economías como Corea del Sur o Brasil.</p></div>
+      <div class="card"><div class="card-num">06</div><div class="card-icon">🌐</div><h3>Colaboración Internacional</h3><p>México participa en redes científicas internacionales como el CERN, la ESA, y la IANAS, además de programas de cooperación con la Unión Europea. Estas alianzas permiten acceder a financiamiento externo, infraestructura compartida y formación en el extranjero, posicionando a México como actor relevante en la ciencia global.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONCLUSIÓN -->
+<section id="conclusion">
+  <div class="content-section">
+    <div class="section-label">Sección III</div>
+    <h2 class="section-title">Conclusión</h2>
+    <p>A lo largo de esta investigación se identificaron seis condiciones estructurales que determinan el estado actual de la ciencia y la tecnología en México: la baja inversión como porcentaje del PIB, las limitaciones en la infraestructura científica, los retos en la formación de investigadores, la fuga de cerebros, la incipiente vinculación para la innovación y las oportunidades que ofrece la cooperación internacional.</p>
+    <p>Estas condiciones no son independientes entre sí; forman un sistema en el que la debilidad de un factor repercute negativamente en los demás. La escasa inversión, por ejemplo, deteriora la infraestructura, reduce las oportunidades de formación y, en consecuencia, incentiva la migración del talento.</p>
+    <p>México posee todos los elementos para consolidar un sistema científico-tecnológico robusto: capital humano calificado, instituciones históricamente reconocidas y una posición geopolítica estratégica. El verdadero reto es de voluntad política y de construcción de políticas públicas de largo plazo que prioricen la ciencia como motor del desarrollo nacional.</p>
+    <p>En definitiva, apostar por la ciencia y la tecnología no es un lujo, sino una inversión imprescindible para el bienestar, la soberanía y el progreso sostenible de México en el siglo XXI.</p>
+  </div>
+</section>
+
+<!-- REFERENCIAS -->
+<section id="referencias">
+  <div class="content-section">
+    <div class="section-label" style="color:var(--dorado);">Sección IV</div>
+    <h2 class="section-title">Referencias</h2>
+    <ul class="ref-list">
+      <li>Consejo Nacional de Humanidades, Ciencias y Tecnologías. (2023). <em>Informe general del estado de la ciencia, la tecnología y la innovación en México 2022</em>. CONAHCYT. <a href="https://www.conahcyt.mx" target="_blank">https://www.conahcyt.mx</a></li>
+      <li>Organización para la Cooperación y el Desarrollo Económico. (2023). <em>OECD Science, Technology and Innovation Outlook 2023</em>. OCDE Publishing. <a href="https://doi.org/10.1787/0e8f1c94-en" target="_blank">https://doi.org/10.1787/0e8f1c94-en</a></li>
+      <li>Banco Mundial. (2023). <em>Research and development expenditure (% of GDP) — Mexico</em>. World Bank Open Data. <a href="https://data.worldbank.org/indicator/GB.XPD.RSDV.GD.ZS?locations=MX" target="_blank">https://data.worldbank.org</a></li>
+      <li>Universidad Nacional Autónoma de México. (2023). <em>La UNAM en cifras 2023</em>. Dirección General de Planeación. <a href="https://www.unam.mx" target="_blank">https://www.unam.mx</a></li>
+      <li>Dutrénit, G., &amp; Sutz, J. (Eds.). (2014). <em>National innovation systems, social inclusion and development: The Latin American experience</em>. Edward Elgar Publishing. <a href="https://doi.org/10.4337/9781782548942" target="_blank">https://doi.org/10.4337/9781782548942</a></li>
+      <li>Didou Aupetit, S. (2017). <em>La internacionalización de la educación superior en América Latina</em>. UNESCO/IESALC. <a href="https://www.iesalc.unesco.org" target="_blank">https://www.iesalc.unesco.org</a></li>
+      <li>Foro Consultivo Científico y Tecnológico. (2022). <em>Ciencia, tecnología e innovación en México: situación actual y desafíos</em>. FCCyT. <a href="https://www.foroconsultivo.org.mx" target="_blank">https://www.foroconsultivo.org.mx</a></li>
+      <li>Canal de YouTube (Referencia audiovisual). (s.f.). <em>Ciencia y tecnología en México</em> [Video]. YouTube. <a href="https://www.youtube.com/watch?v=HmZOdbIr6Uw" target="_blank">https://www.youtube.com/watch?v=HmZOdbIr6Uw</a></li>
+    </ul>
+  </div>
+</section>
+
+<footer>Trabajo de Investigación — Ciencia y Tecnología en México &nbsp;|&nbsp; Valenzuela Ayala Jesus / 14/03/26</footer>
+</body>
+</html>
