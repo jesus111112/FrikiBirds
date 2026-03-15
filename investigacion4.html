@@ -8,132 +8,63 @@
 <style>
   :root {
     --azul-oscuro: #020d1a;
-    --azul-medio: #0a1f35;
     --dorado: #c9a84c;
     --dorado-claro: #f0d080;
     --teal: #00e5c0;
     --teal-dim: rgba(0,229,192,0.15);
     --blue-neon: #4fc3f7;
     --blanco: #e8f4f8;
-    --gris-suave: rgba(255,255,255,0.06);
     --texto: #cce8f4;
     --card-bg: rgba(5,20,40,0.82);
     --border: rgba(0,229,192,0.18);
   }
   * { margin:0; padding:0; box-sizing:border-box; }
   html { scroll-behavior:smooth; }
+  body { font-family:'Source Sans 3',sans-serif; background:var(--azul-oscuro); color:var(--texto); line-height:1.8; }
 
-  body {
-    font-family:'Source Sans 3',sans-serif;
-    background: var(--azul-oscuro);
-    color: var(--texto);
-    line-height:1.8;
-  }
+  #plexus-canvas { position:fixed; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none; }
+  nav, section, footer { position:relative; z-index:1; }
 
-  /* ── CANVAS PLEXUS ── */
-  #plexus-canvas {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    z-index: 0;
-    pointer-events: none;
-  }
-
-  /* Todas las secciones sobre el canvas */
-  nav, section, footer { position: relative; z-index: 1; }
-
-  /* ── NAV ── */
+  /* NAV */
   nav {
-    position: fixed; top:0; left:0; right:0;
-    background: rgba(2,13,26,0.88);
-    backdrop-filter: blur(12px);
-    z-index: 1000;
-    padding: 0 2rem;
-    display: flex; align-items:center; justify-content:space-between;
-    height: 56px;
-    border-bottom: 1px solid var(--teal);
-    box-shadow: 0 0 20px rgba(0,229,192,0.12);
+    position:fixed; top:0; left:0; right:0;
+    background:rgba(2,13,26,0.92); backdrop-filter:blur(12px);
+    z-index:1000; padding:0 2rem;
+    display:flex; align-items:center; justify-content:space-between;
+    height:56px; border-bottom:1px solid var(--teal);
+    box-shadow:0 0 20px rgba(0,229,192,0.1);
   }
-  nav .logo {
-    color: var(--teal);
-    font-family:'Playfair Display',serif;
-    font-size:1rem; letter-spacing:2px;
-    text-shadow: 0 0 12px var(--teal);
-  }
-  nav ul { list-style:none; display:flex; gap:1.4rem; align-items:center; }
-  nav ul li a {
-    color: rgba(200,235,245,0.75);
-    text-decoration:none; font-size:0.8rem;
-    letter-spacing:1px; text-transform:uppercase;
-    transition: color .2s, text-shadow .2s;
-  }
-  nav ul li a:hover { color: var(--teal); text-shadow: 0 0 8px var(--teal); }
+  nav .logo { color:var(--teal); font-family:'Playfair Display',serif; font-size:1rem; letter-spacing:2px; text-shadow:0 0 12px var(--teal); }
+  nav ul { list-style:none; display:flex; gap:1.2rem; align-items:center; flex-wrap:wrap; }
+  nav ul li a { color:rgba(200,235,245,0.75); text-decoration:none; font-size:0.78rem; letter-spacing:1px; text-transform:uppercase; transition:color .2s; }
+  nav ul li a:hover { color:var(--teal); text-shadow:0 0 8px var(--teal); }
 
   /* STUDENT WIDGET */
   .student-info-wrapper { position:relative; }
-  .student-trigger {
-    color: var(--teal); font-size:0.8rem; letter-spacing:1px;
-    text-transform:uppercase; cursor:pointer;
-    display:flex; align-items:center; gap:4px;
-    padding:6px 0; user-select:none; white-space:nowrap;
-    text-shadow: 0 0 8px var(--teal);
-  }
+  .student-trigger { color:var(--teal); font-size:0.78rem; letter-spacing:1px; text-transform:uppercase; cursor:pointer; display:flex; align-items:center; gap:4px; padding:6px 0; user-select:none; white-space:nowrap; text-shadow:0 0 8px var(--teal); }
   .student-card {
-    position:absolute; top:calc(100% + 14px); left:0;
-    width:260px;
-    background: rgba(2,13,26,0.96);
-    border: 1px solid rgba(0,229,192,0.3);
+    position:absolute; top:calc(100% + 14px); left:0; width:260px;
+    background:rgba(2,13,26,0.97); border:1px solid rgba(0,229,192,0.3);
     border-radius:10px; padding:1.2rem 1.4rem;
-    opacity:0; pointer-events:none;
-    transform:translateY(-8px);
-    transition:opacity .25s ease, transform .25s ease;
-    z-index:9999;
-    box-shadow: 0 0 30px rgba(0,229,192,0.15), 0 12px 40px rgba(0,0,0,0.6);
+    opacity:0; pointer-events:none; transform:translateY(-8px);
+    transition:opacity .25s, transform .25s; z-index:9999;
+    box-shadow:0 0 30px rgba(0,229,192,0.15), 0 12px 40px rgba(0,0,0,0.6);
   }
-  .student-card::before {
-    content:''; position:absolute; top:-7px; left:18px;
-    width:12px; height:12px;
-    background:rgba(2,13,26,0.96);
-    border-left:1px solid rgba(0,229,192,0.3);
-    border-top:1px solid rgba(0,229,192,0.3);
-    transform:rotate(45deg);
-  }
+  .student-card::before { content:''; position:absolute; top:-7px; left:18px; width:12px; height:12px; background:rgba(2,13,26,0.97); border-left:1px solid rgba(0,229,192,0.3); border-top:1px solid rgba(0,229,192,0.3); transform:rotate(45deg); }
   .student-info-wrapper:hover .student-card { opacity:1; pointer-events:auto; transform:translateY(0); }
-  .student-card-title {
-    font-size:0.62rem; letter-spacing:.25em; text-transform:uppercase;
-    color:var(--teal); margin-bottom:1rem; padding-bottom:.6rem;
-    border-bottom:1px solid rgba(0,229,192,0.15);
-    font-family:'Playfair Display',serif;
-  }
+  .student-card-title { font-size:0.62rem; letter-spacing:.25em; text-transform:uppercase; color:var(--teal); margin-bottom:1rem; padding-bottom:.6rem; border-bottom:1px solid rgba(0,229,192,0.15); font-family:'Playfair Display',serif; }
   .student-field { display:flex; flex-direction:column; margin-bottom:.7rem; }
   .student-field:last-child { margin-bottom:0; }
   .field-label { font-size:.6rem; letter-spacing:.15em; text-transform:uppercase; color:rgba(0,229,192,0.45); margin-bottom:2px; }
   .field-value { font-size:.92rem; color:rgba(200,235,245,0.85); line-height:1.3; }
 
-  /* ── SECTIONS ── */
   section { min-height:100vh; scroll-margin-top:56px; }
 
-  /* ── PORTADA ── */
-  #portada {
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    text-align:center; padding:80px 2rem 3rem;
-  }
-  .portada-content { position:relative; z-index:1; max-width:760px; }
-  .portada-badge {
-    display:inline-block;
-    border:1px solid var(--teal);
-    color:var(--teal); font-size:.75rem; letter-spacing:3px;
-    text-transform:uppercase; padding:6px 20px; border-radius:2px;
-    margin-bottom:2rem; animation:fadeUp .8s ease both;
-    box-shadow:0 0 12px rgba(0,229,192,0.2);
-  }
-  #portada h1 {
-    font-family:'Playfair Display',serif;
-    font-size:clamp(2.2rem,5vw,4rem);
-    color:#fff; line-height:1.2; margin-bottom:.5rem;
-    animation:fadeUp .8s .15s ease both;
-    text-shadow: 0 0 40px rgba(0,229,192,0.3);
-  }
+  /* PORTADA */
+  #portada { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:80px 2rem 3rem; }
+  .portada-content { max-width:760px; }
+  .portada-badge { display:inline-block; border:1px solid var(--teal); color:var(--teal); font-size:.75rem; letter-spacing:3px; text-transform:uppercase; padding:6px 20px; border-radius:2px; margin-bottom:2rem; animation:fadeUp .8s ease both; box-shadow:0 0 12px rgba(0,229,192,0.2); }
+  #portada h1 { font-family:'Playfair Display',serif; font-size:clamp(2.2rem,5vw,4rem); color:#fff; line-height:1.2; margin-bottom:.5rem; animation:fadeUp .8s .15s ease both; text-shadow:0 0 40px rgba(0,229,192,0.3); }
   #portada h1 span { color:var(--teal); text-shadow:0 0 20px var(--teal); }
   #portada .subtitle { font-size:1.1rem; color:rgba(200,235,245,0.6); margin-bottom:2.5rem; animation:fadeUp .8s .25s ease both; }
   .portada-meta { display:flex; gap:2rem; justify-content:center; flex-wrap:wrap; animation:fadeUp .8s .4s ease both; }
@@ -142,108 +73,153 @@
   .meta-item .value { color:#fff; font-size:.95rem; }
   .scroll-hint { position:absolute; bottom:2rem; color:rgba(0,229,192,0.3); font-size:.75rem; letter-spacing:2px; text-transform:uppercase; animation:bounce 2s infinite; }
 
-  /* ── GLASS CARD BASE ── */
-  .glass {
-    background: rgba(5,18,38,0.75);
-    border:1px solid var(--border);
-    border-radius:14px;
-    backdrop-filter:blur(10px);
-    box-shadow:0 0 25px rgba(0,229,192,0.06), 0 8px 32px rgba(0,0,0,0.4);
-  }
-
-  /* ── ÍNDICE ── */
+  /* ÍNDICE */
   #indice { display:flex; align-items:center; justify-content:center; padding:100px 2rem; }
   .indice-inner { max-width:700px; width:100%; }
   .section-label { font-size:.75rem; letter-spacing:3px; text-transform:uppercase; color:var(--teal); margin-bottom:.5rem; }
-  .section-title {
-    font-family:'Playfair Display',serif;
-    font-size:clamp(1.8rem,3vw,2.8rem); color:#fff;
-    margin-bottom:2.5rem;
-    border-bottom:2px solid var(--teal);
-    padding-bottom:.5rem; display:inline-block;
-    text-shadow:0 0 20px rgba(0,229,192,0.3);
-  }
+  .section-title { font-family:'Playfair Display',serif; font-size:clamp(1.8rem,3vw,2.8rem); color:#fff; margin-bottom:2.5rem; border-bottom:2px solid var(--teal); padding-bottom:.5rem; display:inline-block; text-shadow:0 0 20px rgba(0,229,192,0.3); }
   .indice-list { list-style:none; }
-  .indice-list li {
-    display:flex; align-items:baseline; gap:1rem;
-    padding:.9rem 0; border-bottom:1px solid rgba(0,229,192,0.08);
-    font-size:1rem; transition:color .2s;
-  }
+  .indice-list li { display:flex; align-items:baseline; gap:1rem; padding:.9rem 0; border-bottom:1px solid rgba(0,229,192,0.08); font-size:1rem; transition:color .2s; }
   .indice-list li:hover { color:var(--teal); }
   .indice-list li a { color:inherit; text-decoration:none; flex:1; display:flex; justify-content:space-between; }
-  .indice-list li a:hover { color:var(--teal); }
   .num { font-family:'Playfair Display',serif; font-size:1.4rem; color:var(--teal); min-width:2rem; }
   .dots { flex:1; border-bottom:1px dotted rgba(0,229,192,0.2); margin:0 .5rem; height:.85em; }
 
-  /* ── CONTENT ── */
+  /* CONTENT */
   .content-section { padding:100px 2rem; max-width:900px; margin:0 auto; }
+  #desarrollo .content-section { max-width:1100px; }
   .content-section p { font-size:1.05rem; color:rgba(200,235,245,0.8); margin-bottom:1.2rem; }
-  #desarrollo .content-section { max-width:1000px; }
+  .sub-h3 { font-family:'Playfair Display',serif; color:var(--teal); font-size:1.3rem; margin-bottom:.5rem; text-shadow:0 0 10px rgba(0,229,192,0.2); }
+  .sub-p { font-size:.9rem; color:rgba(0,229,192,0.45); margin-bottom:1rem; }
 
-  /* ── MAPA ── */
-  .mapa-container { position:relative; margin:3rem 0; overflow-x:auto; }
-  .mapa-svg { width:100%; max-width:900px; display:block; margin:0 auto; }
-  .nodo-hover { cursor:pointer; }
+  /* POPUP */
   .mapa-popup {
     display:none; position:fixed; z-index:9999; pointer-events:none;
     transform:translate(-50%,-110%);
-    background:rgba(2,13,26,0.96); border:1.5px solid var(--teal);
+    background:rgba(2,13,26,0.97); border:1.5px solid var(--teal);
     border-radius:12px; overflow:hidden;
     box-shadow:0 0 25px rgba(0,229,192,0.25), 0 20px 50px rgba(0,0,0,0.6);
-    width:260px; animation:popIn .2s ease;
+    width:260px;
   }
-  .mapa-popup.visible { display:block; }
+  .mapa-popup.visible { display:block; animation:popIn .2s ease; }
   .mapa-popup img { width:100%; height:155px; object-fit:cover; display:block; }
   .mapa-popup .pop-label { padding:10px 14px; font-size:.82rem; font-weight:600; color:var(--teal); font-family:'Playfair Display',serif; border-top:1px solid rgba(0,229,192,0.2); }
   .mapa-popup .pop-sub { padding:0 14px 10px; font-size:.75rem; color:rgba(200,235,245,0.6); line-height:1.4; }
   @keyframes popIn { from{opacity:0;transform:translate(-50%,-100%) scale(.92);}to{opacity:1;transform:translate(-50%,-110%) scale(1);} }
 
-  /* ── TARJETAS ── */
-  .cards-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem; margin-top:3rem; }
-  .card {
-    background:rgba(5,18,38,0.75);
-    border:1px solid rgba(0,229,192,0.15);
-    border-top:3px solid var(--teal);
-    border-radius:10px; padding:1.5rem;
-    backdrop-filter:blur(8px);
-    transition:transform .25s, box-shadow .25s, border-color .25s;
-  }
-  .card:hover { transform:translateY(-5px); box-shadow:0 0 25px rgba(0,229,192,0.2), 0 12px 30px rgba(0,0,0,0.4); border-color:var(--teal); }
-  .card-icon { font-size:2rem; margin-bottom:.7rem; }
-  .card h3 { font-family:'Playfair Display',serif; font-size:1.1rem; color:var(--teal); margin-bottom:.7rem; text-shadow:0 0 10px rgba(0,229,192,0.3); }
-  .card p { font-size:.92rem; color:rgba(200,235,245,0.7); line-height:1.7; }
-  .card-num { display:inline-block; background:rgba(0,229,192,0.1); color:var(--teal); font-family:'Playfair Display',serif; font-size:.8rem; padding:2px 8px; border-radius:3px; margin-bottom:.6rem; border:1px solid rgba(0,229,192,0.2); }
+  /* ═══ MAPA CONCEPTUAL ═══ */
+  .mapa-conceptual { margin:2rem 0; user-select:none; }
 
-  /* ── VIDEO ── */
-  .video-wrapper { margin:3rem auto; border-radius:10px; overflow:hidden; box-shadow:0 0 30px rgba(0,229,192,0.15), 0 16px 50px rgba(0,0,0,0.5); aspect-ratio:16/9; max-width:800px; border:1px solid rgba(0,229,192,0.2); }
+  .mapa-titulo {
+    display:flex; align-items:center; justify-content:center; gap:12px;
+    background:linear-gradient(135deg,rgba(0,229,192,0.1),rgba(79,195,247,0.1));
+    border:2px solid rgba(0,229,192,0.55); border-radius:50px;
+    padding:14px 30px; font-family:'Playfair Display',serif;
+    font-size:clamp(.95rem,2vw,1.35rem); font-weight:700; color:#fff;
+    text-align:center; text-shadow:0 0 18px rgba(0,229,192,0.35);
+    box-shadow:0 0 25px rgba(0,229,192,0.08); margin-bottom:1.2rem;
+  }
+
+  .mapa-raiz-row { display:flex; justify-content:center; margin-bottom:4px; }
+  .mapa-flecha-c { text-align:center; color:rgba(0,229,192,0.5); font-size:1.3rem; line-height:1.3; }
+
+  .nodo {
+    border-radius:12px; padding:9px 14px; text-align:center;
+    font-size:.85rem; font-weight:600; line-height:1.4;
+    transition:transform .2s, box-shadow .2s;
+    border:1.5px solid transparent; cursor:default;
+  }
+  .nodo.raiz {
+    background:linear-gradient(135deg,rgba(0,229,192,0.12),rgba(79,195,247,0.12));
+    border-color:rgba(0,229,192,0.65); color:var(--teal);
+    font-size:.95rem; padding:12px 28px;
+    box-shadow:0 0 18px rgba(0,229,192,0.15);
+  }
+  .nodo.verde   { background:rgba(46,204,113,0.09);  border-color:rgba(46,204,113,0.45);  color:#2ecc71; }
+  .nodo.naranja { background:rgba(230,126,34,0.09);  border-color:rgba(230,126,34,0.45);  color:#e8864a; }
+  .nodo.azul    { background:rgba(79,195,247,0.09);  border-color:rgba(79,195,247,0.45);  color:#4fc3f7; }
+  .nodo.header  { font-size:.92rem; font-weight:700; padding:11px 16px; }
+  .nodo.clickable { cursor:pointer; }
+  .nodo.verde.clickable:hover   { transform:translateY(-2px); box-shadow:0 0 14px rgba(46,204,113,0.35);  border-color:rgba(46,204,113,0.9); }
+  .nodo.naranja.clickable:hover { transform:translateY(-2px); box-shadow:0 0 14px rgba(230,126,34,0.35);  border-color:rgba(230,126,34,0.9); }
+  .nodo.azul.clickable:hover    { transform:translateY(-2px); box-shadow:0 0 14px rgba(79,195,247,0.35);  border-color:rgba(79,195,247,0.9); }
+
+  .col-arr { text-align:center; font-size:1.1rem; line-height:1.2; padding:3px 0; }
+  .col-arr.v { color:rgba(46,204,113,0.45); }
+  .col-arr.n { color:rgba(230,126,34,0.45); }
+  .col-arr.a { color:rgba(79,195,247,0.45); }
+
+  .mapa-cols {
+    display:grid; grid-template-columns:1fr 1.15fr 1fr;
+    gap:1.4rem; margin:6px 0 1.4rem; align-items:start;
+  }
+  .mapa-col { display:flex; flex-direction:column; gap:0; }
+
+  /* Trio */
+  .trio { display:grid; grid-template-columns:1fr 1fr 1fr; gap:.45rem; margin-top:4px; }
+  .trio-box { border-radius:10px; padding:9px 7px; font-size:.76rem; line-height:1.5; border:1px solid transparent; }
+  .trio-box.g { background:rgba(46,204,113,0.07);  border-color:rgba(46,204,113,0.28); color:#9de0b4; }
+  .trio-box.r { background:rgba(231,76,60,0.07);   border-color:rgba(231,76,60,0.28);  color:#f0a8a0; }
+  .trio-box.b { background:rgba(79,195,247,0.07);  border-color:rgba(79,195,247,0.28); color:#9fd6f0; }
+  .trio-titulo { font-weight:700; font-size:.8rem; margin-bottom:5px; }
+  .trio-box ul { list-style:none; padding:0; }
+  .trio-box ul li { padding:1px 0; }
+
+  /* Futuro */
+  .mapa-futuro-titulo {
+    text-align:center;
+    background:linear-gradient(90deg,rgba(230,126,34,0.1),rgba(0,229,192,0.1),rgba(79,195,247,0.1));
+    border:1.5px solid rgba(0,229,192,0.38); border-radius:50px;
+    padding:13px 24px; font-family:'Playfair Display',serif;
+    font-size:clamp(.9rem,2vw,1.2rem); font-weight:700; color:#fff;
+    text-shadow:0 0 14px rgba(0,229,192,0.25); margin:.8rem 0;
+  }
+  .mapa-futuro-row { display:grid; grid-template-columns:repeat(5,1fr); gap:.7rem; margin-top:.7rem; }
+  .futuro-box {
+    background:rgba(5,18,38,0.85); border:1.5px solid rgba(0,229,192,0.22);
+    border-radius:12px; padding:13px 7px; text-align:center;
+    font-size:.8rem; color:rgba(200,235,245,0.8); line-height:1.6;
+    transition:transform .2s, box-shadow .2s, border-color .2s;
+  }
+  .futuro-box:hover { transform:translateY(-3px); box-shadow:0 0 16px rgba(0,229,192,0.2); border-color:rgba(0,229,192,0.65); }
+  .futuro-box strong { color:var(--teal); display:block; }
+
+  /* TARJETAS */
+  .cards-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem; margin-top:3rem; }
+  .card { background:rgba(5,18,38,0.75); border:1px solid rgba(0,229,192,0.15); border-top:3px solid var(--teal); border-radius:10px; padding:1.5rem; backdrop-filter:blur(8px); transition:transform .25s, box-shadow .25s; }
+  .card:hover { transform:translateY(-5px); box-shadow:0 0 25px rgba(0,229,192,0.2); }
+  .card-icon { font-size:2rem; margin-bottom:.7rem; }
+  .card h3 { font-family:'Playfair Display',serif; font-size:1.1rem; color:var(--teal); margin-bottom:.7rem; }
+  .card p { font-size:.92rem; color:rgba(200,235,245,0.7); line-height:1.7; }
+  .card-num { display:inline-block; background:rgba(0,229,192,0.1); color:var(--teal); font-size:.8rem; padding:2px 8px; border-radius:3px; margin-bottom:.6rem; border:1px solid rgba(0,229,192,0.2); }
+
+  /* VIDEO */
+  .video-wrapper { margin:3rem auto; border-radius:10px; overflow:hidden; box-shadow:0 0 30px rgba(0,229,192,0.15); aspect-ratio:16/9; max-width:800px; border:1px solid rgba(0,229,192,0.2); }
   .video-wrapper iframe { width:100%; height:100%; border:none; display:block; }
   .video-caption { text-align:center; font-size:.85rem; color:rgba(0,229,192,0.4); margin-top:.8rem; font-style:italic; }
 
-  /* ── REFERENCIAS ── */
+  /* REFERENCIAS */
   .ref-list { list-style:none; }
   .ref-list li { color:rgba(200,235,245,0.7); font-size:.9rem; padding:.8rem 0; border-bottom:1px solid rgba(0,229,192,0.08); padding-left:1.5rem; text-indent:-1.5rem; line-height:1.7; }
   .ref-list li a { color:var(--teal); }
 
-  /* ── FOOTER ── */
-  footer { background:rgba(2,13,26,0.9); text-align:center; padding:1.5rem; color:rgba(0,229,192,0.25); font-size:.8rem; letter-spacing:1px; border-top:1px solid rgba(0,229,192,0.08); }
+  footer { background:rgba(2,13,26,0.95); text-align:center; padding:1.5rem; color:rgba(0,229,192,0.25); font-size:.8rem; letter-spacing:1px; border-top:1px solid rgba(0,229,192,0.08); }
 
-  /* ANIMACIONES */
   @keyframes fadeUp { from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);} }
   @keyframes bounce { 0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);} }
 
-  /* SUBTÍTULOS */
-  .sub-h3 { font-family:'Playfair Display',serif; color:var(--teal); font-size:1.3rem; margin-bottom:.5rem; text-shadow:0 0 10px rgba(0,229,192,0.2); }
-  .sub-p { font-size:.9rem; color:rgba(0,229,192,0.45); margin-bottom:1rem; }
-
-  @media(max-width:600px){ nav ul{gap:.8rem;} nav ul li a{font-size:.72rem;} .student-card{left:auto;right:0;} }
+  @media(max-width:800px){
+    .mapa-cols { grid-template-columns:1fr; }
+    .mapa-futuro-row { grid-template-columns:repeat(3,1fr); }
+    .trio { grid-template-columns:1fr; }
+    nav ul { gap:.6rem; }
+  }
 </style>
 </head>
 <body>
 
-<!-- CANVAS PLEXUS -->
 <canvas id="plexus-canvas"></canvas>
 
-<!-- NAV -->
 <nav>
   <div class="logo">⬡ C&T México</div>
   <ul>
@@ -323,133 +299,207 @@
     <h2 class="section-title">Desarrollo</h2>
 
     <p class="sub-h3">Mapa Conceptual</p>
-    <p class="sub-p">Pasa el cursor sobre cada nodo para ver una imagen e información relacionada.</p>
+    <p class="sub-p">Pasa el cursor sobre los nodos para ver información e imágenes relacionadas.</p>
 
+    <!-- POPUP -->
     <div class="mapa-popup" id="mapaPopup">
       <img id="popupImg" src="" alt="">
       <div class="pop-label" id="popupTitle"></div>
       <div class="pop-sub" id="popupSub"></div>
     </div>
 
-    <div class="mapa-container">
-      <svg class="mapa-svg" viewBox="0 0 860 520" xmlns="http://www.w3.org/2000/svg" font-family="'Source Sans 3',sans-serif">
-        <defs>
-          <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#00e5c0"/></marker>
-          <filter id="sombra"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="rgba(0,229,192,0.2)"/></filter>
-          <filter id="sombraHover"><feDropShadow dx="0" dy="0" stdDeviation="10" flood-color="rgba(0,229,192,0.6)"/></filter>
-          <filter id="glow"><feGaussianBlur stdDeviation="3" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        </defs>
+    <!-- ═══ MAPA CONCEPTUAL ═══ -->
+    <div class="mapa-conceptual">
 
-        <!-- Líneas de conexión -->
-        <line x1="430" y1="220" x2="200" y2="95"  stroke="rgba(0,229,192,0.4)" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
-        <line x1="430" y1="220" x2="660" y2="95"  stroke="rgba(79,195,247,0.4)" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
-        <line x1="430" y1="220" x2="120" y2="310" stroke="rgba(0,229,192,0.4)" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
-        <line x1="430" y1="220" x2="740" y2="310" stroke="rgba(79,195,247,0.4)" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
-        <line x1="430" y1="220" x2="200" y2="430" stroke="rgba(0,229,192,0.4)" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
-        <line x1="430" y1="220" x2="660" y2="430" stroke="rgba(79,195,247,0.4)" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+      <div class="mapa-titulo">
+        <span>🇲🇽</span>
+        <span>Condiciones de la Ciencia y la Tecnología en México</span>
+        <span>⚛️</span>
+      </div>
 
-        <!-- NODO CENTRAL -->
-        <rect x="295" y="165" width="270" height="110" rx="12" fill="rgba(0,229,192,0.06)" stroke="rgba(0,229,192,0.5)" stroke-width="1.5" filter="url(#sombra)"/>
-        <text x="430" y="208" text-anchor="middle" font-size="15" font-weight="700" fill="#00e5c0" font-family="'Playfair Display',serif" filter="url(#glow)">Ciencia y Tecnología</text>
-        <text x="430" y="228" text-anchor="middle" font-size="13" fill="rgba(200,235,245,0.8)">en México</text>
-        <text x="430" y="252" text-anchor="middle" font-size="10" fill="rgba(0,229,192,0.4)">Condiciones estructurales del sistema C+T</text>
+      <div class="mapa-raiz-row">
+        <div class="nodo raiz">🔬 Situación Actual 🇲🇽</div>
+      </div>
+      <div class="mapa-flecha-c">↓</div>
 
-        <!-- NODO 1 — Inversión -->
-        <g class="nodo-hover" data-img="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=520&q=80" data-title="💰 Inversión en C+T" data-sub="México invierte ~0.3% del PIB en I+D, muy por debajo del promedio OCDE (2.7%).">
-          <rect x="100" y="38" width="200" height="72" rx="10" fill="rgba(0,229,192,0.06)" stroke="rgba(0,229,192,0.4)" stroke-width="1" filter="url(#sombra)"/>
-          <text x="200" y="66" text-anchor="middle" font-size="12" font-weight="700" fill="#00e5c0">💰 Inversión en C+T</text>
-          <text x="200" y="84" text-anchor="middle" font-size="10" fill="rgba(200,235,245,0.6)">Baja inversión vs. países</text>
-          <text x="200" y="98" text-anchor="middle" font-size="10" fill="rgba(200,235,245,0.6)">de la OCDE (~0.3% del PIB)</text>
-        </g>
+      <div class="mapa-cols">
 
-        <!-- NODO 2 — Infraestructura -->
-        <g class="nodo-hover" data-img="https://images.unsplash.com/photo-1576086213369-97a306d36557?w=520&q=80" data-title="🏛️ Infraestructura Científica" data-sub="Laboratorios con equipo limitado; instituciones como UNAM e IPN lideran el sector.">
-          <rect x="560" y="38" width="200" height="72" rx="10" fill="rgba(79,195,247,0.06)" stroke="rgba(79,195,247,0.4)" stroke-width="1" filter="url(#sombra)"/>
-          <text x="660" y="66" text-anchor="middle" font-size="12" font-weight="700" fill="#4fc3f7">🏛 Infraestructura</text>
-          <text x="660" y="84" text-anchor="middle" font-size="10" fill="rgba(200,235,245,0.6)">Laboratorios limitados;</text>
-          <text x="660" y="98" text-anchor="middle" font-size="10" fill="rgba(200,235,245,0.6)">necesitan modernización</text>
-        </g>
+        <!-- COLUMNA IZQUIERDA: Factores Positivos -->
+        <div class="mapa-col">
+          <div class="nodo verde header">✅ Factores Positivos</div>
+          <div class="col-arr v">↓</div>
+          <div class="nodo verde clickable"
+            data-img="https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=520&q=80"
+            data-title="🔬 Apoyo de CONAHCYT"
+            data-sub="El CONAHCYT financia proyectos científicos, becas de posgrado e investigadores en todo México.">
+            🔬 Apoyo de <strong>CONAHCYT</strong>
+          </div>
+          <div class="col-arr v">↓</div>
+          <div class="nodo verde clickable"
+            data-img="https://images.unsplash.com/photo-1562774053-701939374585?w=520&q=80"
+            data-title="🏛️ Universidades e Investigación"
+            data-sub="La UNAM, IPN y CINVESTAV son instituciones de clase mundial en ciencia e investigación.">
+            🏛️ Universidades e Investigación
+          </div>
+          <div class="col-arr v">↓</div>
+          <div class="nodo verde clickable"
+            data-img="https://images.unsplash.com/photo-1518770660439-4636190af475?w=520&q=80"
+            data-title="🤖 Avances Tecnológicos"
+            data-sub="México ha logrado avances en biotecnología, aeronáutica, energías renovables y manufactura avanzada.">
+            🤖 Avances Tecnológicos
+          </div>
+          <div class="col-arr v">↓</div>
+          <div class="nodo verde clickable"
+            data-img="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=520&q=80"
+            data-title="📋 Programas de Becas"
+            data-sub="Existen becas nacionales para posgrado e investigación, aunque insuficientes frente a la demanda real.">
+            📋 Programas de Becas
+          </div>
+        </div>
 
-        <!-- NODO 3 — Educación -->
-        <g class="nodo-hover" data-img="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=520&q=80" data-title="🎓 Educación y Formación" data-sub="Las universidades forman miles de investigadores, pero faltan becas y plazas de posgrado.">
-          <rect x="20" y="268" width="200" height="72" rx="10" fill="rgba(0,229,192,0.06)" stroke="rgba(0,229,192,0.4)" stroke-width="1" filter="url(#sombra)"/>
-          <text x="120" y="296" text-anchor="middle" font-size="12" font-weight="700" fill="#00e5c0">🎓 Educación</text>
-          <text x="120" y="314" text-anchor="middle" font-size="10" fill="rgba(200,235,245,0.6)">Universidades forman</text>
-          <text x="120" y="328" text-anchor="middle" font-size="10" fill="rgba(200,235,245,0.6)">talento; faltan más becas</text>
-        </g>
+        <!-- COLUMNA CENTRO: Retos + Trio -->
+        <div class="mapa-col">
+          <div class="nodo naranja header">⚠️ Retos y Problemas</div>
+          <div class="col-arr n">↓</div>
+          <div class="nodo naranja clickable"
+            data-img="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=520&q=80"
+            data-title="💸 Baja Inversión"
+            data-sub="México invierte ~0.3% del PIB en I+D, muy por debajo del 2.7% que recomienda la OCDE.">
+            💸 Baja Inversión
+          </div>
+          <div class="col-arr n">↓</div>
+          <div class="nodo naranja clickable"
+            data-img="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=520&q=80"
+            data-title="✈️ Fuga de Cerebros"
+            data-sub="Miles de científicos mexicanos emigran al extranjero por mejores salarios y oportunidades.">
+            ✈️ Fuga de Cerebros
+          </div>
+          <div class="col-arr n">↓</div>
+          <div class="nodo naranja clickable"
+            data-img="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=520&q=80"
+            data-title="🗺️ Desigualdad Regional"
+            data-sub="La infraestructura científica se concentra en la CDMX, dejando rezagadas otras regiones.">
+            🗺️ Desigualdad Regional
+          </div>
+          <div class="col-arr n">↓</div>
+          <div class="nodo naranja clickable"
+            data-img="https://images.unsplash.com/photo-1576086213369-97a306d36557?w=520&q=80"
+            data-title="🏗️ Poca Infraestructura"
+            data-sub="Muchos laboratorios carecen de equipo moderno para investigación de frontera.">
+            🏗️ Poca Infraestructura
+          </div>
+          <div class="col-arr n">↓</div>
+          <div class="trio">
+            <div class="trio-box g">
+              <div class="trio-titulo">📊 Resultados</div>
+              <ul>
+                <li>💡 Innovación</li>
+                <li>📈 Desarrollo</li>
+                <li>👨‍🔬 Talento</li>
+              </ul>
+            </div>
+            <div class="trio-box r">
+              <div class="trio-titulo">😟 Consecuencias</div>
+              <ul>
+                <li>⚠️ Poco Avance</li>
+                <li>🔬 Inv. Limitada</li>
+                <li>💻 Brecha Tec.</li>
+              </ul>
+            </div>
+            <div class="trio-box b">
+              <div class="trio-titulo">✅ Soluciones</div>
+              <ul>
+                <li>📜 Reformas</li>
+                <li>💰 Incentivos</li>
+                <li>🧪 Proyectos</li>
+              </ul>
+            </div>
+          </div>
+        </div>
 
-        <!-- NODO 4 — Fuga de cerebros -->
-        <g class="nodo-hover" data-img="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=520&q=80" data-title="✈️ Fuga de Cerebros" data-sub="Científicos mexicanos emigran por mejores salarios y oportunidades en el extranjero.">
-          <rect x="640" y="268" width="200" height="72" rx="10" fill="rgba(79,195,247,0.06)" stroke="rgba(79,195,247,0.4)" stroke-width="1" filter="url(#sombra)"/>
-          <text x="740" y="296" text-anchor="middle" font-size="12" font-weight="700" fill="#4fc3f7">✈️ Fuga de Cerebros</text>
-          <text x="740" y="314" text-anchor="middle" font-size="10" fill="rgba(200,235,245,0.6)">Migración de científicos</text>
-          <text x="740" y="328" text-anchor="middle" font-size="10" fill="rgba(200,235,245,0.6)">hacia el extranjero</text>
-        </g>
+        <!-- COLUMNA DERECHA: Áreas de Oportunidad -->
+        <div class="mapa-col">
+          <div class="nodo azul header">💡 Áreas de Oportunidad</div>
+          <div class="col-arr a">↓</div>
+          <div class="nodo azul clickable"
+            data-img="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=520&q=80"
+            data-title="💵 Más Inversión"
+            data-sub="Incrementar el gasto público en C+T al menos al 1% del PIB como meta a corto plazo.">
+            💵 Más Inversión
+          </div>
+          <div class="col-arr a">↓</div>
+          <div class="nodo azul clickable"
+            data-img="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=520&q=80"
+            data-title="🎓 Educación Científica"
+            data-sub="Fortalecer programas educativos en ciencia desde nivel básico hasta posgrado en todo el país.">
+            🎓 Educación Científica
+          </div>
+          <div class="col-arr a">↓</div>
+          <div class="nodo azul clickable"
+            data-img="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=520&q=80"
+            data-title="🌐 Colaboración Global"
+            data-sub="Ampliar acuerdos con el CERN, ESA y organismos internacionales para compartir recursos.">
+            🌐 Colaboración Global
+          </div>
+          <div class="col-arr a">↓</div>
+          <div class="nodo azul clickable"
+            data-img="https://images.unsplash.com/photo-1518770660439-4636190af475?w=520&q=80"
+            data-title="🚀 Tecnología e Innovación"
+            data-sub="Impulsar ecosistemas de innovación, startups tecnológicas y parques científicos en el país.">
+            🚀 Tecnología e Innovación
+          </div>
+        </div>
 
-        <!-- NODO 5 — Innovación -->
-        <g class="nodo-hover" data-img="https://images.unsplash.com/photo-1518770660439-4636190af475?w=520&q=80" data-title="⚙️ Innovación Tecnológica" data-sub="La vinculación empresa-academia-gobierno impulsa proyectos en biotecnología, aeronáutica y TI.">
-          <rect x="100" y="388" width="200" height="72" rx="10" fill="rgba(0,229,192,0.06)" stroke="rgba(0,229,192,0.4)" stroke-width="1" filter="url(#sombra)"/>
-          <text x="200" y="416" text-anchor="middle" font-size="12" font-weight="700" fill="#00e5c0">⚙️ Innovación</text>
-          <text x="200" y="434" text-anchor="middle" font-size="10" fill="rgba(200,235,245,0.6)">Vinculación empresa-</text>
-          <text x="200" y="448" text-anchor="middle" font-size="10" fill="rgba(200,235,245,0.6)">academia-gobierno</text>
-        </g>
+      </div><!-- fin mapa-cols -->
 
-        <!-- NODO 6 — Colaboración -->
-        <g class="nodo-hover" data-img="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=520&q=80" data-title="🌐 Colaboración Internacional" data-sub="México participa en el CERN, ESA e IANAS, compartiendo conocimiento y recursos a nivel global.">
-          <rect x="560" y="388" width="200" height="72" rx="10" fill="rgba(79,195,247,0.06)" stroke="rgba(79,195,247,0.4)" stroke-width="1" filter="url(#sombra)"/>
-          <text x="660" y="416" text-anchor="middle" font-size="12" font-weight="700" fill="#4fc3f7">🌐 Colaboración Internacional</text>
-          <text x="660" y="434" text-anchor="middle" font-size="10" fill="rgba(200,235,245,0.6)">Redes globales de</text>
-          <text x="660" y="448" text-anchor="middle" font-size="10" fill="rgba(200,235,245,0.6)">investigación compartida</text>
-        </g>
+      <div class="mapa-futuro-titulo">🌟 Hacia un Futuro Científico y Tecnológico</div>
+      <div class="mapa-futuro-row">
+        <div class="futuro-box">💰<br><strong>Mayor Inversión</strong></div>
+        <div class="futuro-box">🧲<br><strong>Retener Talento</strong></div>
+        <div class="futuro-box">🏗️<br><strong>Infraestructura</strong></div>
+        <div class="futuro-box">📚<br><strong>Educación y Becas</strong></div>
+        <div class="futuro-box">💡<br><strong>Innovación</strong></div>
+      </div>
 
-        <rect x="10" y="480" width="840" height="30" rx="6" fill="rgba(0,229,192,0.03)" stroke="rgba(0,229,192,0.08)" stroke-width="1"/>
-        <text x="430" y="500" text-anchor="middle" font-size="10" fill="rgba(0,229,192,0.35)">Pasa el cursor sobre cada nodo para ver más información · Elaboración propia</text>
-      </svg>
-    </div>
+    </div><!-- fin mapa-conceptual -->
 
     <script>
     (function(){
-      const popup=document.getElementById('mapaPopup');
-      const pImg=document.getElementById('popupImg');
-      const pTitle=document.getElementById('popupTitle');
-      const pSub=document.getElementById('popupSub');
-      document.querySelectorAll('.nodo-hover').forEach(function(g){
-        g.addEventListener('mouseenter',function(e){
-          pImg.src=g.dataset.img; pTitle.textContent=g.dataset.title; pSub.textContent=g.dataset.sub;
-          popup.classList.add('visible'); movePopup(e);
-          const r=g.querySelectorAll('rect');
-          r[0].setAttribute('filter','url(#sombraHover)');
-          r[0].dataset.origStroke=r[0].getAttribute('stroke');
-          r[0].setAttribute('stroke','rgba(0,229,192,0.9)');
-          r[0].setAttribute('stroke-width','2');
+      var popup=document.getElementById('mapaPopup');
+      var pImg=document.getElementById('popupImg');
+      var pTitle=document.getElementById('popupTitle');
+      var pSub=document.getElementById('popupSub');
+      document.querySelectorAll('.nodo.clickable').forEach(function(el){
+        el.addEventListener('mouseenter',function(e){
+          pImg.src=el.dataset.img;
+          pTitle.textContent=el.dataset.title;
+          pSub.textContent=el.dataset.sub;
+          popup.classList.add('visible');
+          move(e);
         });
-        g.addEventListener('mousemove',movePopup);
-        g.addEventListener('mouseleave',function(){
-          popup.classList.remove('visible');
-          const r=g.querySelectorAll('rect');
-          r[0].setAttribute('filter','url(#sombra)');
-          r[0].setAttribute('stroke',r[0].dataset.origStroke||'rgba(0,229,192,0.4)');
-          r[0].setAttribute('stroke-width','1');
-        });
+        el.addEventListener('mousemove',move);
+        el.addEventListener('mouseleave',function(){ popup.classList.remove('visible'); });
       });
-      function movePopup(e){ popup.style.left=e.clientX+'px'; popup.style.top=e.clientY+'px'; }
+      function move(e){ popup.style.left=e.clientX+'px'; popup.style.top=e.clientY+'px'; }
     })();
     </script>
 
+    <!-- VIDEO -->
     <p class="sub-h3" style="margin-top:2.5rem;">Video de Referencia</p>
-    <p class="sub-p">Recurso audiovisual complementario sobre la situación de la ciencia y tecnología en México.</p>
+    <p class="sub-p">Recurso audiovisual complementario sobre la ciencia y tecnología en México.</p>
     <div class="video-wrapper">
       <iframe src="https://www.youtube.com/embed/HmZOdbIr6Uw" title="Ciencia y Tecnología en México" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
     <p class="video-caption">Fuente: YouTube — Video de referencia sobre la ciencia y tecnología en México.</p>
 
+    <!-- TARJETAS -->
     <p class="sub-h3" style="margin-top:3rem;">Condiciones Detalladas</p>
     <div class="cards-grid">
       <div class="card"><div class="card-num">01</div><div class="card-icon">💰</div><h3>Inversión en Ciencia y Tecnología</h3><p>México invierte alrededor del 0.3% de su PIB en investigación y desarrollo, cifra muy inferior al promedio del 2.7% recomendado por la OCDE. Esta limitación financiera restringe la creación de nuevos proyectos, la adquisición de equipo de vanguardia y el otorgamiento de becas.</p></div>
-      <div class="card"><div class="card-num">02</div><div class="card-icon">🏛️</div><h3>Infraestructura Científica</h3><p>El país cuenta con instituciones como la UNAM, el IPN y el CINVESTAV, reconocidas internacionalmente. Sin embargo, muchos centros de investigación fuera de la Ciudad de México presentan laboratorios con equipos limitados u obsoletos.</p></div>
-      <div class="card"><div class="card-num">03</div><div class="card-icon">🎓</div><h3>Educación y Formación de Científicos</h3><p>Las universidades públicas gradúan anualmente a miles de ingenieros y científicos. No obstante, la oferta de posgrados de calidad es desigual entre regiones y el número de becas disponibles resulta insuficiente frente a la demanda.</p></div>
-      <div class="card"><div class="card-num">04</div><div class="card-icon">✈️</div><h3>Fuga de Cerebros</h3><p>La emigración de científicos mexicanos hacia EE. UU., Canadá y Europa es un fenómeno persistente, impulsada por los bajos salarios académicos, la insuficiencia de plazas y la burocracia institucional. El país pierde talento que el Estado formó.</p></div>
-      <div class="card"><div class="card-num">05</div><div class="card-icon">⚙️</div><h3>Innovación y Desarrollo Tecnológico</h3><p>Iniciativas como los CEMIE y los clústeres tecnológicos buscan crear puentes entre academia, gobierno e industria. Hay casos de éxito en biotecnología, aeronáutica y TI, aunque la vinculación sigue siendo débil comparada con Corea del Sur o Brasil.</p></div>
+      <div class="card"><div class="card-num">02</div><div class="card-icon">🏛️</div><h3>Infraestructura Científica</h3><p>El país cuenta con instituciones como la UNAM, el IPN y el CINVESTAV, reconocidas internacionalmente. Sin embargo, muchos centros de investigación presentan laboratorios con equipos limitados u obsoletos que necesitan modernización urgente.</p></div>
+      <div class="card"><div class="card-num">03</div><div class="card-icon">🎓</div><h3>Educación y Formación de Científicos</h3><p>Las universidades públicas gradúan anualmente a miles de ingenieros y científicos. No obstante, la oferta de posgrados de calidad es desigual entre regiones y el número de becas resulta insuficiente frente a la demanda.</p></div>
+      <div class="card"><div class="card-num">04</div><div class="card-icon">✈️</div><h3>Fuga de Cerebros</h3><p>La emigración de científicos mexicanos hacia EE. UU., Canadá y Europa es un fenómeno persistente, impulsada por los bajos salarios académicos, la insuficiencia de plazas y la burocracia. El país pierde talento que el Estado formó.</p></div>
+      <div class="card"><div class="card-num">05</div><div class="card-icon">⚙️</div><h3>Innovación y Desarrollo Tecnológico</h3><p>Iniciativas como los CEMIE y los clústeres tecnológicos buscan crear puentes entre academia, gobierno e industria. Hay avances en biotecnología, aeronáutica y TI, aunque la vinculación sigue siendo débil comparada con Corea del Sur o Brasil.</p></div>
       <div class="card"><div class="card-num">06</div><div class="card-icon">🌐</div><h3>Colaboración Internacional</h3><p>México participa en redes como el CERN, la ESA y la IANAS, además de programas con la Unión Europea. Estas alianzas permiten acceder a financiamiento externo, infraestructura compartida y formación de investigadores en el extranjero.</p></div>
     </div>
   </div>
@@ -475,131 +525,70 @@
     <ul class="ref-list">
       <li>Consejo Nacional de Humanidades, Ciencias y Tecnologías. (2023). <em>Informe general del estado de la ciencia, la tecnología y la innovación en México 2022</em>. CONAHCYT. <a href="https://www.conahcyt.mx" target="_blank">https://www.conahcyt.mx</a></li>
       <li>Organización para la Cooperación y el Desarrollo Económico. (2023). <em>OECD Science, Technology and Innovation Outlook 2023</em>. OCDE Publishing. <a href="https://doi.org/10.1787/0e8f1c94-en" target="_blank">https://doi.org/10.1787/0e8f1c94-en</a></li>
-      <li>Banco Mundial. (2023). <em>Research and development expenditure (% of GDP) — Mexico</em>. World Bank Open Data. <a href="https://data.worldbank.org/indicator/GB.XPD.RSDV.GD.ZS?locations=MX" target="_blank">https://data.worldbank.org</a></li>
+      <li>Banco Mundial. (2023). <em>Research and development expenditure (% of GDP) — Mexico</em>. World Bank Open Data. <a href="https://data.worldbank.org" target="_blank">https://data.worldbank.org</a></li>
       <li>Universidad Nacional Autónoma de México. (2023). <em>La UNAM en cifras 2023</em>. Dirección General de Planeación. <a href="https://www.unam.mx" target="_blank">https://www.unam.mx</a></li>
       <li>Dutrénit, G., &amp; Sutz, J. (Eds.). (2014). <em>National innovation systems, social inclusion and development</em>. Edward Elgar Publishing. <a href="https://doi.org/10.4337/9781782548942" target="_blank">https://doi.org/10.4337/9781782548942</a></li>
       <li>Didou Aupetit, S. (2017). <em>La internacionalización de la educación superior en América Latina</em>. UNESCO/IESALC. <a href="https://www.iesalc.unesco.org" target="_blank">https://www.iesalc.unesco.org</a></li>
       <li>Foro Consultivo Científico y Tecnológico. (2022). <em>Ciencia, tecnología e innovación en México: situación actual y desafíos</em>. FCCyT. <a href="https://www.foroconsultivo.org.mx" target="_blank">https://www.foroconsultivo.org.mx</a></li>
-      <li>Canal de YouTube (Referencia audiovisual). (s.f.). <em>Ciencia y tecnología en México</em> [Video]. YouTube. <a href="https://www.youtube.com/watch?v=HmZOdbIr6Uw" target="_blank">https://www.youtube.com/watch?v=HmZOdbIr6Uw</a></li>
+      <li>Canal de YouTube. (s.f.). <em>Ciencia y tecnología en México</em> [Video]. YouTube. <a href="https://www.youtube.com/watch?v=HmZOdbIr6Uw" target="_blank">https://www.youtube.com/watch?v=HmZOdbIr6Uw</a></li>
     </ul>
   </div>
 </section>
 
-<footer>Trabajo de Investigación — Ciencia y Tecnología en México &nbsp;|&nbsp; Valenzuela Ayala Jesus 14/03/26</footer>
+<footer>Trabajo de Investigación — Ciencia y Tecnología en México &nbsp;|&nbsp; Valenzuela Ayala Jesus &nbsp;|&nbsp; 2026</footer>
 
-<!-- PLEXUS ANIMATION SCRIPT -->
 <script>
 (function(){
-  const canvas = document.getElementById('plexus-canvas');
-  const ctx = canvas.getContext('2d');
-  let W, H, particles = [], mouse = {x:null, y:null};
-  const PARTICLE_COUNT = 90;
-  const MAX_DIST = 140;
-
-  function resize(){
-    W = canvas.width  = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-  }
-
+  var canvas=document.getElementById('plexus-canvas');
+  var ctx=canvas.getContext('2d');
+  var W,H,particles=[],mouse={x:null,y:null};
+  var N=85, DIST=135;
+  function resize(){ W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; }
   function rand(a,b){ return Math.random()*(b-a)+a; }
-
   function Particle(){
-    this.x = rand(0,W);
-    this.y = rand(0,H);
-    this.vx = rand(-0.35,0.35);
-    this.vy = rand(-0.35,0.35);
-    // 60% teal, 40% blue
-    this.teal = Math.random() < 0.6;
-    this.r = rand(1.5,3);
+    this.x=rand(0,W); this.y=rand(0,H);
+    this.vx=rand(-.3,.3); this.vy=rand(-.3,.3);
+    this.teal=Math.random()<.6; this.r=rand(1.5,2.8);
   }
-
-  Particle.prototype.update = function(){
-    this.x += this.vx;
-    this.y += this.vy;
+  Particle.prototype.update=function(){
+    this.x+=this.vx; this.y+=this.vy;
     if(this.x<0||this.x>W) this.vx*=-1;
     if(this.y<0||this.y>H) this.vy*=-1;
   };
-
-  function init(){
-    particles = [];
-    for(var i=0;i<PARTICLE_COUNT;i++) particles.push(new Particle());
-  }
-
+  function init(){ particles=[]; for(var i=0;i<N;i++) particles.push(new Particle()); }
   function draw(){
     ctx.clearRect(0,0,W,H);
-
-    // Draw connections
     for(var i=0;i<particles.length;i++){
       for(var j=i+1;j<particles.length;j++){
-        var dx=particles[i].x-particles[j].x;
-        var dy=particles[i].y-particles[j].y;
-        var dist=Math.sqrt(dx*dx+dy*dy);
-        if(dist<MAX_DIST){
-          var alpha=(1-dist/MAX_DIST)*0.5;
-          // Mix color based on particles
-          var col = (particles[i].teal && particles[j].teal)
-            ? 'rgba(0,229,192,'+alpha+')'
-            : ((!particles[i].teal && !particles[j].teal)
-              ? 'rgba(79,195,247,'+alpha+')'
-              : 'rgba(40,210,215,'+alpha+')');
-          ctx.beginPath();
-          ctx.strokeStyle=col;
-          ctx.lineWidth=0.8;
-          ctx.moveTo(particles[i].x,particles[i].y);
-          ctx.lineTo(particles[j].x,particles[j].y);
-          ctx.stroke();
+        var dx=particles[i].x-particles[j].x, dy=particles[i].y-particles[j].y;
+        var d=Math.sqrt(dx*dx+dy*dy);
+        if(d<DIST){
+          var a=(1-d/DIST)*.45;
+          var c=(particles[i].teal&&particles[j].teal)?'rgba(0,229,192,'+a+')':(!particles[i].teal&&!particles[j].teal)?'rgba(79,195,247,'+a+')':'rgba(40,212,215,'+a+')';
+          ctx.beginPath(); ctx.strokeStyle=c; ctx.lineWidth=.7;
+          ctx.moveTo(particles[i].x,particles[i].y); ctx.lineTo(particles[j].x,particles[j].y); ctx.stroke();
         }
       }
-      // Mouse connections
       if(mouse.x!==null){
-        var dx=particles[i].x-mouse.x;
-        var dy=particles[i].y-mouse.y;
-        var dist=Math.sqrt(dx*dx+dy*dy);
-        if(dist<180){
-          var alpha=(1-dist/180)*0.6;
-          ctx.beginPath();
-          ctx.strokeStyle='rgba(0,229,192,'+alpha+')';
-          ctx.lineWidth=1;
-          ctx.moveTo(particles[i].x,particles[i].y);
-          ctx.lineTo(mouse.x,mouse.y);
-          ctx.stroke();
-        }
+        var dx=particles[i].x-mouse.x, dy=particles[i].y-mouse.y, d=Math.sqrt(dx*dx+dy*dy);
+        if(d<170){ var a=(1-d/170)*.55; ctx.beginPath(); ctx.strokeStyle='rgba(0,229,192,'+a+')'; ctx.lineWidth=.9; ctx.moveTo(particles[i].x,particles[i].y); ctx.lineTo(mouse.x,mouse.y); ctx.stroke(); }
       }
     }
-
-    // Draw particles
     for(var i=0;i<particles.length;i++){
       var p=particles[i];
-      ctx.beginPath();
-      var grad=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*2);
-      if(p.teal){
-        grad.addColorStop(0,'rgba(0,229,192,0.9)');
-        grad.addColorStop(1,'rgba(0,229,192,0)');
-      } else {
-        grad.addColorStop(0,'rgba(79,195,247,0.9)');
-        grad.addColorStop(1,'rgba(79,195,247,0)');
-      }
-      ctx.fillStyle=grad;
-      ctx.arc(p.x,p.y,p.r*2,0,Math.PI*2);
-      ctx.fill();
-      // Core dot
-      ctx.beginPath();
-      ctx.fillStyle=p.teal?'rgba(0,229,192,0.95)':'rgba(79,195,247,0.95)';
-      ctx.arc(p.x,p.y,p.r*0.6,0,Math.PI*2);
-      ctx.fill();
+      var g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*2);
+      g.addColorStop(0,p.teal?'rgba(0,229,192,.9)':'rgba(79,195,247,.9)');
+      g.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.fillStyle=g; ctx.arc(p.x,p.y,p.r*2,0,Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.fillStyle=p.teal?'rgba(0,229,192,.95)':'rgba(79,195,247,.95)'; ctx.arc(p.x,p.y,p.r*.6,0,Math.PI*2); ctx.fill();
       p.update();
     }
-
     requestAnimationFrame(draw);
   }
-
-  window.addEventListener('resize', function(){ resize(); init(); });
-  window.addEventListener('mousemove', function(e){ mouse.x=e.clientX; mouse.y=e.clientY; });
-  window.addEventListener('mouseleave', function(){ mouse.x=null; mouse.y=null; });
-
-  resize();
-  init();
-  draw();
+  window.addEventListener('resize',function(){ resize(); init(); });
+  window.addEventListener('mousemove',function(e){ mouse.x=e.clientX; mouse.y=e.clientY; });
+  window.addEventListener('mouseleave',function(){ mouse.x=null; mouse.y=null; });
+  resize(); init(); draw();
 })();
 </script>
 
