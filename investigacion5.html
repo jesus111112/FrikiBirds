@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ciencia, Tecnología y Sociedad</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Raleway:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0d0d14;
+    --cream: #f5f0e8;
+    --gold: #c9a84c;
+    --gold-light: #e8c96e;
+    --rust: #b84a2f;
+    --teal: #1a6b6b;
+    --blue-deep: #0f2a4a;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Raleway', sans-serif; background: var(--ink); color: var(--cream); overflow-x: hidden; }
+
+  /* ── PROGRESS BAR ── */
+  .progress-bar {
+    position: fixed; top: 0; left: 0; height: 2px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    width: 0%; z-index: 9999; transition: width 0.1s linear;
+  }
+
+  /* ── COVER ── */
+  .cover {
+    min-height: 100vh; display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    position: relative; overflow: hidden;
+    background: var(--blue-deep); text-align: center; padding: 2rem;
+  }
+  .cover::before {
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 70% 60% at 20% 30%, rgba(201,168,76,0.18) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 80% 70%, rgba(26,107,107,0.22) 0%, transparent 55%);
+  }
+  .grid-lines {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(201,168,76,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(201,168,76,0.07) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .cover-label { font-size:.75rem; font-weight:700; letter-spacing:.4em; text-transform:uppercase; color:var(--gold); margin-bottom:2rem; position:relative; animation:fadeDown .8s ease both; }
+  .cover h1 { font-family:'Playfair Display',serif; font-size:clamp(2.8rem,7vw,6rem); font-weight:900; line-height:1; position:relative; animation:fadeUp 1s .2s ease both; }
+  .cover h1 em { font-style:italic; color:var(--gold-light); display:block; }
+  .cover-divider { width:80px; height:2px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin:2rem auto; position:relative; animation:fadeUp 1s .4s ease both; }
+  .cover-subtitle { font-size:1.05rem; font-weight:300; letter-spacing:.08em; color:rgba(245,240,232,.7); max-width:560px; line-height:1.7; position:relative; animation:fadeUp 1s .5s ease both; }
+  .pillars { display:flex; gap:1.5rem; margin-top:3rem; position:relative; animation:fadeUp 1s .7s ease both; flex-wrap:wrap; justify-content:center; }
+  .pillar-tag { border:1px solid rgba(201,168,76,.4); padding:.4rem 1.2rem; border-radius:2px; font-size:.72rem; letter-spacing:.2em; text-transform:uppercase; color:var(--gold-light); }
+  .scroll-hint { position:absolute; bottom:2.5rem; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:.5rem; color:rgba(245,240,232,.4); font-size:.7rem; letter-spacing:.2em; text-transform:uppercase; animation:bob 2s infinite ease-in-out; }
+  .scroll-hint::after { content:''; width:1px; height:40px; background:linear-gradient(180deg,rgba(201,168,76,.6),transparent); display:block; }
+
+  /* ── NAV ── */
+  nav {
+    position:sticky; top:0; z-index:200;
+    background:rgba(13,13,20,.96); backdrop-filter:blur(14px);
+    border-bottom:1px solid rgba(201,168,76,.15);
+    padding:0 2rem; display:flex; align-items:center;
+    justify-content:space-between; height:60px;
+  }
+  .nav-left { display:flex; align-items:center; gap:1.2rem; }
+
+  /* Student Card */
+  .student-info-wrapper { position:relative; }
+  .student-trigger {
+    cursor:default; display:flex; align-items:center; gap:6px;
+    font-family:'Playfair Display',serif; font-size:.95rem; font-weight:700;
+    letter-spacing:.05em; transition:color .3s;
+  }
+  .student-trigger.cts-trigger { color:var(--gold); }
+  .student-trigger.alumno-trigger { color:#5ec5c5; }
+  .student-trigger svg { flex-shrink:0; opacity:.7; }
+  .student-trigger:hover { opacity:.85; }
+
+  .student-card {
+    position:absolute; top:calc(100% + 14px); left:0;
+    width:295px; background:rgba(8,6,2,.98);
+    border:1px solid rgba(201,168,76,.28); padding:1.3rem 1.5rem;
+    opacity:0; pointer-events:none; transform:translateY(-8px);
+    transition:opacity .25s ease, transform .25s ease;
+    z-index:9999; box-shadow:0 18px 52px rgba(0,0,0,.85);
+  }
+  .student-card.teal-card { border-color:rgba(26,107,107,.45); }
+  .student-card::before {
+    content:''; position:absolute; top:-6px; left:20px;
+    width:10px; height:10px; background:rgba(8,6,2,.98);
+    border-left:1px solid rgba(201,168,76,.28); border-top:1px solid rgba(201,168,76,.28);
+    transform:rotate(45deg);
+  }
+  .student-card.teal-card::before { border-color:rgba(26,107,107,.45); }
+  .student-info-wrapper:hover .student-card { opacity:1; pointer-events:auto; transform:translateY(0); }
+  .student-card-title { font-size:.61rem; letter-spacing:.27em; text-transform:uppercase; color:var(--gold); margin-bottom:1rem; padding-bottom:.6rem; border-bottom:1px solid rgba(201,168,76,.18); font-weight:700; }
+  .student-card.teal-card .student-card-title { color:#5ec5c5; border-bottom-color:rgba(26,107,107,.3); }
+  .student-field { display:flex; flex-direction:column; margin-bottom:.75rem; }
+  .student-field:last-child { margin-bottom:0; }
+  .field-label { font-size:.57rem; letter-spacing:.15em; text-transform:uppercase; color:rgba(201,168,76,.5); margin-bottom:.15rem; font-weight:700; }
+  .teal-card .field-label { color:rgba(94,197,197,.5); }
+  .field-value { font-size:.88rem; color:rgba(245,240,232,.8); line-height:1.35; }
+  .field-value a { color:var(--gold-light); text-decoration:none; }
+  .field-value a:hover { text-decoration:underline; }
+
+  /* Video nav link */
+  .nav-video-link {
+    display:flex; align-items:center; gap:5px;
+    font-size:.7rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+    color:rgba(245,240,232,.5); text-decoration:none;
+    border:1px solid rgba(245,240,232,.12); padding:.3rem .8rem; border-radius:2px;
+    transition:all .3s;
+  }
+  .nav-video-link:hover { color:var(--gold-light); border-color:rgba(201,168,76,.35); background:rgba(201,168,76,.06); }
+  .nav-links { display:flex; gap:1.8rem; list-style:none; }
+  .nav-links a { color:rgba(245,240,232,.65); text-decoration:none; font-size:.74rem; letter-spacing:.12em; text-transform:uppercase; font-weight:600; transition:color .3s; }
+  .nav-links a:hover { color:var(--gold-light); }
+
+  /* ── SECTIONS ── */
+  section { padding:100px 0 80px; position:relative; }
+  .container { max-width:1100px; margin:0 auto; padding:0 2rem; }
+  .section-num { font-size:.7rem; letter-spacing:.4em; text-transform:uppercase; color:var(--gold); font-weight:700; margin-bottom:.8rem; display:flex; align-items:center; gap:1rem; }
+  .section-num::after { content:''; flex:1; height:1px; background:linear-gradient(90deg,rgba(201,168,76,.4),transparent); max-width:120px; }
+  .section-title { font-family:'Playfair Display',serif; font-size:clamp(2rem,4.5vw,3.4rem); font-weight:900; line-height:1.1; margin-bottom:1.8rem; }
+  .section-title span { color:var(--gold-light); font-style:italic; }
+  .section-lead { font-size:1.1rem; font-weight:300; line-height:1.8; color:rgba(245,240,232,.8); max-width:680px; margin-bottom:3rem; border-left:3px solid var(--gold); padding-left:1.5rem; }
+
+  /* ── BANNER IMAGE ── */
+  .img-banner { width:100%; height:280px; object-fit:cover; object-position:center 30%; display:block; border-radius:4px; margin-bottom:3rem; border:1px solid rgba(201,168,76,.15); filter:brightness(.75) saturate(.85); transition:filter .4s; }
+  .img-banner:hover { filter:brightness(.95) saturate(1); }
+
+  /* ── REVOLUCIÓN ── */
+  #revolucion { background:var(--ink); }
+  .rev-layout { display:grid; grid-template-columns:1.5fr 1fr; gap:3rem; align-items:start; margin-bottom:3rem; }
+  @media(max-width:800px){ .rev-layout{ grid-template-columns:1fr; } }
+
+  .timeline { position:relative; padding-left:2px; }
+  .timeline::before { content:''; position:absolute; left:0; top:0; bottom:0; width:2px; background:linear-gradient(180deg,var(--gold),var(--teal),transparent); }
+  .timeline-item { padding:0 0 3rem 2.5rem; position:relative; opacity:0; transform:translateX(-20px); transition:all .6s ease; }
+  .timeline-item.visible { opacity:1; transform:translateX(0); }
+  .timeline-dot { position:absolute; left:-7px; top:6px; width:16px; height:16px; border-radius:50%; background:var(--gold); border:3px solid var(--ink); box-shadow:0 0 12px rgba(201,168,76,.5); }
+  .timeline-year { font-size:.7rem; font-weight:700; letter-spacing:.3em; color:var(--gold); text-transform:uppercase; margin-bottom:.4rem; }
+  .timeline-h { font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:700; margin-bottom:.6rem; color:var(--cream); }
+  .timeline-p { font-size:.95rem; line-height:1.7; color:rgba(245,240,232,.7); }
+
+  .side-imgs img { width:100%; border-radius:4px; border:1px solid rgba(201,168,76,.18); filter:sepia(25%) brightness(.8); transition:filter .4s; display:block; }
+  .side-imgs img:hover { filter:sepia(0%) brightness(1); }
+  .gallery-caption { font-size:.68rem; color:rgba(245,240,232,.38); letter-spacing:.1em; text-align:center; margin-top:.6rem; font-style:italic; }
+
+  /* ── FIGURE CARDS ── */
+  .figure-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(175px,1fr)); gap:1.5rem; margin-top:3rem; }
+  .figure-card { background:rgba(245,240,232,.04); border:1px solid rgba(201,168,76,.15); border-radius:4px; overflow:hidden; text-align:center; opacity:0; transform:translateY(20px); transition:opacity .5s, transform .5s, background .3s, border-color .3s; }
+  .figure-card.visible { opacity:1; transform:translateY(0); }
+  .figure-card:hover { background:rgba(201,168,76,.08); border-color:rgba(201,168,76,.4); transform:translateY(-4px); }
+  .figure-img { width:100%; height:155px; object-fit:cover; object-position:top; display:block; filter:sepia(30%) brightness(.82); transition:filter .4s; }
+  .figure-card:hover .figure-img { filter:sepia(0%) brightness(1); }
+  .figure-body { padding:1.1rem 1rem; }
+  .figure-name { font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700; color:var(--cream); margin-bottom:.3rem; }
+  .figure-dates { font-size:.7rem; color:var(--gold); font-weight:600; letter-spacing:.15em; margin-bottom:.5rem; }
+  .figure-desc { font-size:.8rem; line-height:1.5; color:rgba(245,240,232,.6); }
+
+  /* ── MODERNIDAD ── */
+  #modernidad { background:linear-gradient(180deg,var(--ink) 0%,var(--blue-deep) 100%); }
+  .img-gallery { display:grid; grid-template-columns:2fr 1fr 1fr; gap:1rem; margin-bottom:.5rem; }
+  @media(max-width:700px){ .img-gallery{ grid-template-columns:1fr 1fr; } }
+  .gallery-img { width:100%; height:195px; object-fit:cover; border-radius:3px; border:1px solid rgba(201,168,76,.12); filter:brightness(.78) saturate(.85); transition:all .4s; display:block; }
+  .gallery-img:hover { filter:brightness(1) saturate(1.1); transform:scale(1.02); }
+
+  .pillars-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:2rem; margin-top:2.5rem; }
+  .pillar-card { position:relative; padding:2.5rem 2rem; border-radius:4px; overflow:hidden; opacity:0; transform:translateY(30px); transition:opacity .6s, transform .6s; }
+  .pillar-card.visible { opacity:1; transform:translateY(0); }
+  .pillar-card::before { content:''; position:absolute; inset:0; opacity:.06; transition:opacity .3s; }
+  .pillar-card:hover::before { opacity:.1; }
+  .pillar-card:nth-child(1){ background:rgba(201,168,76,.08); border:1px solid rgba(201,168,76,.25); }
+  .pillar-card:nth-child(1)::before{ background:var(--gold); }
+  .pillar-card:nth-child(2){ background:rgba(26,107,107,.1); border:1px solid rgba(26,107,107,.35); }
+  .pillar-card:nth-child(2)::before{ background:var(--teal); }
+  .pillar-card:nth-child(3){ background:rgba(184,74,47,.08); border:1px solid rgba(184,74,47,.3); }
+  .pillar-card:nth-child(3)::before{ background:var(--rust); }
+  .pillar-num { font-size:3.5rem; font-family:'Playfair Display',serif; font-weight:900; line-height:1; margin-bottom:1rem; }
+  .pillar-card:nth-child(1) .pillar-num{ color:rgba(201,168,76,.3); }
+  .pillar-card:nth-child(2) .pillar-num{ color:rgba(26,107,107,.4); }
+  .pillar-card:nth-child(3) .pillar-num{ color:rgba(184,74,47,.35); }
+  .pillar-h { font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700; margin-bottom:1rem; color:var(--cream); }
+  .pillar-p { font-size:.92rem; line-height:1.75; color:rgba(245,240,232,.7); }
+  .pillar-tag-inline { display:inline-block; margin-top:1.2rem; font-size:.68rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; padding:.3rem .8rem; border-radius:2px; }
+  .pillar-card:nth-child(1) .pillar-tag-inline{ background:rgba(201,168,76,.15); color:var(--gold-light); }
+  .pillar-card:nth-child(2) .pillar-tag-inline{ background:rgba(26,107,107,.2); color:#5ec5c5; }
+  .pillar-card:nth-child(3) .pillar-tag-inline{ background:rgba(184,74,47,.2); color:#e88070; }
+
+  .tech-examples { display:flex; flex-wrap:wrap; gap:.8rem; margin-top:3rem; }
+  .tech-chip { background:rgba(245,240,232,.06); border:1px solid rgba(245,240,232,.12); border-radius:50px; padding:.45rem 1.1rem; font-size:.8rem; color:rgba(245,240,232,.7); font-weight:600; transition:all .3s; }
+  .tech-chip:hover { background:rgba(201,168,76,.12); border-color:rgba(201,168,76,.3); color:var(--gold-light); }
+
+  /* ── VIDEO ── */
+  .video-section { background:linear-gradient(180deg,var(--blue-deep) 0%,rgba(13,13,20,.98) 100%); padding:80px 0; }
+  .video-wrapper { max-width:860px; margin:0 auto; padding:0 2rem; }
+  .video-label { font-size:.7rem; letter-spacing:.35em; text-transform:uppercase; color:var(--gold); font-weight:700; margin-bottom:1rem; display:flex; align-items:center; gap:.8rem; }
+  .video-label::before { content:'▶'; width:26px; height:26px; border-radius:50%; background:rgba(201,168,76,.12); border:1px solid rgba(201,168,76,.3); display:inline-flex; align-items:center; justify-content:center; font-size:.65rem; }
+  .video-title { font-family:'Playfair Display',serif; font-size:clamp(1.4rem,3vw,2rem); font-weight:700; margin-bottom:.8rem; color:var(--cream); }
+  .video-desc { font-size:.9rem; color:rgba(245,240,232,.6); line-height:1.7; margin-bottom:2rem; max-width:680px; }
+  .video-frame-wrap { position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:4px; border:1px solid rgba(201,168,76,.2); box-shadow:0 24px 80px rgba(0,0,0,.6); }
+  .video-frame-wrap iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; }
+
+  /* ── INSTITUCIONALIZACIÓN ── */
+  #institucionalizacion { background:var(--blue-deep); }
+  .inst-img { width:100%; height:200px; object-fit:cover; border-radius:4px; border:1px solid rgba(201,168,76,.15); filter:brightness(.75) saturate(.8); transition:filter .4s; display:block; margin-bottom:.6rem; }
+  .inst-img:hover { filter:brightness(.95) saturate(1); }
+  .inst-grid { display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:start; }
+  @media(max-width:700px){ .inst-grid{ grid-template-columns:1fr; } }
+  .inst-list { list-style:none; display:flex; flex-direction:column; gap:1.2rem; }
+  .inst-item { display:flex; gap:1.2rem; align-items:flex-start; padding:1.5rem; background:rgba(245,240,232,.03); border:1px solid rgba(245,240,232,.08); border-radius:4px; opacity:0; transform:translateX(-20px); transition:opacity .5s, transform .5s, background .3s; }
+  .inst-item.visible { opacity:1; transform:translateX(0); }
+  .inst-item:hover { background:rgba(201,168,76,.06); border-color:rgba(201,168,76,.2); }
+  .inst-icon { font-size:1.6rem; flex-shrink:0; margin-top:.1rem; }
+  .inst-h { font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700; color:var(--cream); margin-bottom:.4rem; }
+  .inst-p { font-size:.88rem; line-height:1.65; color:rgba(245,240,232,.65); }
+
+  .stat-box { background:rgba(201,168,76,.06); border:1px solid rgba(201,168,76,.2); border-radius:4px; padding:2.5rem 2rem; text-align:center; position:sticky; top:90px; }
+  .stat-label { font-size:.7rem; letter-spacing:.3em; text-transform:uppercase; color:var(--gold); margin-bottom:2rem; font-weight:700; }
+  .stat-row { margin-bottom:2rem; padding-bottom:2rem; border-bottom:1px solid rgba(201,168,76,.12); }
+  .stat-row:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0; }
+  .stat-num { font-family:'Playfair Display',serif; font-size:3rem; font-weight:900; color:var(--gold-light); line-height:1; margin-bottom:.3rem; }
+  .stat-desc { font-size:.82rem; color:rgba(245,240,232,.6); line-height:1.5; }
+
+  /* ── CLOSING ── */
+  .closing { background:var(--ink); padding:100px 0 80px; text-align:center; position:relative; overflow:hidden; }
+  .closing::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(201,168,76,.08) 0%,transparent 60%); }
+  .closing-quote { font-family:'Playfair Display',serif; font-size:clamp(1.4rem,3.5vw,2.4rem); font-style:italic; font-weight:400; line-height:1.4; max-width:800px; margin:0 auto 1.5rem; color:var(--cream); position:relative; }
+  .closing-quote::before { content:'\201C'; font-size:6rem; position:absolute; top:-2rem; left:-2rem; color:rgba(201,168,76,.15); font-style:normal; line-height:1; }
+  .closing-attr { font-size:.8rem; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); font-weight:700; margin-bottom:4rem; position:relative; }
+  .impact-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1.5rem; margin-top:4rem; text-align:left; position:relative; }
+  .impact-card { background:rgba(245,240,232,.04); border:1px solid rgba(245,240,232,.1); border-radius:4px; padding:2rem; opacity:0; transform:translateY(20px); transition:opacity .5s, transform .5s, background .3s; }
+  .impact-card.visible { opacity:1; transform:translateY(0); }
+  .impact-card:hover { background:rgba(245,240,232,.07); }
+  .impact-emoji { font-size:2rem; margin-bottom:1rem; display:block; }
+  .impact-h { font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--cream); margin-bottom:.7rem; }
+  .impact-p { font-size:.88rem; line-height:1.65; color:rgba(245,240,232,.6); }
+
+  /* ── CONCLUSIÓN ── */
+  .conclusion-section {
+    background: linear-gradient(135deg, rgba(15,42,74,.95) 0%, rgba(13,13,20,1) 100%);
+    padding: 100px 0 80px; position: relative; overflow: hidden;
+  }
+  .conclusion-section::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 80% 50%, rgba(26,107,107,.12) 0%, transparent 60%);
+  }
+  .conclusion-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+  @media(max-width:800px){ .conclusion-inner{ grid-template-columns:1fr; gap:2.5rem; } }
+
+  .conclusion-text-block { position: relative; }
+  .conclusion-big-quote {
+    font-family: 'Playfair Display', serif; font-size: clamp(1.15rem, 2.5vw, 1.6rem);
+    font-style: italic; line-height: 1.65; color: var(--cream);
+    border-left: 3px solid var(--teal); padding-left: 2rem; margin-bottom: 2.5rem;
+  }
+  .conclusion-body { font-size: .97rem; line-height: 1.85; color: rgba(245,240,232,.72); }
+  .conclusion-body p { margin-bottom: 1.4rem; }
+  .conclusion-body strong { color: var(--gold-light); font-weight: 700; }
+
+  .conclusion-mosaic { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; gap: .8rem; }
+  .mosaic-img { width: 100%; object-fit: cover; border-radius: 4px; border: 1px solid rgba(201,168,76,.15); filter: brightness(.75) saturate(.8); transition: filter .4s, transform .4s; display: block; }
+  .mosaic-img:hover { filter: brightness(1) saturate(1.1); transform: scale(1.02); }
+  .mosaic-img.tall { grid-row: span 2; height: 100%; min-height: 280px; }
+  .mosaic-img.short { height: 140px; }
+  .mosaic-caption { grid-column: span 2; font-size: .66rem; color: rgba(245,240,232,.35); letter-spacing: .1em; text-align: center; font-style: italic; }
+
+  .conclusion-tags { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 2rem; }
+  .conclusion-tag { font-size: .7rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+    padding: .35rem 1rem; border-radius: 2px; border: 1px solid rgba(26,107,107,.4);
+    color: #5ec5c5; background: rgba(26,107,107,.1); }
+
+  /* ── BIBLIOGRAFÍA ── */
+  .bib-section {
+    background: rgba(8,6,2,.98); padding: 80px 0 60px;
+    border-top: 1px solid rgba(201,168,76,.15);
+    position: relative;
+  }
+  .bib-section::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 50% 40% at 50% 100%, rgba(201,168,76,.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .bib-header { margin-bottom: 3rem; }
+  .bib-categories { display: flex; flex-direction: column; gap: 2.5rem; }
+  .bib-category { opacity: 0; transform: translateY(18px); transition: opacity .5s, transform .5s; }
+  .bib-category.visible { opacity: 1; transform: translateY(0); }
+  .bib-cat-title {
+    font-size: .68rem; font-weight: 700; letter-spacing: .3em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 1.2rem; padding-bottom: .6rem;
+    border-bottom: 1px solid rgba(201,168,76,.18);
+    display: flex; align-items: center; gap: .8rem;
+  }
+  .bib-cat-title::before {
+    content: attr(data-num); font-family: 'Playfair Display', serif;
+    font-size: 1.1rem; font-weight: 900; color: rgba(201,168,76,.35);
+  }
+  .bib-list { display: flex; flex-direction: column; gap: 1rem; list-style: none; }
+  .bib-entry {
+    background: rgba(245,240,232,.03); border: 1px solid rgba(245,240,232,.07);
+    border-left: 3px solid rgba(201,168,76,.25); border-radius: 0 4px 4px 0;
+    padding: 1.1rem 1.4rem; transition: background .3s, border-color .3s;
+    font-size: .88rem; line-height: 1.7; color: rgba(245,240,232,.7);
+  }
+  .bib-entry:hover { background: rgba(201,168,76,.05); border-left-color: var(--gold); }
+  .bib-entry em { color: var(--gold-light); font-style: italic; }
+  .bib-entry strong { color: rgba(245,240,232,.9); font-weight: 700; }
+  .bib-entry .bib-note {
+    display: block; font-size: .76rem; color: rgba(245,240,232,.4);
+    margin-top: .4rem; font-style: italic; border-top: 1px solid rgba(245,240,232,.08);
+    padding-top: .4rem;
+  }
+  .bib-entry a { color: var(--gold); text-decoration: none; word-break: break-all; }
+  .bib-entry a:hover { text-decoration: underline; }
+  .bib-audiovisual { border-left-color: rgba(26,107,107,.5); }
+  .bib-audiovisual:hover { border-left-color: #5ec5c5; background: rgba(26,107,107,.06); }
+
+  /* ── FOOTER ── */
+  footer { border-top:1px solid rgba(201,168,76,.15); padding:2.5rem 2rem; text-align:center; color:rgba(245,240,232,.35); font-size:.75rem; letter-spacing:.12em; text-transform:uppercase; }
+  footer span { color:var(--gold); }
+  footer a { color:rgba(201,168,76,.5); text-decoration:none; font-size:.68rem; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeDown { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes bob { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(8px)} }
+  .sep { width:100%; height:1px; background:linear-gradient(90deg,transparent,rgba(201,168,76,.25),transparent); }
+
+  @media(max-width:600px) {
+    .nav-links { display:none; }
+    .figure-grid { grid-template-columns:1fr 1fr; }
+    .nav-video-link span { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="grid-lines"></div>
+  <p class="cover-label">Ciencia · Tecnología · Sociedad</p>
+  <h1>Historia de la<em>Ciencia</em>y el Conocimiento</h1>
+  <div class="cover-divider"></div>
+  <p class="cover-subtitle">Un recorrido desde la Revolución Científica hasta la institucionalización del saber y su relación con la sociedad moderna.</p>
+  <div class="pillars">
+    <span class="pillar-tag">Revolución Científica</span>
+    <span class="pillar-tag">Ciencia en la Modernidad</span>
+    <span class="pillar-tag">Institucionalización</span>
+  </div>
+  <div class="scroll-hint">Desplázate</div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-left">
+
+    <!-- ── CTS CARD ── -->
+    <div class="student-info-wrapper">
+      <span class="student-trigger cts-trigger">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        CTS
+      </span>
+      <div class="student-card">
+        <div class="student-card-title">Datos de la Actividad</div>
+        <div class="student-field">
+          <span class="field-label">Materia</span>
+          <span class="field-value">Ciencia, Tecnología y Sociedad</span>
+        </div>
+        <div class="student-field">
+          <span class="field-label">Tema Principal</span>
+          <span class="field-value">Revolución Científica · Ciencia en la Modernidad · Institucionalización</span>
+        </div>
+        <div class="student-field">
+          <span class="field-label">Ejes Temáticos</span>
+          <span class="field-value">Generación del Conocimiento · Aplicación Práctica · Impacto Social</span>
+        </div>
+        <div class="student-field">
+          <span class="field-label">Video de Referencia</span>
+          <span class="field-value">
+            <a href="https://www.youtube.com/watch?v=iW9hp_Y-PdU" target="_blank">▶ Ver en YouTube ↗</a>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ALUMNO CARD ── -->
+    <div class="student-info-wrapper">
+      <span class="student-trigger alumno-trigger">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Alumno
+      </span>
+      <div class="student-card teal-card">
+        <div class="student-card-title">Datos del Estudiante</div>
+        <div class="student-field">
+          <span class="field-label">Nombre</span>
+          <span class="field-value">Valenzuela Ayala Jesus イエス</span>
+        </div>
+        <div class="student-field">
+          <span class="field-label">Grado y Grupo</span>
+          <span class="field-value">6CPGM</span>
+        </div>
+        <div class="student-field">
+          <span class="field-label">Materia</span>
+          <span class="field-value">Conciencia Histórica 3</span>
+        </div>
+        <div class="student-field">
+          <span class="field-label">Profesor</span>
+          <span class="field-value">Carlos Urbina Hernández</span>
+        </div>
+        <div class="student-field">
+          <span class="field-label">Actividad</span>
+          <span class="field-value">Historia de la Ciencia y el Conocimiento</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Video quick-link -->
+    <a class="nav-video-link" href="#video-ref">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      <span>Video</span>
+    </a>
+  </div>
+
+  <ul class="nav-links">
+    <li><a href="#revolucion">Revolución</a></li>
+    <li><a href="#modernidad">Modernidad</a></li>
+    <li><a href="#institucionalizacion">Institucionalización</a></li>
+    <li><a href="#conclusion">Conclusión</a></li>
+    <li><a href="#cierre">Impacto</a></li>
+    <li><a href="#bibliografia">Bibliografía</a></li>
+  </ul>
+</nav>
+
+<!-- ══ 1. REVOLUCIÓN CIENTÍFICA ══ -->
+<section id="revolucion">
+  <div class="container">
+    <div class="section-num">01 — Fundamentos Históricos</div>
+    <h2 class="section-title">La Revolución <span>Científica</span></h2>
+    <p class="section-lead">
+      Entre los siglos XVI y XVII, Europa vivió una transformación radical en la comprensión del mundo. El método empírico y la razón desplazaron a la autoridad religiosa como fuente del conocimiento.
+    </p>
+
+    <img class="img-banner"
+      src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Cellarius_Harmonia_Macrocosmica_-_Scenographia_Systematis_Copernicani.jpg/1200px-Cellarius_Harmonia_Macrocosmica_-_Scenographia_Systematis_Copernicani.jpg"
+      alt="Sistema Copernicano — Andreas Cellarius, 1661" loading="lazy" />
+
+    <div class="rev-layout">
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">Siglo XVI · Ruptura Cosmológica</div>
+          <div class="timeline-h">El giro heliocéntrico de Copérnico</div>
+          <p class="timeline-p">Nicolás Copérnico propuso en <em>De revolutionibus orbium coelestium</em> (1543) que la Tierra giraba alrededor del Sol, desafiando siglos de cosmología ptolemaica y abriendo la puerta a una nueva forma de entender el universo.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">Siglo XVII · Método y Experimento</div>
+          <div class="timeline-h">Galileo y el nacimiento del método experimental</div>
+          <p class="timeline-p">Galileo Galilei unificó matemáticas y observación para describir el movimiento. Sus observaciones con el telescopio confirmaron el modelo heliocéntrico y establecieron el experimento controlado como fundamento científico.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">1687 · Síntesis Newtoniana</div>
+          <div class="timeline-h">Newton unifica el cosmos</div>
+          <p class="timeline-p">Isaac Newton publicó los <em>Principia Mathematica</em>, integrando mecánica celeste y terrestre en una sola ley de gravitación universal. Esta síntesis estableció el modelo mecanicista del universo.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">Legado · Cambio de Paradigma</div>
+          <div class="timeline-h">De la autoridad a la evidencia</div>
+          <p class="timeline-p">La revolución estableció que el conocimiento debe basarse en evidencia empírica, razonamiento lógico y verificación —principios que siguen siendo la base de la ciencia actual.</p>
+        </div>
+      </div>
+
+      <div class="side-imgs" style="display:flex;flex-direction:column;gap:1rem;">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Portrait_of_Galileo_Galilei_by_Leoni.jpg/440px-Portrait_of_Galileo_Galilei_by_Leoni.jpg"
+          alt="Galileo Galilei" loading="lazy" style="border-radius:4px;" />
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Portrait_of_Sir_Isaac_Newton%2C_1689.jpg/440px-Portrait_of_Sir_Isaac_Newton%2C_1689.jpg"
+          alt="Isaac Newton" loading="lazy" style="border-radius:4px;" />
+        <p class="gallery-caption">Galileo Galilei (arriba) · Isaac Newton (abajo)</p>
+      </div>
+    </div>
+
+    <div class="figure-grid">
+      <div class="figure-card">
+        <img class="figure-img"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Nikolaus_Kopernikus.jpg/440px-Nikolaus_Kopernikus.jpg"
+          alt="Copérnico" loading="lazy"/>
+        <div class="figure-body">
+          <div class="figure-name">Copérnico</div>
+          <div class="figure-dates">1473 – 1543</div>
+          <div class="figure-desc">Heliocentrismo; la Tierra gira alrededor del Sol.</div>
+        </div>
+      </div>
+      <div class="figure-card">
+        <img class="figure-img"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Portrait_of_Galileo_Galilei_by_Leoni.jpg/440px-Portrait_of_Galileo_Galilei_by_Leoni.jpg"
+          alt="Galileo" loading="lazy"/>
+        <div class="figure-body">
+          <div class="figure-name">Galileo</div>
+          <div class="figure-dates">1564 – 1642</div>
+          <div class="figure-desc">Método experimental y observación telescópica.</div>
+        </div>
+      </div>
+      <div class="figure-card">
+        <img class="figure-img"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Portrait_of_Sir_Isaac_Newton%2C_1689.jpg/440px-Portrait_of_Sir_Isaac_Newton%2C_1689.jpg"
+          alt="Newton" loading="lazy"/>
+        <div class="figure-body">
+          <div class="figure-name">Newton</div>
+          <div class="figure-dates">1643 – 1727</div>
+          <div class="figure-desc">Gravitación universal y leyes del movimiento.</div>
+        </div>
+      </div>
+      <div class="figure-card">
+        <img class="figure-img"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Frans_Hals_-_Portret_van_Ren%C3%A9_Descartes.jpg/440px-Frans_Hals_-_Portret_van_Ren%C3%A9_Descartes.jpg"
+          alt="Descartes" loading="lazy"/>
+        <div class="figure-body">
+          <div class="figure-name">Descartes</div>
+          <div class="figure-dates">1596 – 1650</div>
+          <div class="figure-desc">Racionalismo y método deductivo.</div>
+        </div>
+      </div>
+      <div class="figure-card">
+        <img class="figure-img"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Francis_Bacon%2C_Viscount_St_Alban_from_NPG_%283%29.jpg/440px-Francis_Bacon%2C_Viscount_St_Alban_from_NPG_%283%29.jpg"
+          alt="Francis Bacon" loading="lazy"/>
+        <div class="figure-body">
+          <div class="figure-name">Bacon</div>
+          <div class="figure-dates">1561 – 1626</div>
+          <div class="figure-desc">Método inductivo y filosofía empirista.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ══ 2. CIENCIA EN LA MODERNIDAD ══ -->
+<section id="modernidad">
+  <div class="container">
+    <div class="section-num">02 — Ciencia &amp; Sociedad</div>
+    <h2 class="section-title">Ciencia en la <span>Modernidad</span></h2>
+    <p class="section-lead">
+      La ciencia moderna no solo genera conocimiento: transforma la realidad. Se articula en tres ejes fundamentales que definen su relación con la tecnología y la sociedad.
+    </p>
+
+    <div class="img-gallery">
+      <img class="gallery-img"
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Electron_Microscope.jpg/1200px-Electron_Microscope.jpg"
+        alt="Microscopio electrónico moderno" loading="lazy"/>
+      <img class="gallery-img"
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/James_Webb_Space_Telescope_2009_top.jpg/600px-James_Webb_Space_Telescope_2009_top.jpg"
+        alt="Telescopio espacial James Webb" loading="lazy"/>
+      <img class="gallery-img"
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Southwest_corner_of_introduction_to_biology_laboratory.jpg/600px-Southwest_corner_of_introduction_to_biology_laboratory.jpg"
+        alt="Laboratorio científico moderno" loading="lazy"/>
+    </div>
+    <p class="gallery-caption">Microscopio electrónico · Telescopio espacial James Webb · Laboratorio de biología molecular</p>
+
+    <div class="pillars-grid">
+      <div class="pillar-card">
+        <div class="pillar-num">01</div>
+        <div class="pillar-h">Generación de Conocimiento</div>
+        <p class="pillar-p">La ciencia utiliza tecnología avanzada —microscopios digitales, telescopios espaciales, satélites— para observar fenómenos antes invisibles. La instrumentación amplía los sentidos humanos y permite explorar lo infinitamente pequeño y lo infinitamente grande.</p>
+        <span class="pillar-tag-inline">Epistemología</span>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-num">02</div>
+        <div class="pillar-h">Aplicación Práctica</div>
+        <p class="pillar-p">La tecnología traduce las teorías científicas en productos concretos: la mecánica cuántica dio origen a los semiconductores y las computadoras; la genética molecular impulsa tratamientos médicos personalizados y vacunas de nueva generación.</p>
+        <span class="pillar-tag-inline">Innovación</span>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-num">03</div>
+        <div class="pillar-h">Impacto Social</div>
+        <p class="pillar-p">Hoy se habla de "desarrollo cooperativo": la sociedad define los problemas prioritarios y la ciencia y tecnología diseñan soluciones. Ciudadanos, gobiernos y científicos co-crean la agenda de investigación para el bien común.</p>
+        <span class="pillar-tag-inline">Desarrollo Cooperativo</span>
+      </div>
+    </div>
+
+    <div style="margin-top:3rem;">
+      <p style="font-size:.75rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:1.2rem;">Ejemplos de aplicación científico-tecnológica</p>
+      <div class="tech-examples">
+        <span class="tech-chip">💻 Computación Cuántica</span>
+        <span class="tech-chip">🧬 Edición Genómica CRISPR</span>
+        <span class="tech-chip">🛰️ Satélites de Observación</span>
+        <span class="tech-chip">🔬 Microscopía Electrónica</span>
+        <span class="tech-chip">🤖 Inteligencia Artificial</span>
+        <span class="tech-chip">💊 Vacunas ARNm</span>
+        <span class="tech-chip">☀️ Energías Renovables</span>
+        <span class="tech-chip">🌐 Internet y Telecomunicaciones</span>
+        <span class="tech-chip">🚀 Exploración Espacial</span>
+        <span class="tech-chip">🧠 Neurociencia Cognitiva</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ══ VIDEO DE REFERENCIA ══ -->
+<div class="video-section" id="video-ref">
+  <div class="video-wrapper">
+    <div class="video-label">Material de Referencia</div>
+    <h3 class="video-title">Video: Revolución Científica y Conocimiento</h3>
+    <p class="video-desc">El siguiente video fue indicado como material de apoyo para el tema. Complementa la perspectiva histórica y conceptual de la relación entre ciencia, tecnología y sociedad presentada en esta actividad.</p>
+    <div class="video-frame-wrap">
+      <iframe
+        src="https://www.youtube.com/embed/iW9hp_Y-PdU"
+        title="Video de referencia — Ciencia, Tecnología y Sociedad"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+    <p class="gallery-caption" style="margin-top:1rem;">Fuente: YouTube · Material proporcionado por el docente</p>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- ══ 3. INSTITUCIONALIZACIÓN ══ -->
+<section id="institucionalizacion">
+  <div class="container">
+    <div class="section-num">03 — Organización del Saber</div>
+    <h2 class="section-title">Institucionalización <span>de la Ciencia</span></h2>
+    <p class="section-lead">
+      La ciencia dejó de ser una actividad solitaria para convertirse en una empresa colectiva organizada. Universidades, academias, revistas y organismos internacionales estructuran hoy la producción del conocimiento.
+    </p>
+
+    <img class="inst-img"
+      src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Old_Bodleian_Library.jpg/1200px-Old_Bodleian_Library.jpg"
+      alt="Biblioteca Bodleiana, Oxford" loading="lazy"/>
+    <p class="gallery-caption" style="margin-bottom:2.5rem;">Biblioteca Bodleiana, Universidad de Oxford — símbolo del saber institucionalizado desde 1602</p>
+
+    <div class="inst-grid">
+      <ul class="inst-list">
+        <li class="inst-item">
+          <span class="inst-icon">🏛️</span>
+          <div>
+            <div class="inst-h">Academias Científicas (s. XVII)</div>
+            <p class="inst-p">La Royal Society (1660) y la Académie des Sciences de París (1666) fueron los primeros espacios colectivos de validación del conocimiento, introduciendo la revisión por pares y la comunicación sistematizada.</p>
+          </div>
+        </li>
+        <li class="inst-item">
+          <span class="inst-icon">🎓</span>
+          <div>
+            <div class="inst-h">La Universidad de Investigación</div>
+            <p class="inst-p">El modelo de Berlín (1810) transformó la universidad en un centro de producción científica. La ciencia se profesionalizó: se formaron investigadores especializados y la carrera académica se formalizó.</p>
+          </div>
+        </li>
+        <li class="inst-item">
+          <span class="inst-icon">📰</span>
+          <div>
+            <div class="inst-h">Revistas y Publicación Científica</div>
+            <p class="inst-p">Las revistas especializadas establecieron el sistema de revisión por pares como mecanismo de control de calidad. Hoy, miles de publicaciones indexadas articulan el intercambio global del saber.</p>
+          </div>
+        </li>
+        <li class="inst-item">
+          <span class="inst-icon">🌐</span>
+          <div>
+            <div class="inst-h">Organismos Internacionales</div>
+            <p class="inst-p">UNESCO, CERN, OMS y otros organismos coordinan la ciencia a escala global, financian grandes proyectos colaborativos y establecen estándares éticos para la investigación científica y tecnológica.</p>
+          </div>
+        </li>
+        <li class="inst-item">
+          <span class="inst-icon">💰</span>
+          <div>
+            <div class="inst-h">Financiamiento y Política Científica</div>
+            <p class="inst-p">El Estado moderno institucionaliza la inversión en I+D. Consejos nacionales de ciencia, fondos de innovación y convenios con la industria establecen la agenda de investigación y su vínculo con el desarrollo económico.</p>
+          </div>
+        </li>
+      </ul>
+
+      <div class="stat-box">
+        <div class="stat-label">Ciencia en cifras</div>
+        <div class="stat-row">
+          <div class="stat-num">+8M</div>
+          <div class="stat-desc">investigadores activos trabajan en instituciones científicas en el mundo (UNESCO, 2023)</div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-num">2.5%</div>
+          <div class="stat-desc">del PIB mundial se destina a Investigación y Desarrollo tecnológico</div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-num">1665</div>
+          <div class="stat-desc">año de publicación de las primeras revistas científicas (<em>Philosophical Transactions</em>)</div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-num">360+</div>
+          <div class="stat-desc">años de práctica científica institucionalizada desde las primeras academias</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ══ 4. CONCLUSIÓN ══ -->
+<section class="conclusion-section" id="conclusion">
+  <div class="container">
+    <div class="section-num">04 — Reflexión Final</div>
+    <h2 class="section-title">Conclusión: <span>Ciencia, Sociedad</span> y Futuro</h2>
+
+    <div class="conclusion-inner">
+      <div class="conclusion-text-block">
+        <div class="conclusion-big-quote">
+          El conocimiento científico no surge en el vacío; es un producto histórico, social y cultural que refleja los valores, necesidades y conflictos de cada época.
+        </div>
+        <div class="conclusion-body">
+          <p>
+            A lo largo de esta actividad hemos recorrido más de cinco siglos de transformación en la manera en que la humanidad produce y organiza el saber. La <strong>Revolución Científica</strong> del siglo XVI no fue solo un cambio de ideas astronómicas: fue una ruptura profunda con la forma de entender la autoridad, la verdad y la naturaleza misma del conocimiento. Copérnico, Galileo, Newton y Descartes no solo describieron el cosmos —lo redefinieron.
+          </p>
+          <p>
+            La <strong>ciencia en la modernidad</strong> amplificó ese legado: la instrumentación tecnológica permitió ver lo invisible, el pensamiento cuántico desafió el sentido común, y la colaboración internacional hizo del conocimiento una empresa verdaderamente global. Hoy, la inteligencia artificial, la edición genómica y la exploración espacial continúan esa misma tradición de ruptura y descubrimiento.
+          </p>
+          <p>
+            Finalmente, la <strong>institucionalización de la ciencia</strong> garantizó que el saber no dependiera de genios aislados, sino de comunidades organizadas, con métodos, estándares éticos y financiamiento público. Las academias, universidades y organismos internacionales son el tejido social que sostiene la aventura científica.
+          </p>
+          <p>
+            La relación entre <strong>Ciencia, Tecnología y Sociedad</strong> es, en última instancia, bidireccional: la sociedad moldea qué investigamos y para qué, mientras que la ciencia transforma las condiciones materiales y simbólicas en las que vivimos. Comprender esta relación es indispensable para ejercer una ciudadanía activa, crítica y responsable en el siglo XXI.
+          </p>
+        </div>
+        <div class="conclusion-tags">
+          <span class="conclusion-tag">Método Científico</span>
+          <span class="conclusion-tag">Cambio de Paradigma</span>
+          <span class="conclusion-tag">Bien Común</span>
+          <span class="conclusion-tag">Ética del Conocimiento</span>
+          <span class="conclusion-tag">Ciudadanía Científica</span>
+        </div>
+      </div>
+
+      <!-- Mosaic of images -->
+      <div class="conclusion-mosaic">
+        <img class="mosaic-img tall"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Camponotus_flavomarginatus_ant.jpg/600px-Camponotus_flavomarginatus_ant.jpg"
+          alt="Ciencia moderna — microscopía" loading="lazy"
+          style="object-position:center;"/>
+        <img class="mosaic-img short"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/DNA_Overview.png/600px-DNA_Overview.png"
+          alt="ADN — genómica" loading="lazy"/>
+        <img class="mosaic-img short"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Starsinthesky.jpg/600px-Starsinthesky.jpg"
+          alt="Estrellas — astronomía" loading="lazy"/>
+        <p class="mosaic-caption">Ciencias naturales · Genómica · Astronomía — fronteras del conocimiento</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ══ CIERRE: IMPACTO SOCIAL ══ -->
+<div class="closing" id="cierre">
+  <div class="container">
+    <p class="closing-quote">La ciencia sin conciencia social es solo erudición; la tecnología sin dirección ética es solo poder. El desarrollo cooperativo une ambas fuerzas al servicio de la humanidad.</p>
+    <p class="closing-attr">— Síntesis del tema: Ciencia, Tecnología y Sociedad</p>
+    <div style="width:60px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:0 auto 2rem;"></div>
+    <p style="font-size:.75rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:2rem;">Impacto del Desarrollo Cooperativo</p>
+    <div class="impact-cards">
+      <div class="impact-card">
+        <span class="impact-emoji">🏥</span>
+        <div class="impact-h">Salud Global</div>
+        <p class="impact-p">La ciencia institucionalizada produjo antibióticos, vacunas y terapias génicas que han duplicado la esperanza de vida en un siglo.</p>
+      </div>
+      <div class="impact-card">
+        <span class="impact-emoji">🌱</span>
+        <div class="impact-h">Sostenibilidad</div>
+        <p class="impact-p">La sociedad define la crisis climática como prioridad y la ciencia responde con energías limpias, materiales biodegradables y agricultura de precisión.</p>
+      </div>
+      <div class="impact-card">
+        <span class="impact-emoji">🤝</span>
+        <div class="impact-h">Acceso al Conocimiento</div>
+        <p class="impact-p">La institucionalización abrió la ciencia a más personas: universidades públicas, ciencia abierta y datos abiertos democratizan el saber.</p>
+      </div>
+      <div class="impact-card">
+        <span class="impact-emoji">⚖️</span>
+        <div class="impact-h">Ética Científica</div>
+        <p class="impact-p">Los comités de bioética y marcos regulatorios aseguran que la ciencia avance dentro de límites humanos y sociales responsables.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BIBLIOGRAFÍA ══ -->
+<div class="bib-section" id="bibliografia">
+  <div class="container">
+    <div class="bib-header">
+      <div class="section-num">05 — Referencias</div>
+      <h2 class="section-title">Fuentes <span>Bibliográficas</span></h2>
+      <p class="section-lead" style="margin-bottom:0;">Obras y recursos consultados para la elaboración de esta actividad, organizados por eje temático.</p>
+    </div>
+    <div class="bib-categories">
+      <div class="bib-category">
+        <div class="bib-cat-title" data-num="1">Revolución Científica e Institucionalización</div>
+        <ul class="bib-list">
+          <li class="bib-entry"><strong>Kuhn, T. S.</strong> (1962). <em>La estructura de las revoluciones científicas.</em> Fondo de Cultura Económica.<span class="bib-note">Esencial para entender cómo la ciencia cambia a través de paradigmas.</span></li>
+          <li class="bib-entry"><strong>Rossi, P.</strong> (1970). <em>Los filósofos y las máquinas (1400–1700).</em> Editorial Labor.<span class="bib-note">Explica cómo la técnica y la ciencia se unieron para dar paso a la modernidad.</span></li>
+          <li class="bib-entry"><strong>Shapin, S.</strong> (1996). <em>La Revolución Científica: Una interpretación alternativa.</em> Paidós.<span class="bib-note">Analiza la institucionalización y cómo la ciencia se convirtió en una práctica social.</span></li>
+        </ul>
+      </div>
+      <div class="bib-category">
+        <div class="bib-cat-title" data-num="2">Ciencia en la Modernidad y Aplicación Práctica</div>
+        <ul class="bib-list">
+          <li class="bib-entry"><strong>Bunge, M.</strong> (1985). <em>La ciencia, su método y su filosofía.</em> Penguin Random House.<span class="bib-note">Define la relación entre ciencia pura, ciencia aplicada y tecnología.</span></li>
+          <li class="bib-entry"><strong>Echeverría, J.</strong> (2003). <em>La revolución tecnocientífica.</em> Fondo de Cultura Económica.<span class="bib-note">Analiza cómo la ciencia y la tecnología se han fusionado en la "Tecnociencia" actual.</span></li>
+          <li class="bib-entry"><strong>Latour, B.</strong> (1987). <em>Ciencia en acción: Cómo seguir a los científicos e ingenieros a través de la sociedad.</em> Labor.</li>
+        </ul>
+      </div>
+      <div class="bib-category">
+        <div class="bib-cat-title" data-num="3">Impacto Social y Desarrollo Cooperativo</div>
+        <ul class="bib-list">
+          <li class="bib-entry"><strong>López Cerezo, J. A.</strong> (2020). <em>La confianza en la ciencia.</em> Alianza Editorial.<span class="bib-note">Aborda el papel de la sociedad en la definición de problemas científicos.</span></li>
+          <li class="bib-entry"><strong>Olivé, L.</strong> (2007). <em>La ciencia y la tecnología en la sociedad del conocimiento.</em> Fondo de Cultura Económica.<span class="bib-note">Habla sobre la ética y la participación social en el desarrollo tecnológico.</span></li>
+          <li class="bib-entry"><strong>UNESCO</strong> (2021). <em>Recomendación sobre la Ciencia Abierta.</em> Organización de las Naciones Unidas para la Educación, la Ciencia y la Cultura.<span class="bib-note">Documento clave para entender el "desarrollo cooperativo" y el acceso universal al conocimiento.</span></li>
+        </ul>
+      </div>
+      <div class="bib-category">
+        <div class="bib-cat-title" data-num="4">Referencia Audiovisual</div>
+        <ul class="bib-list">
+          <li class="bib-entry bib-audiovisual"><strong>CuriosaMente.</strong> (2017). <em>¿Cómo sabemos lo que es verdad? — La Ciencia</em> [Video]. YouTube.<br><a href="https://www.youtube.com/watch?v=iW9hp_Y-PdU" target="_blank">▶ https://www.youtube.com/watch?v=iW9hp_Y-PdU</a><span class="bib-note">Material proporcionado por el docente como referencia audiovisual de la actividad.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>Ciencia, Tecnología y Sociedad</span>&nbsp;·&nbsp;Generación de Conocimiento · Aplicación Práctica · Impacto Social
+  <br><br>
+  Valenzuela Ayala Jesus · 6CPGM · Conciencia Histórica 3 · Prof. Carlos Urbina Hernández
+  <br><br>
+  <a href="https://www.youtube.com/watch?v=iW9hp_Y-PdU" target="_blank">▶ Video de Referencia — YouTube</a>
+</footer>
+
+<script>
+  // Progress bar
+  window.addEventListener('scroll', () => {
+    const pct = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+    document.getElementById('progressBar').style.width = pct + '%';
+  });
+
+  // Scroll-reveal
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.timeline-item,.figure-card,.pillar-card,.inst-item,.impact-card,.bib-category')
+    .forEach((el, i) => { el.style.transitionDelay = `${i * 0.07}s`; io.observe(el); });
+</script>
+</body>
+</html>
