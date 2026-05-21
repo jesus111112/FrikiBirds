@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instituciones Científicas Mexicanas</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --verde: #00A86B;
+    --verde-dark: #007A4D;
+    --oro: #D4A017;
+    --rojo: #C0392B;
+    --azul-noche: #0A1628;
+    --azul-medio: #112240;
+    --azul-claro: #1D3461;
+    --texto: #E8EAF0;
+    --texto-suave: #A8B2C8;
+    --blanco: #FFFFFF;
+    --accent: #64FFDA;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--azul-noche);
+    color: var(--texto);
+    overflow-x: hidden;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+    background: rgba(10, 22, 40, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(100, 255, 218, 0.1);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px;
+  }
+  nav .logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem; color: var(--accent); letter-spacing: 2px;
+  }
+  nav ul { list-style: none; display: flex; gap: 1.5rem; }
+  nav ul li a {
+    font-size: 0.72rem; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--texto-suave); text-decoration: none;
+    transition: color 0.3s;
+  }
+  nav ul li a:hover { color: var(--accent); }
+
+  /* ─── SECCIONES GENERALES ─── */
+  section { min-height: 100vh; padding: 100px 5vw 80px; }
+
+  .section-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 3px; color: var(--accent);
+    text-transform: uppercase; margin-bottom: 1rem;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    font-weight: 900; line-height: 1.1;
+    margin-bottom: 1.5rem;
+  }
+  .divider {
+    width: 60px; height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--verde));
+    margin-bottom: 2rem;
+  }
+
+  /* ─── PORTADA ─── */
+  #portada {
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: flex-start;
+    min-height: 100vh; padding-top: 60px;
+    position: relative; overflow: hidden;
+    background:
+      radial-gradient(ellipse 80% 60% at 70% 40%, rgba(0, 168, 107, 0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 50% at 20% 80%, rgba(100, 255, 218, 0.06) 0%, transparent 60%),
+      var(--azul-noche);
+  }
+  #portada::before {
+    content: '';
+    position: absolute; top: 0; right: 0; bottom: 0;
+    width: 45%;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='800' viewBox='0 0 600 800'%3E%3Cdefs%3E%3CradialGradient id='g' cx='50%25' cy='50%25'%3E%3Cstop offset='0' stop-color='%2300A86B' stop-opacity='0.15'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='300' cy='400' r='300' fill='url(%23g)'/%3E%3C/svg%3E") center/cover no-repeat;
+    pointer-events: none;
+  }
+  .portada-grid {
+    position: absolute; inset: 0; pointer-events: none; opacity: 0.04;
+    background-image: linear-gradient(rgba(100,255,218,1) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(100,255,218,1) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+  .portada-content { position: relative; z-index: 2; max-width: 700px; }
+  .portada-badge {
+    display: inline-block;
+    background: rgba(100,255,218,0.1);
+    border: 1px solid rgba(100,255,218,0.3);
+    color: var(--accent);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 2px;
+    padding: 6px 16px; border-radius: 3px;
+    margin-bottom: 2rem;
+    animation: fadeInDown 0.8s ease forwards;
+  }
+  .portada-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 6vw, 5.5rem);
+    font-weight: 900; line-height: 1.05;
+    animation: fadeInUp 0.9s 0.2s ease both;
+  }
+  .portada-title span { color: var(--accent); }
+  .portada-sub {
+    font-size: 1.05rem; color: var(--texto-suave);
+    max-width: 520px; line-height: 1.7;
+    margin: 1.5rem 0 2.5rem;
+    animation: fadeInUp 0.9s 0.4s ease both;
+  }
+  .portada-meta {
+    display: flex; gap: 2rem; flex-wrap: wrap;
+    animation: fadeInUp 0.9s 0.6s ease both;
+  }
+  .meta-item { font-family: 'Space Mono', monospace; font-size: 0.72rem; color: var(--texto-suave); }
+  .meta-item strong { display: block; color: var(--accent); margin-bottom: 3px; }
+  .scroll-hint {
+    position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    color: var(--texto-suave); font-size: 0.7rem; letter-spacing: 2px;
+    animation: bounce 2s infinite;
+  }
+  .scroll-hint::after {
+    content: '↓'; font-size: 1.2rem; color: var(--accent);
+  }
+
+  /* ─── INDICE ─── */
+  #indice {
+    background: var(--azul-medio);
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .indice-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem; margin-top: 2rem;
+  }
+  .indice-item {
+    background: rgba(100,255,218,0.04);
+    border: 1px solid rgba(100,255,218,0.1);
+    border-left: 3px solid var(--accent);
+    padding: 1rem 1.2rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none; color: inherit;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .indice-item:hover {
+    background: rgba(100,255,218,0.1);
+    transform: translateX(6px);
+    border-left-color: var(--verde);
+  }
+  .indice-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.5rem; font-weight: 700;
+    color: rgba(100,255,218,0.25);
+    min-width: 40px;
+  }
+  .indice-text strong { display: block; font-size: 0.9rem; margin-bottom: 3px; }
+  .indice-text span { font-size: 0.75rem; color: var(--texto-suave); }
+
+  /* ─── INTRO ─── */
+  #introduccion {
+    display: flex; flex-direction: column; justify-content: center;
+    position: relative;
+  }
+  .intro-layout {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 4rem; align-items: center; margin-top: 2rem;
+  }
+  .intro-text p {
+    font-size: 1.05rem; line-height: 1.8; color: var(--texto-suave);
+    margin-bottom: 1.2rem;
+  }
+  .intro-text p strong { color: var(--texto); }
+  .intro-visual {
+    position: relative; padding: 2rem;
+    background: rgba(100,255,218,0.03);
+    border: 1px solid rgba(100,255,218,0.1);
+    border-radius: 8px;
+  }
+  .stat-circle {
+    text-align: center; padding: 1.5rem 0;
+  }
+  .stat-circle .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem; font-weight: 900; color: var(--accent);
+    display: block;
+  }
+  .stat-circle .lbl {
+    font-size: 0.8rem; color: var(--texto-suave); letter-spacing: 1px;
+  }
+  .stat-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;
+  }
+  .stat-mini {
+    background: rgba(10,22,40,0.6);
+    border: 1px solid rgba(100,255,218,0.12);
+    border-radius: 4px; padding: 1rem; text-align: center;
+  }
+  .stat-mini .n { font-family: 'Space Mono', monospace; font-size: 1.4rem; color: var(--verde); font-weight: 700; }
+  .stat-mini .l { font-size: 0.72rem; color: var(--texto-suave); margin-top: 4px; }
+
+  /* ─── DESARROLLO ─── */
+  #desarrollo { background: var(--azul-noche); }
+  .inst-card {
+    background: var(--azul-medio);
+    border: 1px solid rgba(100,255,218,0.1);
+    border-radius: 8px; padding: 2rem;
+    margin-bottom: 2rem;
+    position: relative; overflow: hidden;
+    transition: all 0.3s;
+  }
+  .inst-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--verde));
+  }
+  .inst-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(100,255,218,0.25);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  }
+  .inst-header {
+    display: flex; align-items: flex-start; gap: 1.5rem; margin-bottom: 1.2rem;
+  }
+  .inst-icon {
+    width: 56px; height: 56px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; flex-shrink: 0;
+  }
+  .inst-icon.unam { background: rgba(0,168,107,0.15); }
+  .inst-icon.cinvestav { background: rgba(100,255,218,0.1); }
+  .inst-icon.cpi { background: rgba(212,160,23,0.15); }
+  .inst-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem; font-weight: 700;
+  }
+  .inst-name span {
+    display: block; font-family: 'Space Mono', monospace;
+    font-size: 0.7rem; color: var(--accent);
+    font-weight: 400; margin-bottom: 4px; letter-spacing: 2px;
+  }
+  .inst-desc {
+    font-size: 0.95rem; line-height: 1.7; color: var(--texto-suave);
+    margin-bottom: 1.2rem;
+  }
+  .inst-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem; padding: 4px 10px;
+    border-radius: 3px; border: 1px solid;
+    letter-spacing: 1px;
+  }
+  .tag.green { border-color: var(--verde); color: var(--verde); }
+  .tag.cyan { border-color: var(--accent); color: var(--accent); }
+  .tag.gold { border-color: var(--oro); color: var(--oro); }
+  .sub-inst-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem; margin-top: 1.5rem;
+  }
+  .sub-card {
+    background: rgba(10,22,40,0.7); border: 1px solid rgba(100,255,218,0.08);
+    border-radius: 6px; padding: 1.2rem;
+    border-left: 3px solid var(--oro);
+    transition: all 0.3s;
+  }
+  .sub-card:hover { background: rgba(100,255,218,0.05); transform: translateX(4px); }
+  .sub-card h4 { font-size: 0.9rem; margin-bottom: 0.4rem; color: var(--oro); }
+  .sub-card p { font-size: 0.82rem; color: var(--texto-suave); line-height: 1.6; }
+
+  /* ─── DESARROLLO REGIONAL ─── */
+  #desarrollo-regional { background: var(--azul-medio); }
+  .mapa-container {
+    margin-top: 2rem;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
+    align-items: start;
+  }
+  .region-card {
+    background: rgba(10,22,40,0.6);
+    border: 1px solid rgba(100,255,218,0.1);
+    border-radius: 8px; padding: 1.5rem;
+    margin-bottom: 1rem;
+    position: relative;
+    transition: all 0.3s;
+  }
+  .region-card:hover { border-color: rgba(100,255,218,0.3); }
+  .region-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.8rem; }
+  .region-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .region-card h3 { font-size: 1rem; font-weight: 600; }
+  .region-card p { font-size: 0.85rem; color: var(--texto-suave); line-height: 1.6; }
+  .impact-bar { margin-top: 1rem; }
+  .impact-bar label { font-size: 0.72rem; color: var(--texto-suave); display: flex; justify-content: space-between; margin-bottom: 4px; }
+  .bar-track { height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--accent), var(--verde)); transition: width 1s ease; }
+  .mexico-map {
+    background: rgba(10,22,40,0.6);
+    border: 1px solid rgba(100,255,218,0.1);
+    border-radius: 8px; padding: 1.5rem;
+    text-align: center;
+  }
+  .mexico-map svg { width: 100%; max-width: 400px; }
+
+  /* ─── INTERACTIVO ─── */
+  #interactivo { background: var(--azul-noche); }
+  .quiz-container {
+    max-width: 700px; margin: 2rem auto 0;
+  }
+  .quiz-q {
+    background: var(--azul-medio);
+    border: 1px solid rgba(100,255,218,0.12);
+    border-radius: 8px; padding: 2rem;
+  }
+  .quiz-q h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem; margin-bottom: 1.5rem; line-height: 1.5;
+  }
+  .quiz-q h3 em { color: var(--accent); font-style: normal; }
+  .quiz-options { display: flex; flex-direction: column; gap: 0.7rem; }
+  .q-opt {
+    background: rgba(10,22,40,0.5);
+    border: 1px solid rgba(100,255,218,0.1);
+    border-radius: 5px; padding: 0.9rem 1.2rem;
+    cursor: pointer; font-size: 0.9rem;
+    transition: all 0.25s; text-align: left;
+    color: var(--texto);
+  }
+  .q-opt:hover { background: rgba(100,255,218,0.08); border-color: var(--accent); }
+  .q-opt.correct { background: rgba(0,168,107,0.2); border-color: var(--verde); color: var(--accent); }
+  .q-opt.wrong { background: rgba(192,57,43,0.2); border-color: var(--rojo); color: #ff6b6b; }
+  .quiz-feedback {
+    margin-top: 1rem; padding: 0.8rem 1.2rem;
+    border-radius: 5px; font-size: 0.88rem;
+    display: none;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.ok { background: rgba(0,168,107,0.15); border: 1px solid var(--verde); color: #64ffb4; }
+  .quiz-feedback.fail { background: rgba(192,57,43,0.15); border: 1px solid var(--rojo); color: #ff8080; }
+  .quiz-nav { display: flex; gap: 1rem; margin-top: 1.5rem; align-items: center; }
+  .q-btn {
+    background: var(--accent); color: var(--azul-noche);
+    border: none; padding: 0.7rem 1.5rem;
+    font-family: 'Space Mono', monospace; font-size: 0.75rem;
+    letter-spacing: 1px; cursor: pointer; border-radius: 4px;
+    font-weight: 700; transition: all 0.2s;
+  }
+  .q-btn:hover { background: var(--verde); transform: translateY(-2px); }
+  .q-btn.secondary {
+    background: transparent; color: var(--accent);
+    border: 1px solid var(--accent);
+  }
+  .q-btn.secondary:hover { background: rgba(100,255,218,0.1); }
+  #score-display {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem; color: var(--texto-suave);
+    margin-left: auto;
+  }
+  .progress-bar {
+    height: 3px; background: rgba(255,255,255,0.08);
+    border-radius: 2px; margin-bottom: 1.5rem; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; background: var(--accent);
+    border-radius: 2px; transition: width 0.4s ease;
+  }
+  .quiz-result {
+    text-align: center; padding: 3rem;
+    display: none;
+  }
+  .quiz-result.show { display: block; }
+  .result-score {
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem; font-weight: 900; color: var(--accent);
+  }
+
+  /* ─── VIDEO ─── */
+  #video-section {
+    background: var(--azul-medio);
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .video-wrapper {
+    position: relative; padding-top: 56.25%;
+    border-radius: 8px; overflow: hidden;
+    border: 1px solid rgba(100,255,218,0.15);
+    margin-top: 2rem;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+    max-width: 900px;
+  }
+  .video-wrapper iframe {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%; border: none;
+  }
+  .video-caption {
+    margin-top: 1rem; font-size: 0.82rem;
+    color: var(--texto-suave); font-style: italic;
+  }
+
+  /* ─── REFLEXION ─── */
+  #reflexion { background: var(--azul-noche); }
+  .reflexion-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem; margin-top: 2rem;
+  }
+  .refl-card {
+    background: var(--azul-medio);
+    border: 1px solid rgba(100,255,218,0.1);
+    border-radius: 8px; padding: 1.8rem;
+    position: relative; overflow: hidden;
+    transition: all 0.3s;
+  }
+  .refl-card::before {
+    content: ''; position: absolute;
+    top: -50px; right: -50px;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: rgba(100,255,218,0.04);
+    transition: all 0.3s;
+  }
+  .refl-card:hover::before { transform: scale(2.5); }
+  .refl-card:hover { transform: translateY(-4px); border-color: rgba(100,255,218,0.25); }
+  .refl-icon { font-size: 2rem; margin-bottom: 1rem; }
+  .refl-card h3 { font-family: 'Playfair Display', serif; font-size: 1.15rem; margin-bottom: 0.8rem; }
+  .refl-card p { font-size: 0.88rem; color: var(--texto-suave); line-height: 1.7; }
+  .blockquote {
+    border-left: 4px solid var(--accent);
+    padding: 1.5rem 2rem; margin: 3rem 0;
+    background: rgba(100,255,218,0.04);
+    border-radius: 0 8px 8px 0;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem; font-style: italic;
+    line-height: 1.7; color: var(--texto);
+  }
+  .blockquote cite { display: block; margin-top: 0.8rem; font-size: 0.8rem; color: var(--texto-suave); font-style: normal; font-family: 'DM Sans', sans-serif; }
+
+  /* ─── CONCLUSION ─── */
+  #conclusion { background: var(--azul-medio); }
+  .concl-layout {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; margin-top: 2rem;
+  }
+  .concl-points { display: flex; flex-direction: column; gap: 1rem; }
+  .concl-point {
+    display: flex; gap: 1rem; align-items: flex-start;
+    padding: 1rem; border-radius: 6px;
+    background: rgba(10,22,40,0.5);
+    border: 1px solid rgba(100,255,218,0.08);
+    transition: all 0.3s;
+  }
+  .concl-point:hover { background: rgba(100,255,218,0.06); border-color: rgba(100,255,218,0.2); }
+  .concl-num {
+    font-family: 'Space Mono', monospace; font-size: 1.2rem;
+    font-weight: 700; color: var(--accent); min-width: 36px;
+    line-height: 1.2;
+  }
+  .concl-point p { font-size: 0.9rem; color: var(--texto-suave); line-height: 1.6; }
+  .concl-point p strong { color: var(--texto); }
+  .concl-visual {
+    text-align: center;
+    background: rgba(10,22,40,0.5);
+    border: 1px solid rgba(100,255,218,0.1);
+    border-radius: 8px; padding: 2.5rem;
+  }
+  .concl-visual .big-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem; font-weight: 900;
+    background: linear-gradient(135deg, var(--accent), var(--verde));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .concl-visual p { font-size: 0.85rem; color: var(--texto-suave); margin-top: 0.5rem; }
+
+  /* ─── FUENTES ─── */
+  #fuentes { background: var(--azul-noche); }
+  .fuente-item {
+    border-left: 2px solid rgba(100,255,218,0.2);
+    padding: 1rem 1.5rem; margin-bottom: 1rem;
+    background: rgba(17,34,64,0.4); border-radius: 0 6px 6px 0;
+    transition: all 0.3s;
+  }
+  .fuente-item:hover { border-left-color: var(--accent); background: rgba(100,255,218,0.04); }
+  .fuente-item p { font-size: 0.88rem; color: var(--texto-suave); line-height: 1.7; }
+  .fuente-item .author { color: var(--texto); font-weight: 500; }
+  .fuente-item .title { font-style: italic; color: var(--accent); }
+  .fuente-tipo {
+    font-family: 'Space Mono', monospace; font-size: 0.65rem;
+    letter-spacing: 2px; color: var(--oro); margin-bottom: 4px;
+    text-transform: uppercase;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: rgba(7,15,28,0.95);
+    border-top: 1px solid rgba(100,255,218,0.08);
+    padding: 2rem 5vw; text-align: center;
+    font-size: 0.78rem; color: var(--texto-suave);
+    font-family: 'Space Mono', monospace; letter-spacing: 1px;
+  }
+  footer span { color: var(--accent); }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes bounce { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-10px); } }
+
+  .fade-in {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 768px) {
+    .intro-layout, .mapa-container, .concl-layout { grid-template-columns: 1fr; gap: 2rem; }
+    nav ul { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">🔬 CIENCIA · MX</div>
+  <ul>
+    <li><a href="#portada">Inicio</a></li>
+    <li><a href="#introduccion">Intro</a></li>
+    <li><a href="#desarrollo">Instituciones</a></li>
+    <li><a href="#desarrollo-regional">Regional</a></li>
+    <li><a href="#interactivo">Quiz</a></li>
+    <li><a href="#video-section">Video</a></li>
+    <li><a href="#conclusion">Conclusión</a></li>
+    <li><a href="#fuentes">Fuentes</a></li>
+  </ul>
+</nav>
+
+<!-- ═══════════════════════════════════ PORTADA ═══ -->
+<section id="portada">
+  <div class="portada-grid"></div>
+  <div class="portada-content">
+    <div class="portada-badge">Actividad Académica · Ciencia y Tecnología</div>
+    <h1 class="portada-title">
+      Instituciones<br>
+      <span>Científicas</span><br>
+      Mexicanas
+    </h1>
+    <p class="portada-sub">
+      Un recorrido por los centros de investigación que impulsan el
+      conocimiento, la innovación y el desarrollo regional de México.
+    </p>
+    <div class="portada-meta">
+      <div class="meta-item">
+        <strong>Tema</strong>
+        Ciencia & Tecnología Nacional
+      </div>
+      <div class="meta-item">
+        <strong>Enfoque</strong>
+        Instituciones · Desarrollo Regional
+      </div>
+      <div class="meta-item">
+        <strong>Nivel</strong>
+        Educación Superior
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint">desplazar</div>
+</section>
+
+<!-- ═══════════════════════════════════ ÍNDICE ═══ -->
+<section id="indice">
+  <div class="section-tag">Contenido</div>
+  <h2 class="section-title">Índice</h2>
+  <div class="divider"></div>
+  <div class="indice-grid">
+    <a href="#introduccion" class="indice-item">
+      <span class="indice-num">01</span>
+      <div class="indice-text"><strong>Introducción</strong><span>Contexto científico de México</span></div>
+    </a>
+    <a href="#desarrollo" class="indice-item">
+      <span class="indice-num">02</span>
+      <div class="indice-text"><strong>UNAM</strong><span>Mayor producción científica</span></div>
+    </a>
+    <a href="#desarrollo" class="indice-item">
+      <span class="indice-num">03</span>
+      <div class="indice-text"><strong>Cinvestav</strong><span>Alta especialización en posgrados</span></div>
+    </a>
+    <a href="#desarrollo" class="indice-item">
+      <span class="indice-num">04</span>
+      <div class="indice-text"><strong>Sistema CPIs</strong><span>27 centros especializados</span></div>
+    </a>
+    <a href="#desarrollo-regional" class="indice-item">
+      <span class="indice-num">05</span>
+      <div class="indice-text"><strong>Desarrollo Regional</strong><span>Impacto en el territorio</span></div>
+    </a>
+    <a href="#interactivo" class="indice-item">
+      <span class="indice-num">06</span>
+      <div class="indice-text"><strong>Quiz Interactivo</strong><span>Pon a prueba tu aprendizaje</span></div>
+    </a>
+    <a href="#video-section" class="indice-item">
+      <span class="indice-num">07</span>
+      <div class="indice-text"><strong>Video de Referencia</strong><span>Material audiovisual</span></div>
+    </a>
+    <a href="#reflexion" class="indice-item">
+      <span class="indice-num">08</span>
+      <div class="indice-text"><strong>Reflexión</strong><span>Análisis crítico</span></div>
+    </a>
+    <a href="#conclusion" class="indice-item">
+      <span class="indice-num">09</span>
+      <div class="indice-text"><strong>Conclusión</strong><span>Síntesis y prospectiva</span></div>
+    </a>
+    <a href="#fuentes" class="indice-item">
+      <span class="indice-num">10</span>
+      <div class="indice-text"><strong>Fuentes Bibliográficas</strong><span>Referencias APA 7ª edición</span></div>
+    </a>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ INTRODUCCIÓN ═══ -->
+<section id="introduccion">
+  <div class="section-tag">01 · Introducción</div>
+  <h2 class="section-title">El Ecosistema<br>Científico de México</h2>
+  <div class="divider"></div>
+  <div class="intro-layout">
+    <div class="intro-text fade-in">
+      <p>México cuenta con un <strong>robusto sistema de instituciones científicas</strong> que abarca desde universidades públicas de clase mundial hasta centros de investigación especializados distribuidos a lo largo del territorio nacional.</p>
+      <p>Este ecosistema científico está articulado principalmente a través del <strong>Consejo Nacional de Humanidades, Ciencias y Tecnologías (Conahcyt)</strong>, que coordina la política de ciencia y tecnología del país, y se estructura en tres grandes pilares: la UNAM, el Cinvestav y la red de Centros Públicos de Investigación.</p>
+      <p>La diversidad geográfica e institucional de este sistema permite que el conocimiento generado responda a las <strong>necesidades regionales específicas</strong>, contribuyendo al desarrollo económico, social y ambiental de distintas regiones del país.</p>
+    </div>
+    <div class="intro-visual fade-in">
+      <div class="stat-circle">
+        <span class="num">27</span>
+        <span class="lbl">CENTROS PÚBLICOS DE INVESTIGACIÓN</span>
+      </div>
+      <div class="stat-row">
+        <div class="stat-mini">
+          <div class="n">400+</div>
+          <div class="l">Institutos UNAM</div>
+        </div>
+        <div class="stat-mini">
+          <div class="n">40+</div>
+          <div class="l">Departamentos Cinvestav</div>
+        </div>
+        <div class="stat-mini">
+          <div class="n">#1</div>
+          <div class="l">UNAM en producción nacional</div>
+        </div>
+        <div class="stat-mini">
+          <div class="n">Top</div>
+          <div class="l">Cinvestav en citas A.L.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ DESARROLLO ═══ -->
+<section id="desarrollo">
+  <div class="section-tag">02–04 · Instituciones Científicas</div>
+  <h2 class="section-title">Las Grandes<br>Instituciones</h2>
+  <div class="divider"></div>
+
+  <!-- UNAM -->
+  <div class="inst-card fade-in">
+    <div class="inst-header">
+      <div class="inst-icon unam">🎓</div>
+      <div class="inst-name">
+        <span>INSTITUCIÓN PÚBLICA FEDERAL</span>
+        Universidad Nacional Autónoma de México
+      </div>
+    </div>
+    <p class="inst-desc">
+      Fundada en 1910, la UNAM es la institución con <strong>mayor producción científica del país</strong> y una de las más importantes de América Latina. Su autonomía le permite generar conocimiento libre y crítico, abarcando prácticamente todas las áreas del saber humano. Cuenta con campus en múltiples estados y una red global de convenios de colaboración internacional. Sus investigadores publican miles de artículos en revistas indexadas cada año, consolidándola como el motor del sistema científico mexicano.
+    </p>
+    <div class="inst-tags">
+      <span class="tag green">Mayor producción científica</span>
+      <span class="tag cyan">Ciudad de México</span>
+      <span class="tag green">Patrimonio UNESCO</span>
+      <span class="tag cyan">+350,000 alumnos</span>
+    </div>
+    <div class="sub-inst-grid" style="margin-top:1.5rem;">
+      <div class="sub-card">
+        <h4>🔭 Instituto de Astronomía</h4>
+        <p>Investigación en astrofísica, cosmología y astronomía observacional. Opera observatorios en San Pedro Mártir (Baja California) y Tonantzintla (Puebla).</p>
+      </div>
+      <div class="sub-card">
+        <h4>🌿 Instituto de Biología</h4>
+        <p>Uno de los centros de biodiversidad más importantes del mundo. Resguarda colecciones biológicas nacionales y lidera estudios de conservación.</p>
+      </div>
+      <div class="sub-card">
+        <h4>⚛️ Instituto de Ciencias Nucleares</h4>
+        <p>Investiga física de partículas, astrofísica nuclear y aplicaciones de la radiación en medicina y materiales. Conectado al CERN.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CINVESTAV -->
+  <div class="inst-card fade-in">
+    <div class="inst-header">
+      <div class="inst-icon cinvestav">🔬</div>
+      <div class="inst-name">
+        <span>CENTRO DE INVESTIGACIÓN DE ÉLITE</span>
+        Centro de Investigación y de Estudios Avanzados del IPN
+      </div>
+    </div>
+    <p class="inst-desc">
+      El Cinvestav, creado en 1961, destaca a nivel mundial por su <strong>alta especialización en posgrados</strong> y es reconocido como uno de los centros de investigación más citados en América Latina. Con sede central en la Ciudad de México y unidades en Mérida, Monterrey, Guadalajara, Saltillo y Zacatenco, abarca disciplinas como ingeniería eléctrica, biotecnología, física, matemáticas, biomedicina y ciencias ambientales. Su modelo se enfoca en la formación de investigadores de alto nivel y en la vinculación con la industria y el sector productivo.
+    </p>
+    <div class="inst-tags">
+      <span class="tag cyan">Más citado en A.L.</span>
+      <span class="tag green">Múltiples unidades</span>
+      <span class="tag cyan">Posgrados especializados</span>
+      <span class="tag green">Vinculación industrial</span>
+    </div>
+  </div>
+
+  <!-- CPIs -->
+  <div class="inst-card fade-in">
+    <div class="inst-header">
+      <div class="inst-icon cpi">🗺️</div>
+      <div class="inst-name">
+        <span>RED NACIONAL · CONAHCYT</span>
+        Sistema de Centros Públicos de Investigación (CPIs)
+      </div>
+    </div>
+    <p class="inst-desc">
+      El Sistema de CPIs es una <strong>red de 27 instituciones</strong> distribuidas estratégicamente en el territorio nacional, cada una especializada en disciplinas vinculadas a las vocaciones y necesidades de su región. Estas instituciones son financiadas por el gobierno federal a través del Conahcyt y representan uno de los instrumentos más eficaces para llevar el conocimiento científico a donde más se necesita.
+    </p>
+    <div class="inst-tags">
+      <span class="tag gold">27 centros nacionales</span>
+      <span class="tag green">Distribución territorial</span>
+      <span class="tag gold">Vocación regional</span>
+    </div>
+    <div class="sub-inst-grid" style="margin-top:1.5rem;">
+      <div class="sub-card">
+        <h4>🌊 CICESE — Ensenada, B.C.</h4>
+        <p>Especializado en óptica, oceanografía y geofísica. Referente internacional en ciencias del mar y desarrollo de fibras ópticas para telecomunicaciones.</p>
+      </div>
+      <div class="sub-card">
+        <h4>🌱 CICY — Yucatán</h4>
+        <p>Enfocado en biotecnología y recursos naturales tropicales. Investiga plantas de la Península de Yucatán con potencial farmacéutico y agroindustrial.</p>
+      </div>
+      <div class="sub-card">
+        <h4>🌳 INECOL — Veracruz</h4>
+        <p>Dedicado a la ecología y conservación de ecosistemas. Realiza investigación fundamental sobre biodiversidad en las selvas y bosques tropicales de México.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ DESARROLLO REGIONAL ═══ -->
+<section id="desarrollo-regional">
+  <div class="section-tag">05 · Desarrollo Regional</div>
+  <h2 class="section-title">Ciencia al Servicio<br>del Territorio</h2>
+  <div class="divider"></div>
+  <p style="color:var(--texto-suave); max-width:700px; line-height:1.8; margin-bottom:2rem;">
+    La distribución geográfica de las instituciones científicas mexicanas responde a una estrategia de <strong>descentralización del conocimiento</strong>, vinculando la investigación a los recursos naturales, vocaciones productivas y problemas concretos de cada región.
+  </p>
+  <div class="mapa-container">
+    <div>
+      <div class="region-card fade-in">
+        <div class="region-header">
+          <div class="region-dot" style="background:#64FFDA;"></div>
+          <h3>Noroeste — CICESE (Ensenada)</h3>
+        </div>
+        <p>Aprovecha la biodiversidad marina del Pacífico y el desierto de Baja California. Desarrolla tecnología óptica que impulsa la industria de telecomunicaciones regional y monitorea sismos en la Falla de San Andrés.</p>
+        <div class="impact-bar">
+          <label><span>Impacto regional</span><span>88%</span></label>
+          <div class="bar-track"><div class="bar-fill" style="width:88%;"></div></div>
+        </div>
+      </div>
+      <div class="region-card fade-in">
+        <div class="region-header">
+          <div class="region-dot" style="background:#D4A017;"></div>
+          <h3>Sureste — CICY (Mérida)</h3>
+        </div>
+        <p>Estudia la riqueza biológica de la Península de Yucatán. Su investigación en biotecnología contribuye a la industria henequenera, el manejo de cenotes y el desarrollo de biofármacos a partir de plantas endémicas.</p>
+        <div class="impact-bar">
+          <label><span>Impacto regional</span><span>82%</span></label>
+          <div class="bar-track"><div class="bar-fill" style="width:82%; background: linear-gradient(90deg, var(--oro), #f0c040);"></div></div>
+        </div>
+      </div>
+      <div class="region-card fade-in">
+        <div class="region-header">
+          <div class="region-dot" style="background:#00A86B;"></div>
+          <h3>Golfo — INECOL (Xalapa)</h3>
+        </div>
+        <p>Protege los ecosistemas de nubosidad y bosque mesófilo de Veracruz. Sus estudios de biodiversidad informan políticas de ordenamiento ecológico y restauración de ríos estratégicos para agua potable.</p>
+        <div class="impact-bar">
+          <label><span>Impacto regional</span><span>79%</span></label>
+          <div class="bar-track"><div class="bar-fill" style="width:79%; background: linear-gradient(90deg, var(--verde), #4cc474);"></div></div>
+        </div>
+      </div>
+      <div class="region-card fade-in">
+        <div class="region-header">
+          <div class="region-dot" style="background:#6C63FF;"></div>
+          <h3>Centro — UNAM / Cinvestav</h3>
+        </div>
+        <p>Concentra la mayor densidad de investigadores del país. Genera conocimiento básico y aplicado en todas las disciplinas, formando los recursos humanos que alimentan el sistema científico nacional.</p>
+        <div class="impact-bar">
+          <label><span>Impacto regional</span><span>95%</span></label>
+          <div class="bar-track"><div class="bar-fill" style="width:95%; background: linear-gradient(90deg, #6C63FF, #a89dff);"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="mexico-map fade-in">
+      <!-- Mapa estilizado SVG de México con marcadores -->
+      <svg viewBox="0 0 500 420" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <!-- Silueta simplificada de México -->
+        <path d="M 80 60 L 300 40 L 420 80 L 440 130 L 400 150 L 420 200 L 380 220 L 350 260 L 300 280 L 250 300 L 200 340 L 160 380 L 130 360 L 100 310 L 80 260 L 50 200 L 40 150 L 60 100 Z"
+          fill="rgba(17,34,64,0.8)" stroke="rgba(100,255,218,0.3)" stroke-width="1.5"/>
+        <!-- Baja California -->
+        <path d="M 60 80 L 40 120 L 30 180 L 45 200 L 55 170 L 70 120 L 80 80 Z"
+          fill="rgba(100,255,218,0.1)" stroke="rgba(100,255,218,0.2)" stroke-width="1"/>
+
+        <!-- Marcadores de instituciones -->
+        <!-- CICESE - Ensenada -->
+        <circle cx="55" cy="140" r="8" fill="rgba(100,255,218,0.2)" stroke="#64FFDA" stroke-width="2" filter="url(#glow)"/>
+        <circle cx="55" cy="140" r="3" fill="#64FFDA"/>
+        <text x="70" y="145" fill="#64FFDA" font-size="9" font-family="monospace">CICESE</text>
+
+        <!-- UNAM - CDMX -->
+        <circle cx="220" cy="210" r="10" fill="rgba(0,168,107,0.2)" stroke="#00A86B" stroke-width="2" filter="url(#glow)"/>
+        <circle cx="220" cy="210" r="4" fill="#00A86B"/>
+        <text x="234" y="207" fill="#00A86B" font-size="9" font-family="monospace">UNAM</text>
+        <text x="234" y="218" fill="#64FFDA" font-size="8" font-family="monospace">CINVESTAV</text>
+
+        <!-- INECOL - Xalapa -->
+        <circle cx="270" cy="225" r="7" fill="rgba(76,196,116,0.2)" stroke="#4cc474" stroke-width="1.5" filter="url(#glow)"/>
+        <circle cx="270" cy="225" r="3" fill="#4cc474"/>
+        <text x="282" y="230" fill="#4cc474" font-size="8" font-family="monospace">INECOL</text>
+
+        <!-- CICY - Mérida -->
+        <circle cx="320" cy="240" r="7" fill="rgba(212,160,23,0.2)" stroke="#D4A017" stroke-width="1.5" filter="url(#glow)"/>
+        <circle cx="320" cy="240" r="3" fill="#D4A017"/>
+        <text x="332" y="245" fill="#D4A017" font-size="8" font-family="monospace">CICY</text>
+
+        <!-- Líneas de conexión -->
+        <line x1="55" y1="140" x2="220" y2="210" stroke="rgba(100,255,218,0.15)" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="220" y1="210" x2="270" y2="225" stroke="rgba(100,255,218,0.15)" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="270" y1="225" x2="320" y2="240" stroke="rgba(100,255,218,0.15)" stroke-width="1" stroke-dasharray="4,4"/>
+
+        <text x="250" y="395" fill="rgba(100,255,218,0.4)" font-size="8" font-family="monospace" text-anchor="middle">DISTRIBUCIÓN TERRITORIAL · CPIs</text>
+      </svg>
+      <p style="font-size:0.75rem; color:var(--texto-suave); margin-top:0.5rem;">Principales centros científicos en el territorio mexicano</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ INTERACTIVO ═══ -->
+<section id="interactivo">
+  <div class="section-tag">06 · Sección Interactiva</div>
+  <h2 class="section-title">Quiz de<br>Conocimiento</h2>
+  <div class="divider"></div>
+  <p style="color:var(--texto-suave); margin-bottom:2rem; font-size:0.95rem;">Pon a prueba lo aprendido sobre las instituciones científicas mexicanas.</p>
+  <div class="quiz-container">
+    <div class="progress-bar"><div class="progress-fill" id="qProgress" style="width:0%"></div></div>
+    <div id="quizArea"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ VIDEO ═══ -->
+<section id="video-section">
+  <div class="section-tag">07 · Material Audiovisual</div>
+  <h2 class="section-title">Video de<br>Referencia</h2>
+  <div class="divider"></div>
+  <p style="color:var(--texto-suave); max-width:700px; line-height:1.8; margin-bottom:0.5rem;">
+    El siguiente video complementa los contenidos desarrollados en esta presentación, abordando el papel de las instituciones científicas en el contexto del desarrollo nacional.
+  </p>
+  <div class="video-wrapper">
+    <iframe
+      src="https://www.youtube.com/embed/fQ2jOBK2ZtE"
+      title="Instituciones Científicas Mexicanas"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen>
+    </iframe>
+  </div>
+  <p class="video-caption">📹 Video de referencia sobre instituciones científicas en México. Fuente: YouTube.</p>
+</section>
+
+<!-- ═══════════════════════════════════ REFLEXIÓN ═══ -->
+<section id="reflexion">
+  <div class="section-tag">08 · Reflexión</div>
+  <h2 class="section-title">Análisis<br>Crítico</h2>
+  <div class="divider"></div>
+  <blockquote class="blockquote">
+    "La ciencia no es solo un conjunto de conocimientos; es una forma de pensar, de cuestionar y de transformar la realidad. Las instituciones científicas mexicanas son la infraestructura de ese pensamiento."
+    <cite>— Reflexión sobre el papel de la ciencia en el desarrollo nacional</cite>
+  </blockquote>
+  <div class="reflexion-grid">
+    <div class="refl-card fade-in">
+      <div class="refl-icon">⚖️</div>
+      <h3>Fortalezas del sistema</h3>
+      <p>México cuenta con instituciones de clase mundial como la UNAM y el Cinvestav, cuyo prestigio internacional es comparable al de grandes centros europeos. La red de CPIs garantiza cobertura territorial y especialización temática.</p>
+    </div>
+    <div class="refl-card fade-in">
+      <div class="refl-icon">🔍</div>
+      <h3>Áreas de oportunidad</h3>
+      <p>La concentración de recursos en el centro del país genera brechas regionales. La inversión en ciencia y tecnología (menos del 0.5% del PIB) está por debajo del promedio de la OCDE (2.7%), limitando el potencial de crecimiento.</p>
+    </div>
+    <div class="refl-card fade-in">
+      <div class="refl-icon">🌐</div>
+      <h3>Vinculación industria-academia</h3>
+      <p>La transferencia de conocimiento desde laboratorios hacia el sector productivo es aún insuficiente. Fortalecer esta articulación es clave para que la investigación básica genere impacto económico tangible.</p>
+    </div>
+    <div class="refl-card fade-in">
+      <div class="refl-icon">🚀</div>
+      <h3>Prospectiva y desafíos</h3>
+      <p>La globalización y la revolución digital exigen que México accelere su transición hacia una economía basada en conocimiento. Las instituciones científicas son el punto de partida indispensable para este salto cualitativo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ CONCLUSIÓN ═══ -->
+<section id="conclusion">
+  <div class="section-tag">09 · Conclusión</div>
+  <h2 class="section-title">Síntesis y<br>Prospectiva</h2>
+  <div class="divider"></div>
+  <div class="concl-layout">
+    <div class="concl-points">
+      <div class="concl-point fade-in">
+        <span class="concl-num">01</span>
+        <p>México posee un <strong>sistema científico diverso y estructurado</strong>, articulado por instituciones de alto nivel que generan conocimiento en todas las disciplinas.</p>
+      </div>
+      <div class="concl-point fade-in">
+        <span class="concl-num">02</span>
+        <p>La <strong>distribución territorial</strong> de los CPIs responde estratégicamente a las necesidades y vocaciones productivas de cada región del país.</p>
+      </div>
+      <div class="concl-point fade-in">
+        <span class="concl-num">03</span>
+        <p>La UNAM, el Cinvestav y la red de CPIs conforman el <strong>núcleo de la infraestructura científica nacional</strong>, con alcance internacional reconocido.</p>
+      </div>
+      <div class="concl-point fade-in">
+        <span class="concl-num">04</span>
+        <p>El <strong>aumento en la inversión pública y privada</strong> en ciencia y tecnología es condición necesaria para que México alcance su potencial innovador.</p>
+      </div>
+      <div class="concl-point fade-in">
+        <span class="concl-num">05</span>
+        <p>La ciencia regional no solo genera conocimiento: <strong>transforma economías locales</strong>, conserva recursos naturales y forma las generaciones que liderarán el futuro.</p>
+      </div>
+    </div>
+    <div class="concl-visual fade-in">
+      <div class="big-num">27+</div>
+      <p>Centros de Investigación<br>al servicio de México</p>
+      <div style="margin-top:2rem; display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+        <div style="background:rgba(10,22,40,0.6); padding:1rem; border-radius:6px; border:1px solid rgba(100,255,218,0.08);">
+          <div style="font-family:'Space Mono',monospace; font-size:1.5rem; color:var(--verde);">1910</div>
+          <div style="font-size:0.75rem; color:var(--texto-suave); margin-top:4px;">Fundación UNAM</div>
+        </div>
+        <div style="background:rgba(10,22,40,0.6); padding:1rem; border-radius:6px; border:1px solid rgba(100,255,218,0.08);">
+          <div style="font-family:'Space Mono',monospace; font-size:1.5rem; color:var(--oro);">1961</div>
+          <div style="font-size:0.75rem; color:var(--texto-suave); margin-top:4px;">Creación Cinvestav</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ FUENTES ═══ -->
+<section id="fuentes">
+  <div class="section-tag">10 · Referencias</div>
+  <h2 class="section-title">Fuentes<br>Bibliográficas</h2>
+  <div class="divider"></div>
+  <p style="color:var(--texto-suave); margin-bottom:2rem; font-size:0.85rem; font-family:'Space Mono',monospace; letter-spacing:1px;">FORMATO APA — 7ª EDICIÓN</p>
+
+  <div class="fuente-item fade-in">
+    <div class="fuente-tipo">Institución — Sitio Oficial</div>
+    <p><span class="author">Universidad Nacional Autónoma de México.</span> (2023). <span class="title">Informe de Actividades 2022–2023.</span> UNAM. https://www.unam.mx/acerca-de-la-unam/unam-en-el-tiempo/informe-de-actividades</p>
+  </div>
+
+  <div class="fuente-item fade-in">
+    <div class="fuente-tipo">Institución — Sitio Oficial</div>
+    <p><span class="author">Centro de Investigación y de Estudios Avanzados del IPN (Cinvestav).</span> (2023). <span class="title">¿Qué es el Cinvestav?</span> Cinvestav. https://www.cinvestav.mx/el-cinvestav</p>
+  </div>
+
+  <div class="fuente-item fade-in">
+    <div class="fuente-tipo">Organismo Gubernamental</div>
+    <p><span class="author">Consejo Nacional de Humanidades, Ciencias y Tecnologías (Conahcyt).</span> (2023). <span class="title">Centros Públicos de Investigación.</span> Gobierno de México. https://conahcyt.mx/centros-de-investigacion/centros-publicos/</p>
+  </div>
+
+  <div class="fuente-item fade-in">
+    <div class="fuente-tipo">Centro de Investigación — Sitio Oficial</div>
+    <p><span class="author">Centro de Investigación Científica y de Educación Superior de Ensenada (CICESE).</span> (2023). <span class="title">Presentación institucional.</span> CICESE. https://www.cicese.edu.mx/acerca-de</p>
+  </div>
+
+  <div class="fuente-item fade-in">
+    <div class="fuente-tipo">Centro de Investigación — Sitio Oficial</div>
+    <p><span class="author">Centro de Investigación Científica de Yucatán (CICY).</span> (2023). <span class="title">Misión, visión y objetivos.</span> CICY. https://www.cicy.mx/institucional/mision</p>
+  </div>
+
+  <div class="fuente-item fade-in">
+    <div class="fuente-tipo">Centro de Investigación — Sitio Oficial</div>
+    <p><span class="author">Instituto de Ecología, A.C. (INECOL).</span> (2023). <span class="title">¿Quiénes somos?</span> INECOL. https://www.inecol.mx/inecol/index.php/es/nosotros</p>
+  </div>
+
+  <div class="fuente-item fade-in">
+    <div class="fuente-tipo">Artículo Académico</div>
+    <p><span class="author">Casas, R., y Dettmer, J.</span> (2019). <span class="title">Ciencia, tecnología e innovación en México: hacia una agenda de política pública.</span> <em>Revista Latinoamericana de Estudios Educativos, 49</em>(1), 45–74. https://doi.org/10.48102/rlee.2019.49.1.51</p>
+  </div>
+
+  <div class="fuente-item fade-in">
+    <div class="fuente-tipo">Reporte Internacional</div>
+    <p><span class="author">Organización para la Cooperación y el Desarrollo Económico (OCDE).</span> (2022). <span class="title">Main Science and Technology Indicators 2022.</span> OECD Publishing. https://doi.org/10.1787/g2g9ff07-en</p>
+  </div>
+
+  <div class="fuente-item fade-in">
+    <div class="fuente-tipo">Libro de Referencia</div>
+    <p><span class="author">Lomnitz, L.</span> (2016). <span class="title">La ciencia en México: comunidad científica y Estado.</span> (2.ª ed.). Fondo de Cultura Económica.</p>
+  </div>
+
+  <div class="fuente-item fade-in">
+    <div class="fuente-tipo">Material Audiovisual</div>
+    <p><span class="author">[Productor no especificado].</span> (s.f.). <span class="title">Instituciones Científicas Mexicanas</span> [Video]. YouTube. https://www.youtube.com/watch?v=fQ2jOBK2ZtE</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>Presentación sobre <span>Instituciones Científicas Mexicanas</span> · Actividad Académica · 2024</p>
+  <p style="margin-top:6px; font-size:0.68rem; opacity:0.5;">Diseño y desarrollo educativo · Formato de presentación digital</p>
+</footer>
+
+<script>
+// ─── QUIZ DATA ───
+const questions = [
+  {
+    q: "¿Qué institución tiene la <em>mayor producción científica</em> de México?",
+    opts: ["Instituto Politécnico Nacional", "Universidad Nacional Autónoma de México (UNAM)", "Centro de Investigación y de Estudios Avanzados (Cinvestav)", "Universidad Autónoma Metropolitana"],
+    answer: 1,
+    exp: "La UNAM es reconocida como la institución con mayor producción científica del país, con miles de publicaciones anuales en revistas indexadas internacionales."
+  },
+  {
+    q: "¿En qué ciudad se ubica el CICESE y cuál es su área de especialización principal?",
+    opts: ["Mérida — Biotecnología", "Guadalajara — Electrónica", "Ensenada — Óptica, oceanografía y geofísica", "Monterrey — Ingeniería industrial"],
+    answer: 2,
+    exp: "El CICESE está en Ensenada, Baja California, y se especializa en óptica, oceanografía y geofísica. Es referente internacional en ciencias del mar."
+  },
+  {
+    q: "¿Cuántos centros integran el Sistema de Centros Públicos de Investigación (CPI)?",
+    opts: ["12 centros", "20 centros", "27 centros", "35 centros"],
+    answer: 2,
+    exp: "La red de CPIs está formada por 27 instituciones distribuidas en todo el territorio nacional, coordinadas por el Conahcyt."
+  },
+  {
+    q: "El CICY (Centro de Investigación Científica de Yucatán) se enfoca principalmente en:",
+    opts: ["Astronomía y cosmología", "Biotecnología y recursos naturales", "Ingeniería nuclear", "Oceanografía y geofísica"],
+    answer: 1,
+    exp: "El CICY se especializa en biotecnología y recursos naturales, aprovechando la riqueza biológica de la Península de Yucatán."
+  },
+  {
+    q: "¿Por qué se distingue el Cinvestav a nivel latinoamericano?",
+    opts: ["Por tener el mayor número de alumnos", "Por ser patrimonio de la UNESCO", "Por ser uno de los centros más citados y su alta especialización en posgrados", "Por su antigüedad, fundado en el siglo XIX"],
+    answer: 2,
+    exp: "El Cinvestav destaca por su alta especialización en posgrados y es uno de los centros de investigación más citados en América Latina."
+  }
+];
+
+let current = 0, score = 0, answered = false;
+
+function renderQuestion() {
+  const q = questions[current];
+  const pct = (current / questions.length) * 100;
+  document.getElementById('qProgress').style.width = pct + '%';
+
+  document.getElementById('quizArea').innerHTML = `
+    <div class="quiz-q">
+      <p style="font-family:'Space Mono',monospace; font-size:0.7rem; color:var(--texto-suave); margin-bottom:0.8rem; letter-spacing:1px;">
+        PREGUNTA ${current + 1} DE ${questions.length}
+      </p>
+      <h3>${q.q}</h3>
+      <div class="quiz-options" id="opts">
+        ${q.opts.map((o, i) => `<button class="q-opt" onclick="selectOpt(${i})" id="opt${i}">${o}</button>`).join('')}
+      </div>
+      <div class="quiz-feedback" id="feedback"></div>
+      <div class="quiz-nav">
+        <button class="q-btn secondary" id="nextBtn" onclick="nextQ()" style="display:none;">
+          ${current === questions.length - 1 ? 'VER RESULTADO →' : 'SIGUIENTE →'}
+        </button>
+        <span id="score-display">Correctas: ${score} / ${current}</span>
+      </div>
+    </div>
+  `;
+  answered = false;
+}
+
+function selectOpt(i) {
+  if (answered) return;
+  answered = true;
+  const q = questions[current];
+  const fb = document.getElementById('feedback');
+  document.querySelectorAll('.q-opt').forEach(b => b.style.pointerEvents = 'none');
+  document.getElementById('opt' + q.answer).classList.add('correct');
+  if (i === q.answer) {
+    score++;
+    fb.className = 'quiz-feedback show ok';
+    fb.innerHTML = '✅ ' + q.exp;
+  } else {
+    document.getElementById('opt' + i).classList.add('wrong');
+    fb.className = 'quiz-feedback show fail';
+    fb.innerHTML = '❌ ' + q.exp;
+  }
+  document.getElementById('nextBtn').style.display = 'block';
+  document.getElementById('score-display').textContent = `Correctas: ${score} / ${current + 1}`;
+}
+
+function nextQ() {
+  current++;
+  if (current >= questions.length) {
+    showResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResult() {
+  document.getElementById('qProgress').style.width = '100%';
+  const pct = Math.round((score / questions.length) * 100);
+  const msg = pct >= 80 ? '🎉 ¡Excelente! Dominas el tema.' :
+              pct >= 60 ? '👍 Buen trabajo. Repasa algunos puntos.' :
+              '📚 Te recomendamos revisar el contenido nuevamente.';
+  document.getElementById('quizArea').innerHTML = `
+    <div class="quiz-result show">
+      <div class="result-score">${score}/${questions.length}</div>
+      <p style="font-size:1.1rem; color:var(--texto-suave); margin:0.5rem 0;">${pct}% de aciertos</p>
+      <p style="color:var(--texto); margin:1rem 0 2rem;">${msg}</p>
+      <button class="q-btn" onclick="restartQuiz()">REINTENTAR →</button>
+    </div>
+  `;
+}
+
+function restartQuiz() {
+  current = 0; score = 0; answered = false;
+  renderQuestion();
+}
+
+// ─── SCROLL ANIMATIONS ───
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+
+// Init quiz
+renderQuestion();
+</script>
+</body>
+</html>
